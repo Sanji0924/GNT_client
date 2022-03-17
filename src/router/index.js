@@ -1,27 +1,99 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: "/index",
+    component: () => import("../views/Home.vue"),
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/shops",
+    component: () => import("../views/Front.vue"),
+    children: [
+      {
+        path: "bars",
+        component: () => import("../views/Bars.vue"),
+      },
+      {
+        path: "snacks",
+        component: () => import("../views/Snacks.vue"),
+      },
+      {
+        path: "desserts",
+        component: () => import("../views/Desserts.vue"),
+      },
+      {
+        path: "nightviews",
+        component: () => import("../views/NightViews.vue"),
+      },
+    ],
+  },
+  {
+    path: "/shop",
+    component: () => import("../views/ShopInfo.vue"),
+  },
+  {
+    path: "/memberLogin",
+    component: () => import("../views/MemberLogin.vue"),
+  },
+  {
+    path: "/memberSignUp",
+    component: () => import("../views/MemberSignUp.vue"),
+  },
+  {
+    path: "/member",
+    component: () => import("../views/member/Member.vue"),
+    children: [
+      {
+        path: "memberInfo",
+        component: () => import("../views/member/MemberInfo.vue"),
+      },
+      {
+        path: "favorites",
+        component: () => import("../views/member/Favorites.vue"),
+      },
+      {
+        path: "routes",
+        component: () => import("../views/member/Routes.vue"),
+      },
+      {
+        path: "reviews",
+        component: () => import("../views/member/Reviews.vue"),
+      },
+    ],
+  },
+  {
+    path: "/adminLogin",
+    component: () => import("../views/admin/AdminLogin.vue"),
+  },
+  {
+    path: "/admin",
+    component: () => import("../views/admin/Dashboard.vue"),
+    children: [
+      {
+        path: "shops",
+        component: () => import("../views/admin/AdminShops.vue"),
+      },
+      {
+        path: "members",
+        component: () => import("../views/admin/AdminMembers.vue"),
+      },
+      {
+        path: "forms",
+        component: () => import("../views/admin/AdminForms.vue"),
+      },
+      {
+        path: "data",
+        component: () => import("../views/admin/AdminData.vue"),
+      },
+    ],
   },
 ];
 
 const router = new VueRouter({
+  linkActiveClass: "active",
   routes,
 });
 

@@ -1,0 +1,60 @@
+.route-list {
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+  & .route-list-link {
+    padding: 10px 0px;
+    position: relative;
+    z-index: 100;
+    &:hover {
+      cursor: pointer;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      transform: translate(-50%, 0%);
+      top: -10px;
+      bottom: -10px;
+      left: 20%;
+      // right: 0;
+      border-left: 3px solid #e98830;
+      z-index: 0;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      // right: 50%;
+      left: 20%;
+      border-radius: 50%;
+      border: 2px solid green;
+      background: #eee;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
+// 行程規劃 頁面的行程 list end
+
+.route {
+  // &-item{
+  //   z-index: 100;
+  // }
+  & > a {
+    padding: 10px 0;
+    position: relative;
+    z-index: 100;
+    &::after {
+      content: "";
+      position: absolute;
+      // transform: translate(-50%,-50%);
+      right: 50%;
+      // left: 0;
+      bottom: -20px;
+      top: 0px;
+      border-right: 5px solid green;
+      z-index: -1;
+    }
+  }
+}

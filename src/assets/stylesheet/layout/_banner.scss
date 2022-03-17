@@ -1,0 +1,75 @@
+@import "../helpers/mixin";
+
+.banner {
+  background: url("https://images.unsplash.com/photo-1627481958426-3f165fcdd3c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  max-width: 100%;
+  height: 300px;
+  @include pad {
+    height: 400px;
+  }
+  // @media only screen and (min-width: 768px) {
+  //   height: 400px;
+  // }
+  @include desktop {
+    height: 450px;
+  }
+  &-bar {
+    background: url("https://images.unsplash.com/photo-1535045519217-79ea59ee90f3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    max-width: 100%;
+    height: 300px;
+    @include pad {
+      height: 400px;
+    }
+    @include desktop {
+      height: 400px;
+    }
+  }
+  &-dessert {
+    background: url("https://images.unsplash.com/photo-1642588381432-1390e6c2b762?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    max-width: 100%;
+    height: 300px;
+    @include pad {
+      height: 400px;
+    }
+    @include desktop {
+      height: 400px;
+    }
+  }
+  &-snack {
+    background: url("https://images.unsplash.com/photo-1512132411229-c30391241dd8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    max-width: 100%;
+    height: 300px;
+    @include pad {
+      height: 400px;
+    }
+    @include desktop {
+      height: 400px;
+    }
+  }
+  &-nightview {
+    background: url("https://images.unsplash.com/photo-1521304359532-ce8e805fac76?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    max-width: 100%;
+    height: 300px;
+    @include pad {
+      height: 400px;
+    }
+    @include desktop {
+      height: 400px;
+    }
+  }
+}
