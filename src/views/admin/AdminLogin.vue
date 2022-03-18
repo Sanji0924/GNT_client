@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column">
+  <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-gray w-100">
       <div class="container">
         <router-link class="navbar-brand" to="/index">
@@ -7,8 +7,8 @@
         </router-link>
       </div>
     </nav>
-    <section class="container my-7">
-      <div class="row justify-content-center align-items-center">
+    <section class="main container d-flex flex-column justify-content-center">
+      <div class="row justify-content-center">
         <div class="col-10 col-md-5 col-lg-4">
           <h1 class="h2 text-center mb-3">請先登入</h1>
           <form action="#" class="form-signin">
@@ -42,7 +42,7 @@
         </div>
       </div>
     </section>
-    <!-- <footer class="footer w-100 align-self-end">
+    <footer class="footer w-100 align-self-end">
       <div class="container-fuild bg-gray py-5">
         <div class="container text-center">
           <router-link
@@ -70,7 +70,7 @@
           <p class="text-white mb-0 mt-3">© 2022 LOGO All Rights Reserved.</p>
         </div>
       </div>
-    </footer> -->
+    </footer>
   </div>
 </template>
 <style lang="scss">
@@ -90,9 +90,7 @@ body {
     transition: all 0.3s;
   }
 }
-// .footer {
-//   height: 200px;
-//   background-color: rgba($color: #000002, $alpha: 0.8);
-//   z-index: 100;
-// }
+.main {
+  height: calc(100vh - 272px);
+}
 </style>

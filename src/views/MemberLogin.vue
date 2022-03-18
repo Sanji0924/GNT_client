@@ -1,7 +1,9 @@
 <template>
   <div>
     <FrontNavbar></FrontNavbar>
-    <section class="container my-7">
+    <section
+      class="container main d-flex flex-column justify-content-center mt-5"
+    >
       <div class="row justify-content-center align-items-center">
         <div class="col-10 col-md-5 col-lg-4">
           <h1 class="h2 text-center mb-3">會員登入</h1>
@@ -42,17 +44,17 @@
         </div>
       </div>
     </section>
-    <!-- <FrontFooter></FrontFooter> -->
+    <FrontFooter></FrontFooter>
   </div>
 </template>
 
 <script>
 import FrontNavbar from "../components/FrontNavbar.vue";
-// import FrontFooter from "../components/FrontFooter.vue";
+import FrontFooter from "../components/FrontFooter.vue";
 export default {
   components: {
     FrontNavbar,
-    // FrontFooter,
+    FrontFooter,
   },
 };
 </script>
@@ -62,7 +64,7 @@ html,
 body {
   height: 100%;
 }
-.header {
-  position: static !important;
+.main {
+  height: calc(100vh - 239px);
 }
 </style>

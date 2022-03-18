@@ -1,7 +1,7 @@
 <template>
   <div>
     <FrontNavbar></FrontNavbar>
-    <section class="container my-7">
+    <section class="container mt-7 mb-5">
       <div class="row justify-content-center align-items-center">
         <div class="col-10 col-md-5 col-lg-4">
           <h1 class="h2 text-center mb-3">會員註冊</h1>
@@ -133,9 +133,3 @@ export default {
   },
 };
 </script>
-
-<style lang="css">
-.header {
-  position: static !important;
-}
-</style>
