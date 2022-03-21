@@ -86,8 +86,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-gray btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
+                  @click="openMemberModal"
                 >
                   編輯
                 </button>
@@ -100,5 +99,21 @@
         </table>
       </div>
     </section>
+    <AdminMemberModal ref="modal"></AdminMemberModal>
   </div>
 </template>
+
+<script>
+import AdminMemberModal from "../../components/AdminMemberModal.vue";
+
+export default {
+  components: {
+    AdminMemberModal,
+  },
+  methods: {
+    openMemberModal() {
+      this.$refs.modal.openModal();
+    },
+  },
+};
+</script>

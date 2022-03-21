@@ -71,7 +71,7 @@
                   aria-expanded="false"
                 >
                   <span class="material-icons me-2"> place </span>
-                  店家狀態<span class="material-icons"> expand_more </span>
+                  啟用狀態<span class="material-icons"> expand_more </span>
                 </a>
                 <ul
                   class="dropdown-menu dropdown-menu-center px-2"
@@ -82,7 +82,7 @@
                       href="#"
                       class="text-dark d-flex admin-side-menu-link py-2"
                     >
-                      <span class="material-icons me-2"> edit </span>正常營業
+                      <span class="material-icons me-2"> edit </span>啟用
                     </a>
                   </li>
                   <li>
@@ -90,15 +90,7 @@
                       href="#"
                       class="text-dark d-flex admin-side-menu-link py-2"
                     >
-                      <span class="material-icons me-2"> edit </span>整修中
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="text-dark d-flex admin-side-menu-link py-2"
-                    >
-                      <span class="material-icons me-2"> edit </span>停業
+                      <span class="material-icons me-2"> edit </span>未啟用
                     </a>
                   </li>
                 </ul>
@@ -113,9 +105,8 @@
         <h1 class="h2">店家資料管理</h1>
         <button
           type="button"
-          class="btn btn-outline-primary d-flex align-items-center"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
+          class="btn btn-primary d-flex align-items-center"
+          @click="openShopModal"
         >
           新增店家
         </button>
@@ -126,12 +117,12 @@
         >
           <thead>
             <tr>
-              <th>店家編號</th>
+              <th width="80">店家編號</th>
               <th>店家名稱</th>
-              <th>店家分類</th>
+              <th width="80">店家分類</th>
               <th>店家子分類</th>
-              <th>店家狀態</th>
-              <th></th>
+              <th width="80">是否啟用</th>
+              <th width="120"></th>
             </tr>
           </thead>
           <tbody>
@@ -141,16 +132,14 @@
               <td>Lorem</td>
               <td>Lorem</td>
               <td>
-                <span>正常營業</span>
-                <span class="text-primary">整修中</span>
-                <span class="text-danger">停業</span>
+                <span>啟用</span>
+                <span class="text-danger">未啟用</span>
               </td>
               <td class="text-center">
                 <button
                   type="button"
                   class="btn btn-outline-gray btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
+                  @click="openShopModal"
                 >
                   編輯
                 </button>
@@ -163,5 +152,21 @@
         </table>
       </div>
     </section>
+    <AdminShopModal ref="modal"></AdminShopModal>
   </div>
 </template>
+
+<script>
+import AdminShopModal from "../../components/AdminShopModal.vue";
+
+export default {
+  components: {
+    AdminShopModal,
+  },
+  methods: {
+    openShopModal() {
+      this.$refs.modal.openModal();
+    },
+  },
+};
+</script>

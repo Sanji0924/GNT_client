@@ -3,8 +3,8 @@
     class="modal fade"
     id="exampleModal"
     tabindex="-1"
-    aria-hidden="true"
     ref="modal"
+    style="z-index: 11000"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

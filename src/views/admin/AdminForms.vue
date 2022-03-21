@@ -144,17 +144,8 @@
               <td class="text-center">
                 <button
                   type="button"
-                  class="btn btn-gray btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#detailModel"
-                >
-                  查看更多
-                </button>
-                <button
-                  type="button"
                   class="btn btn-outline-gray btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#editModel"
+                  @click="openFormModal"
                 >
                   編輯
                 </button>
@@ -167,5 +158,21 @@
         </table>
       </div>
     </section>
+    <AdminFormModal ref="modal"></AdminFormModal>
   </div>
 </template>
+
+<script>
+import AdminFormModal from "../../components/AdminFormModal.vue";
+
+export default {
+  components: {
+    AdminFormModal,
+  },
+  methods: {
+    openFormModal() {
+      this.$refs.modal.openModal();
+    },
+  },
+};
+</script>

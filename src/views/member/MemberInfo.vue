@@ -152,7 +152,7 @@ export default {
         gender: "其他",
         tel: "0912345678",
         address: "台南市365號",
-        birth: "2022 - 03 - 30",
+        birth: "2022-03-30",
         email: "qqq@gmail.com",
         account: "qqq123",
         password: "123456",
@@ -164,6 +164,22 @@ export default {
     changeEdit() {
       this.isEdit = !this.isEdit;
     },
+    getData() {
+      const api = `https://localhost:44356/api/MemberInfoes`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          // this.reviews = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  mounted() {
+    // this.getData();
   },
 };
 </script>

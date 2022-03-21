@@ -12,11 +12,12 @@
                 <label for="email" class="form-label">帳號</label>
                 <span class="text-danger ms-2">必填</span>
                 <input
-                  type="email"
+                  type="text"
                   class="form-control"
                   id="email"
-                  name="email"
-                  placeholder="請輸入信箱"
+                  name="account"
+                  placeholder="請輸入帳號"
+                  v-model="user.Account"
                 />
               </div>
               <div class="mb-4">
@@ -27,6 +28,7 @@
                   id="password"
                   name="password"
                   placeholder="請輸入密碼"
+                  v-model="user.Password"
                 />
               </div>
               <hr />
@@ -39,6 +41,7 @@
                   id="name"
                   name="name"
                   placeholder="請輸入姓名"
+                  v-model="user.Name"
                 />
               </div>
               <div class="mb-3">
@@ -48,21 +51,24 @@
                     type="radio"
                     id="gender"
                     name="gender"
-                    value="male"
+                    value="男"
+                    v-model="user.Gender"
                   />男性
                   <input
                     type="radio"
                     id="gender"
                     name="gender"
-                    value="female"
+                    value="女"
                     class="ms-3"
+                    v-model="user.Gender"
                   />女性
                   <input
                     type="radio"
                     id="gender"
                     name="gender"
-                    value="other"
+                    value="其他"
                     class="ms-3"
+                    v-model="user.Gender"
                   />其他
                 </div>
               </div>
@@ -74,6 +80,7 @@
                   id="tel"
                   name="tel"
                   placeholder="請輸入電話"
+                  v-model="user.Phone"
                 />
               </div>
               <div class="mb-3">
@@ -84,15 +91,17 @@
                   id="address"
                   name="address"
                   placeholder="請輸入地址"
+                  v-model="user.Address"
                 />
               </div>
               <div class="mb-3">
-                <label for="account" class="form-label">帳號</label>
+                <label for="account" class="form-label">Email</label>
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
-                  id="account"
-                  name="account"
+                  id="email"
+                  name="email"
+                  v-model="user.Email"
                 />
               </div>
               <div class="mb-3">
@@ -102,6 +111,7 @@
                   class="form-control"
                   id="birth"
                   name="birth"
+                  v-model="user.BirthDate"
                 />
               </div>
             </fieldset>
@@ -109,11 +119,13 @@
               <!-- <button type="submit" class="btn btn-primary btn-lg w-100">
                 送出
               </button> -->
-              <router-link
-                to="/memberLogin"
+              <button
+                type="button"
                 class="btn btn-primary btn-lg w-100"
-                >送出</router-link
+                @click="addMember"
               >
+                送出
+              </button>
             </div>
           </form>
         </div>
@@ -130,6 +142,40 @@ export default {
   components: {
     FrontNavbar,
     FrontFooter,
+  },
+  data() {
+    return {
+      user: {
+        Name: "",
+        Phone: "",
+        Address: "",
+        Gender: "",
+        BirthDate: "",
+        Email: "",
+        RegisterDate: "",
+        BlackList: "",
+        Image: "",
+        Account: "",
+        Password: "",
+        Point: "",
+      },
+    };
+  },
+  methods: {
+    addMember() {
+      const api = `https://localhost:44356/api/MemberInfoes`;
+
+      this.$http
+        .post(api, this.user)
+        .then((res) => {
+          console.log(res);
+          // this.reviews = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          alert(err.response.data.Message);
+        });
+    },
   },
 };
 </script>
