@@ -41,6 +41,11 @@
             >
             <router-link
               class="nav-item nav-link text-white mx-2"
+              to="/admin/shopreviews"
+              >商家評論</router-link
+            >
+            <router-link
+              class="nav-item nav-link text-white mx-2"
               to="/admin/data"
               >後台數據</router-link
             >

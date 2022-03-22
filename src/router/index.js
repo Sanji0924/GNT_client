@@ -86,6 +86,10 @@ const routes = [
         component: () => import("../views/admin/AdminForms.vue"),
       },
       {
+        path: "shopreviews",
+        component: () => import("../views/admin/AdminShopReviews.vue"),
+      },
+      {
         path: "data",
         component: () => import("../views/admin/AdminData.vue"),
       },
