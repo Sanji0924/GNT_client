@@ -42,6 +42,51 @@
               to="/memberLogin"
               >會員登出</router-link
             >
+            <div class="dropdown">
+              <a
+                class="nav-link dropdown d-flex justify-content-center align-items-center mx-2"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                主題頁面<span class="material-icons"> expand_more </span>
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end py-0 right-0 bg-dark text-sm-center"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <router-link
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
+                    to="/shops/bars"
+                    >酒吧</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
+                    to="/shops/desserts"
+                    >咖啡甜點</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
+                    to="/shops/snacks"
+                    >小吃宵夜</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
+                    to="/shops/nightviews"
+                    >夜間景點</router-link
+                  >
+                </li>
+              </ul>
+            </div>
             <div class="dropdown" v-if="isMember">
               <a
                 class="nav-link dropdown d-flex justify-content-center align-items-center mx-2"
@@ -59,35 +104,35 @@
               >
                 <li>
                   <router-link
-                    class="dropdown-item text-white py-2 link-hover-bg border-bottom border-1 border-primary"
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
                     to="/member/memberInfo"
                     >會員資料</router-link
                   >
                 </li>
                 <li>
                   <router-link
-                    class="dropdown-item text-white py-2 link-hover-bg border-bottom border-1 border-primary"
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
                     to="/member/favorites"
                     >我的最愛</router-link
                   >
                 </li>
-                <li>
+                <!-- <li>
                   <router-link
-                    class="dropdown-item text-white py-2 link-hover-bg border-bottom border-1 border-primary"
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
                     to="/member/reviews"
                     >意見回饋</router-link
                   >
-                </li>
+                </li> -->
                 <li>
                   <router-link
-                    class="dropdown-item text-white py-2 link-hover-bg border-bottom border-1 border-primary"
-                    to="/member"
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
+                    to="/member/reviews"
                     >分享紀錄</router-link
                   >
                 </li>
                 <li>
                   <router-link
-                    class="dropdown-item text-white py-2 link-hover-bg border-bottom border-1 border-primary"
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
                     to="/member/routes"
                     >行程規劃</router-link
                   >
@@ -123,5 +168,15 @@ export default {
   width: 100%;
   top: 0;
   z-index: 10000;
+}
+
+.dropdown-menu {
+  min-width: 7.5rem;
+}
+
+.dropdown-item:hover {
+  background: #e98830;
+  // color: #000;
+  transition: all 0.3s;
 }
 </style>

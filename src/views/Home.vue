@@ -35,9 +35,10 @@
           </div>
         </div>
       </section>
-      <section class="container-fuild pt-6 pb-5">
+      <section class="container-fuild bg-dark pt-6 pb-5">
         <div class="container">
           <h2 class="text-center text-primary mb-3">熱門商家</h2>
+          <Swiper></Swiper>
         </div>
       </section>
     </div>
@@ -105,12 +106,7 @@
 <script>
 import FrontNavbar from "../components/FrontNavbar.vue";
 import FrontFooter from "../components/FrontFooter.vue";
-// import Swiper JS
-// import Swiper from "swiper";
-// import { Swiper, SwiperSlide } from "swiper/vue/swiper-vue";
-// import Swiper styles
-// import "../../node_modules/swiper/swiper.min.css";
-// const swiper = new Swiper();
+import Swiper from "../components/Swiper.vue";
 
 export default {
   data() {
@@ -121,6 +117,7 @@ export default {
   components: {
     FrontNavbar,
     FrontFooter,
+    Swiper,
   },
 };
 </script>

@@ -1,86 +1,120 @@
 <template>
-  <swiper :options="swiperOption" ref="mySwiper">
-    <!-- slides -->
-    <swiper-slide>I'm Slide 1</swiper-slide>
-    <swiper-slide>I'm Slide 2</swiper-slide>
-    <swiper-slide>I'm Slide 3</swiper-slide>
-    <swiper-slide>I'm Slide 4</swiper-slide>
-    <!-- Optional controls -->
-    <div class="swiper-pagination" slot="pagination"></div>
-    <div
-      class="swiper-button-prev swiper-button-black"
-      slot="button-prev"
-    ></div>
-    <div
-      class="swiper-button-next swiper-button-black"
-      slot="button-next"
-    ></div>
-    <!-- <div class="swiper-scrollbar"   slot="scrollbar"></div> -->
+  <swiper :options="swiperOption">
+    <swiper-slide class="rounded-5 border-primary border-2">
+      <div class="card border-primary rounded-lg w-100 overflow-hidden">
+        <div class="position-relative">
+          <a href="#" class="card-icon bg-transparent lh-sm">
+            <span class="material-icons fs-3"> favorite </span>
+          </a>
+          <div
+            class="card-img bg-primary"
+            style="
+              background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80');
+            "
+          ></div>
+        </div>
+        <div class="card-body">
+          <div
+            class="fs-7 mb-0 d-flex justify-content-between align-items-center"
+          >
+            <div class="d-flex align-items-center">
+              <span class="material-icons text-primary">star</span>
+              <span class="ms-2">4.5</span>
+            </div>
+            <div>
+              <a
+                href="#"
+                class="btn btn-outline-primary d-flex align-items-center lh-base"
+              >
+                <span class="material-icons fs-6 me-1">add</span>加入行程
+              </a>
+            </div>
+          </div>
+          <h5 class="card-title fs-4 fw-bold d-flex align-items-center">
+            依舊室<span class="fs-6 badge bg-info ms-2 lh-sm">調酒</span>
+          </h5>
+          <ul class="list-unstyled mb-0">
+            <li>地址: 台南市中西區</li>
+            <li>營業時間: 18:00 - 24:00</li>
+          </ul>
+        </div>
+        <div class="card-footer bg-primary">
+          <router-link to="#" class="fs-4 text-center text-dark"
+            >查看更多</router-link
+          >
+        </div>
+      </div>
+    </swiper-slide>
+    <!-- <swiper-slide>Slide 2</swiper-slide>
+    <swiper-slide>Slide 3</swiper-slide> -->
   </swiper>
 </template>
 
 <script>
-import { swiper, swiperSlide } from "vue-awesome-swiper";
-// import { Swiper, SwiperSlide, directive } from "vue-awesome-swiper";
-// import "swiper/css/swiper.css";
-
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
 export default {
   components: {
-    swiper,
-    swiperSlide,
+    Swiper,
+    SwiperSlide,
   },
-  name: "carrousel",
   data() {
     return {
       swiperOption: {
-        notNextTick: true,
-        //循环
-        loop: true,
-        //设定初始化时slide的索引
-        initialSlide: 0,
-        //自动播放
-        autoplay: true,
-        // autoplay: {
-        //     delay: 3000,
-        //     stopOnLastSlide: false,
-        //     disableOnInteraction: true,
-        // },
-        // 设置轮播
-        effect: "flip",
-        //滑动速度
-        speed: 800,
-        //滑动方向
-        direction: "horizontal",
-        //小手掌抓取滑动
-        // grabCursor : true,
-        //滑动之后回调函数
-        on: {
-          slideChangeTransitionEnd: function () {
-            // console.log(this.activeIndex);//切换结束时，告诉我现在是第几个slide
+        slidesPerView: 3,
+        spaceBetween: 30,
+        autoplay: {
+          delay: 3000,
+        },
+        breakpoints: {
+          // when window width is >= 320px
+          320: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          // when window width is >= 480px
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 30,
+          },
+          992: {
+            slidesPerView: 3,
+            spaceBetween: 30,
           },
         },
-        //左右点击
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-        //分页器设置
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-        },
       },
-      swiperSlides: [1, 2, 3, 4],
     };
-  },
-  computed: {
-    swiper() {
-      return this.$refs.mySwiper.$swiper;
-    },
-  },
-  mounted() {
-    console.log("Current Swiper instance object", this.swiper);
-    // this.swiper.slideTo(3, 1000, false);
   },
 };
 </script>
+
+<style lang="scss">
+.card {
+  &-img {
+    border-radius: 10px 10px 0 0;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    max-width: 100%;
+    height: 200px;
+  }
+  &-icon {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    color: #fff;
+    background: #dc3545;
+    border-radius: 10px 4px 0 10px;
+    padding: 10px;
+    &:hover {
+      background: #fff;
+      color: #dc3545;
+      transition: all 0.3s;
+    }
+  }
+  &-footer:hover {
+    opacity: 0.8;
+    transition: all 0.3s;
+  }
+}
+</style>

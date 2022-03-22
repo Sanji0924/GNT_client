@@ -14,7 +14,7 @@
     "c3": "^0.7.20",
     "core-js": "^3.6.5",
     "material-icons": "^1.10.8",
-    "swiper": "^8.0.7",
+    "swiper": "^5.4.1",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
     "vue-axios": "^3.4.1",

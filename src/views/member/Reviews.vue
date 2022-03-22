@@ -11,7 +11,7 @@
               <th width="50" class="text-center">評分</th>
               <th width="350">內容</th>
               <th width="100">撰寫日期</th>
-              <th width="50"></th>
+              <th width="100"></th>
             </tr>
           </thead>
           <tbody>
@@ -25,12 +25,21 @@
               <td>
                 <button
                   type="button"
-                  class="btn btn-outline-gray btn-sm"
+                  class="btn btn-outline-gray btn-sm me-2"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                   @click="openReviewModal"
                 >
                   編輯
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  @click="openReviewModal"
+                >
+                  刪除
                 </button>
               </td>
             </tr>

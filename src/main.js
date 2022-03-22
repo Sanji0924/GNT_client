@@ -6,8 +6,10 @@ import "bootstrap";
 import axios from "axios";
 import VueAxios from "vue-axios";
 
-import "../node_modules/swiper/swiper-bundle.css";
 import VueAwesomeSwiper from "vue-awesome-swiper";
+
+// import "../node_modules/swiper/swiper-bundle.css";
+// import VueAwesomeSwiper from "vue-awesome-swiper";
 
 import VueC3 from "vue-c3";
 
@@ -24,5 +26,6 @@ const app = new Vue({
 Vue.component(VueC3);
 Vue.use(VueAxios, axios);
 Vue.use(VueAwesomeSwiper);
+// Vue.use(VueAwesomeSwiper);
 
 app.$mount("#app");

@@ -28,12 +28,13 @@ const routes = [
         path: "nightviews",
         component: () => import("../views/NightViews.vue"),
       },
+      {
+        path: "shop",
+        component: () => import("../views/ShopInfo.vue"),
+      },
     ],
   },
-  {
-    path: "/shop",
-    component: () => import("../views/ShopInfo.vue"),
-  },
+
   {
     path: "/memberLogin",
     component: () => import("../views/MemberLogin.vue"),

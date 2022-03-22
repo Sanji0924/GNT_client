@@ -25,17 +25,17 @@
     </div>
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <div class="card border-primary rounded rounded-5 w-100">
+        <div class="card border-primary rounded-lg w-100 overflow-hidden">
           <div class="position-relative">
-            <a href="#" class="card-icon bg-transparnt lh-sm">
+            <a href="#" class="card-icon bg-transparent lh-sm">
               <span class="material-icons"> favorite </span>
             </a>
-            <div class="card-img">
-              <img
-                src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
-                alt=""
-              />
-            </div>
+            <div
+              class="card-img bg-primary"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80');
+              "
+            ></div>
           </div>
           <div class="card-body">
             <div
@@ -62,9 +62,9 @@
               <li>營業時間: 18:00 - 24:00</li>
             </ul>
           </div>
-          <div class="card-footer p-0">
-            <a href="./shop.html" class="btn btn-primary btn-lg w-100 rounded-0"
-              >查看更多</a
+          <div class="card-footer bg-primary">
+            <router-link to="#" class="fs-4 text-center text-dark"
+              >查看更多</router-link
             >
           </div>
         </div>

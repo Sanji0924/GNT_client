@@ -30,15 +30,13 @@
                     aria-label="Default select example"
                   >
                     <option selected disabled>請選擇地區</option>
-                    <option value="中西區">中西區</option>
-                    <option value="東區">東區</option>
-                    <option value="北區">北區</option>
-                    <option value="南區">南區</option>
-                    <option value="安平區">安平區</option>
                   </select>
                 </div>
                 <div class="col-5">
-                  <button type="button" class="btn btn-primary w-100 mt-md-0">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary w-100 mt-md-0"
+                  >
                     搜尋
                   </button>
                 </div>
@@ -98,7 +96,7 @@
                       class="card-img-overlay d-flex justify-content-center align-items-center"
                     >
                       <h5 class="card-title fs-3 fw-bold mb-0">
-                        深夜<br />甜點
+                        咖啡<br />甜點
                       </h5>
                     </div>
                   </div>
@@ -128,7 +126,7 @@
           </nav>
         </div>
       </section>
-      <section class="container w-100 pt-6">
+      <section class="container pt-6">
         <router-view></router-view>
       </section>
     </div>
