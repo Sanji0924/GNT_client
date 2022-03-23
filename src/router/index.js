@@ -29,7 +29,7 @@ const routes = [
         component: () => import("../views/NightViews.vue"),
       },
       {
-        path: "shop",
+        path: "shop/:id",
         component: () => import("../views/ShopInfo.vue"),
       },
     ],
@@ -100,6 +100,9 @@ const routes = [
 const router = new VueRouter({
   linkActiveClass: "active",
   routes,
+  // scrollBehavior() {
+  //   return { x: 0, y: 0, behavior: "smooth" };
+  // },
 });
 
 export default router;

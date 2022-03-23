@@ -6,6 +6,9 @@ import "bootstrap";
 import axios from "axios";
 import VueAxios from "vue-axios";
 
+import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
+import "leaflet/dist/leaflet.css";
+
 import VueAwesomeSwiper from "vue-awesome-swiper";
 
 // import "../node_modules/swiper/swiper-bundle.css";
@@ -23,6 +26,9 @@ const app = new Vue({
   render: (h) => h(App),
 });
 
+Vue.component("l-map", LMap);
+Vue.component("l-tile-layer", LTileLayer);
+Vue.component("l-marker", LMarker);
 Vue.component(VueC3);
 Vue.use(VueAxios, axios);
 Vue.use(VueAwesomeSwiper);

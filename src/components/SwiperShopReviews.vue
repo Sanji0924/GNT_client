@@ -141,8 +141,8 @@ export default {
 
 <style lang="scss" scoped>
 .swiper {
-  height: 250px;
-  // width: 80%;
+  height: 300px;
+  width: 80%;
   border: 1px transparent solid;
 
   .swiper-slide {

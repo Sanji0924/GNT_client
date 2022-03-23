@@ -24,7 +24,11 @@
       </ul>
     </div>
     <div class="row">
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div
+        class="col-12 col-md-6 col-lg-4 mb-4"
+        v-for="snack in snacks"
+        :key="snack.ShopID"
+      >
         <div class="card border-primary rounded-lg w-100 overflow-hidden">
           <div class="position-relative">
             <a href="#" class="card-icon bg-transparent lh-sm">
@@ -32,9 +36,7 @@
             </a>
             <div
               class="card-img bg-primary"
-              style="
-                background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80');
-              "
+              :style="{ backgroundImage: `url(${snack.Image1})` }"
             ></div>
           </div>
           <div class="card-body">
@@ -54,16 +56,19 @@
                 </a>
               </div>
             </div>
-            <h5 class="card-title fs-4 fw-bold d-flex align-items-center">
-              依舊室<span class="fs-6 badge bg-gray ms-2 lh-sm">調酒</span>
+            <h5 class="card-title fs-5 fw-bold d-flex align-items-center">
+              {{ snack.Name
+              }}<span class="fs-7 badge bg-gray ms-2 lh-sm">小吃</span>
             </h5>
             <ul class="list-unstyled mb-0">
-              <li>地址: 台南市中西區</li>
+              <li>地址: {{ snack.Address }}</li>
               <li>營業時間: 18:00 - 24:00</li>
             </ul>
           </div>
           <div class="card-footer bg-primary">
-            <router-link to="#" class="fs-4 text-center text-dark"
+            <router-link
+              :to="`shop/${snack.ShopID}`"
+              class="fs-4 text-center text-dark"
               >查看更多</router-link
             >
           </div>
@@ -72,3 +77,36 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      snacks: [],
+    };
+  },
+  methods: {
+    getSnacks() {
+      const api = `https://localhost:44333/api/ShopInfoes/type/snack`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.snacks = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+  },
+  mounted() {
+    this.getSnacks();
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../assets/stylesheet/layout/card";
+</style>

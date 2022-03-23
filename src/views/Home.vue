@@ -23,14 +23,15 @@
               <!-- <img src="./assets/images/test.png" alt=""> -->
               <h2 class="text-dark text-center fw-bold mb-3">地圖查詢</h2>
               <!-- <div id="map" style="height: 400px; border-radius: 20px;"></div> -->
-              <iframe
+              <!-- <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.754303625191!2d120.19892463370536!3d22.99606067684443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e77d29e7eda47%3A0x6311bfe025120a1a!2zQmFyIFRDUkMg5YmN56eR57Sv57Sv5L-x5qiC6YOo!5e0!3m2!1szh-TW!2stw!4v1646355265151!5m2!1szh-TW!2stw"
                 width="100%"
                 height="400"
                 class="rounded-lg"
                 allowfullscreen=""
                 loading="lazy"
-              ></iframe>
+              ></iframe> -->
+              <LeafletComponent></LeafletComponent>
             </div>
           </div>
         </div>
@@ -106,6 +107,8 @@
 <script>
 import FrontNavbar from "../components/FrontNavbar.vue";
 import FrontFooter from "../components/FrontFooter.vue";
+import LeafletComponent from "../components/LeafletComponent.vue";
+
 import Swiper from "../components/Swiper.vue";
 
 export default {
@@ -117,6 +120,7 @@ export default {
   components: {
     FrontNavbar,
     FrontFooter,
+    LeafletComponent,
     Swiper,
   },
 };
