@@ -62,7 +62,7 @@
             </h5>
             <ul class="list-unstyled mb-0">
               <li>地址：{{ nightView.Address }}</li>
-              <li>營業時間：18:00 - 24:00</li>
+              <li>低消：{{ nightView.Min }}</li>
             </ul>
           </div>
           <div class="card-footer bg-primary">

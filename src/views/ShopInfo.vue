@@ -13,7 +13,7 @@
           class="shop-icon text-danger rounded-3 d-flex align-items-center"
         >
           <span class="material-icons"> favorite </span>
-          <span class="shop-icon-istrue material-icons"> favorite </span>
+          <!-- <span class="shop-icon-istrue material-icons"> favorite </span> -->
         </a>
       </div>
       <div
@@ -26,8 +26,15 @@
         </h3>
         <ul class="list-unstyled bg-light rounded-3 p-3">
           <li class="d-flex mb-2">
-            <span class="material-icons me-1"> schedule </span>營業時間：18:00 –
-            00:00
+            <span class="material-icons me-1"> schedule </span>
+            營業時間<br />
+            星期一：{{ shop.Monday }} <br />
+            星期二：{{ shop.Tuesday }} <br />
+            星期三：{{ shop.Wednesday }} <br />
+            星期四：{{ shop.Thursday }} <br />
+            星期五：{{ shop.Friday }} <br />
+            星期六：{{ shop.Saturday }} <br />
+            星期日：{{ shop.Sunday }} <br />
           </li>
           <li class="d-flex mb-2 fw-bold">
             <span class="material-icons me-1"> monetization_on </span

@@ -44,6 +44,25 @@
             </form>
             <h3 class="h4 text-dark mb-3">精選主題</h3>
             <div class="row">
+              <div class="col-12 mb-3">
+                <router-link to="/shops/bars" class="link-hover-opacity">
+                  <div
+                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
+                    style="max-height: 125px"
+                  >
+                    <img
+                      src="https://images.unsplash.com/photo-1627481958426-3f165fcdd3c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80"
+                      class="img-fluid overflow-hidden rounded-5"
+                      alt=""
+                    />
+                    <div
+                      class="card-img-overlay d-flex justify-content-center align-items-center"
+                    >
+                      <h5 class="card-title fs-3 fw-bold mb-0">全部主題</h5>
+                    </div>
+                  </div>
+                </router-link>
+              </div>
               <div class="col-6 mb-3">
                 <router-link to="/shops/bars" class="link-hover-opacity">
                   <div

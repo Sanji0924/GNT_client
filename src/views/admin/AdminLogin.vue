@@ -18,6 +18,7 @@
                 class="form-control"
                 id="floatingInput"
                 placeholder="name@example.com"
+                v-model="user.Account"
               />
               <label for="floatingInput">管理員帳號</label>
             </div>
@@ -27,6 +28,7 @@
                 class="form-control"
                 id="floatingPassword"
                 placeholder="請輸入密碼"
+                v-model="user.Password"
               />
               <label for="floatingPassword">密碼</label>
             </div>
@@ -34,9 +36,9 @@
               class="form-floating mb-3 text-center d-flex justify-content-center align-items-center"
             >
               <!-- <button class="btn btn-gray btn-lg">登入</button> -->
-              <router-link to="/admin" class="btn btn-gray btn-lg"
-                >登入</router-link
-              >
+              <button type="button" class="btn btn-gray btn-lg" @click="login">
+                登入
+              </button>
             </div>
           </form>
         </div>
@@ -73,6 +75,41 @@
     </footer>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      user: {
+        Account: "",
+        Password: "",
+      },
+    };
+  },
+  methods: {
+    login() {
+      const api = `https://localhost:44333/api/Login`;
+
+      this.$http
+        .post(api, this.user)
+        .then((res) => {
+          console.log(res);
+          const { token, expiretime } = res.data;
+          document.cookie = `token=${token}; expires=${expiretime}; path=/`;
+          alert(res.data.message);
+          this.$router.push("/admin/shops");
+          // this.bars = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+  },
+  mounted() {},
+};
+</script>
+
 <style lang="scss">
 html,
 body {

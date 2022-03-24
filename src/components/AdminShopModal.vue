@@ -10,8 +10,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
-            <span>編輯店家資料</span>
-            <span>新增店家資料</span>
+            <span v-if="isNew">新增店家資料</span>
+            <span v-else>編輯店家資料</span>
           </h5>
           <button
             type="button"
@@ -30,32 +30,62 @@
                     type="text"
                     class="form-control"
                     id="shopId"
+                    v-model="tempShop.ShopID"
                     disabled
                   />
                 </div>
                 <div class="mb-3 col-6">
                   <label for="shopName" class="form-label">店家名稱</label>
-                  <input type="text" class="form-control" id="shopName" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shopName"
+                    v-model="tempShop.Name"
+                  />
                 </div>
                 <div class="mb-3 col-12">
                   <label for="shopAddress" class="form-label">店家地址</label>
-                  <input type="text" class="form-control" id="shopAddress" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shopAddress"
+                    v-model="tempShop.Address"
+                  />
                 </div>
                 <div class="mb-3 col-6">
                   <label for="shopLongitude" class="form-label">店家經度</label>
-                  <input type="text" class="form-control" id="shopLongitude" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shopLongitude"
+                    v-model="tempShop.Longitude"
+                  />
                 </div>
                 <div class="mb-3 col-6">
                   <label for="shopLatitude" class="form-label">店家緯度</label>
-                  <input type="text" class="form-control" id="shopLatitude" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shopLatitude"
+                    v-model="tempShop.Latitude"
+                  />
                 </div>
                 <div class="mb-3 col-6">
                   <label for="shopTel" class="form-label">店家電話</label>
-                  <input type="tel" class="form-control" id="shopTel" />
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="shopTel"
+                    v-model="tempShop.Phone"
+                  />
                 </div>
                 <div class="mb-3 col-6">
                   <label for="shopType" class="form-label">店家分類</label>
-                  <select id="shopType" class="form-select">
+                  <select
+                    id="shopType"
+                    class="form-select"
+                    v-model="tempShop.Type"
+                  >
                     <option value="酒吧">酒吧</option>
                     <option value="咖啡甜點">咖啡甜點</option>
                     <option value="小吃消夜">小吃消夜</option>
@@ -85,16 +115,16 @@
                 >
                   <input
                     type="text"
-                    class="form-control d-inline w-25"
+                    class="form-control d-inline w-25 me-2"
                     id="shopOpenTime"
                     :value="toWeek(day)"
                     disabled
-                    me-2
                   />
                   <input
                     type="time"
                     class="form-control d-inline w-25"
                     id="shopOpenTime"
+                    v-model="tempShop.Monday"
                   />
                   到
                   <input
@@ -107,8 +137,6 @@
               <div class="form-check mb-3 col-6">
                 <input
                   id="is_enabled"
-                  :true-value="TRUE"
-                  :false-value="FALSE"
                   class="form-check-input"
                   type="checkbox"
                   checked
@@ -131,10 +159,11 @@
                       class="form-control"
                       id="imageUrl"
                       placeholder="請輸入圖片連結"
+                      v-model="tempShop.Image1"
                     />
                   </div>
                   <img
-                    src="https://images.unsplash.com/photo-1566897819059-db42e135fa69?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80"
+                    :src="tempShop.Image1"
                     alt=""
                     class="img-fluid mb-3"
                     height="300"
@@ -150,11 +179,56 @@
                         class="form-control"
                         id="imagesUrl"
                         placeholder="請輸入圖片連結"
+                        v-model="tempShop.Image2"
                       />
                     </div>
-                    <img src="" alt="" class="img-fluid mb-3" />
-                    <div>
-                      <button type="button" class="btn btn-outline-primary">
+                    <img :src="tempShop.Image2" alt="" class="img-fluid mb-3" />
+                  </div>
+                  <div>
+                    <div class="form-group mb-3">
+                      <label for="imagesUrl" class="mb-2">圖片網址</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="imagesUrl"
+                        placeholder="請輸入圖片連結"
+                        v-model="tempShop.Image3"
+                      />
+                    </div>
+                    <img :src="tempShop.Image3" alt="" class="img-fluid mb-3" />
+                  </div>
+                  <div>
+                    <div class="form-group mb-3">
+                      <label for="imagesUrl" class="mb-2">圖片網址</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="imagesUrl"
+                        placeholder="請輸入圖片連結"
+                        v-model="tempShop.Image4"
+                      />
+                    </div>
+                    <img :src="tempShop.Image4" alt="" class="img-fluid mb-3" />
+                  </div>
+                  <div>
+                    <div class="form-group mb-3">
+                      <label for="imagesUrl" class="mb-2">圖片網址</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="imagesUrl"
+                        placeholder="請輸入圖片連結"
+                        v-model="tempShop.Image5"
+                      />
+                    </div>
+                    <img :src="tempShop.Image5" alt="" class="img-fluid mb-3" />
+                  </div>
+                  <!-- <div>
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        v-if="images.length"
+                      >
                         新增圖片
                       </button>
                     </div>
@@ -162,8 +236,7 @@
                       <button type="button" class="btn btn-outline-danger">
                         刪除圖片
                       </button>
-                    </div>
-                  </div>
+                    </div> -->
                 </div>
               </div>
               <!-- <div>
@@ -180,7 +253,13 @@
           >
             關閉
           </button>
-          <button type="button" class="btn btn-primary">儲存</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="updateShop(tempShop.ShopID)"
+          >
+            儲存
+          </button>
         </div>
       </div>
     </div>
@@ -191,6 +270,7 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
+  props: ["tempShop", "isNew"],
   data() {
     return {
       modal: "",
@@ -219,6 +299,28 @@ export default {
         default:
           return "";
       }
+    },
+    updateShop(id) {
+      let api = `https://localhost:44333/api/ShopInfoes`;
+      let method = "post";
+
+      if (!this.isNew) {
+        method = "put";
+        api = `https://localhost:44333/api/ShopInfoes/${id}`;
+      } else {
+        api = `https://localhost:44333/api/ShopInfoes`;
+      }
+
+      this.$http[method](api)
+        .then((res) => {
+          console.log(res);
+          // this.shops = res.data;
+          this.$refs.shopInfo.getShop();
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
     },
   },
   mounted() {

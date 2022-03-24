@@ -1,5 +1,8 @@
 <template>
-  <div class="container-fuild d-flex justify-content-between bg-white">
+  <div
+    class="container-fuild d-flex justify-content-between bg-white"
+    ref="shopInfo"
+  >
     <input type="checkbox" id="checkShow" hidden />
     <section class="container-fuild side side-member bg-white pt-6 px-3">
       <div class="container pt-5 side-area">
@@ -25,41 +28,49 @@
           <div class="row">
             <ul class="list-unstyled col-12 text-center">
               <li>
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click.prevent="getShops()"
                 >
                   <span class="material-icons me-2"> place </span>全部
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click.prevent="getShops('bar')"
                 >
                   <span class="material-icons me-2"> place </span>酒吧
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link tp="#" class="d-flex admin-side-menu-link py-2">
-                  <span class="material-icons me-2"> place </span>深夜甜點
-                </router-link>
-              </li>
-              <li>
-                <router-link
-                  to="#"
-                  class="text-dark d-flex admin-side-menu-link py-2"
+                <a
+                  tp="#"
+                  class="d-flex admin-side-menu-link py-2"
+                  @click.prevent="getShops('dessert')"
                 >
-                  <span class="material-icons me-2"> place </span>宵夜小吃
-                </router-link>
+                  <span class="material-icons me-2"> place </span>咖啡甜點
+                </a>
               </li>
               <li>
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click.prevent="getShops('snack')"
+                >
+                  <span class="material-icons me-2"> place </span>小吃宵夜
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark d-flex admin-side-menu-link py-2"
+                  @click.prevent="getShops('viewpoint')"
                 >
                   <span class="material-icons me-2"> place </span>夜間景點
-                </router-link>
+                </a>
               </li>
               <li class="dropdown">
                 <a
@@ -106,7 +117,7 @@
         <button
           type="button"
           class="btn btn-primary d-flex align-items-center"
-          @click="openShopModal"
+          @click="updateShop('new')"
         >
           新增店家
         </button>
@@ -117,29 +128,29 @@
         >
           <thead>
             <tr>
-              <th width="80">店家編號</th>
+              <th width="100" class="text-center">店家編號</th>
               <th>店家名稱</th>
-              <th width="80">店家分類</th>
-              <th>店家子分類</th>
-              <th width="80">是否啟用</th>
+              <th width="100">店家分類</th>
+              <!-- <th>店家子分類</th> -->
+              <th width="80" class="text-center">是否啟用</th>
               <th width="120"></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>S001</th>
-              <td>Lorem ipsum dolor sit amet.</td>
-              <td>Lorem</td>
-              <td>Lorem</td>
-              <td>
-                <span>啟用</span>
-                <span class="text-danger">未啟用</span>
+            <tr v-for="shop in shops" :key="shop.ShopID">
+              <th class="text-center">{{ shop.ShopID }}</th>
+              <td>{{ shop.Name }}</td>
+              <td>{{ shop.Type }}</td>
+              <!-- <td>{{ shop.Tag }}</td> -->
+              <td class="text-center">
+                <span v-if="shop.Enable">啟用</span>
+                <span class="text-danger" v-else>未啟用</span>
               </td>
               <td class="text-center">
                 <button
                   type="button"
-                  class="btn btn-outline-gray btn-sm"
-                  @click="openShopModal"
+                  class="btn btn-outline-gray btn-sm me-md-2"
+                  @click="updateShop('update', shop)"
                 >
                   編輯
                 </button>
@@ -152,7 +163,11 @@
         </table>
       </div>
     </section>
-    <AdminShopModal ref="modal"></AdminShopModal>
+    <AdminShopModal
+      ref="modal"
+      :tempShop="tempShop"
+      :isNew="isNew"
+    ></AdminShopModal>
   </div>
 </template>
 
@@ -163,10 +178,49 @@ export default {
   components: {
     AdminShopModal,
   },
+  data() {
+    return {
+      shops: [],
+      tempShop: {},
+      isNew: true,
+    };
+  },
   methods: {
+    getShops(type) {
+      let api = `https://localhost:44333/api/ShopInfoes`;
+
+      if (type) {
+        api = `https://localhost:44333/api/ShopInfoes/type/${type}`;
+      }
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.shops = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    updateShop(status, item) {
+      if (status === "new") {
+        this.isNew = true;
+        this.tempShop = {};
+      } else if (status === "update") {
+        this.isNew = false;
+        this.tempShop = { ...item };
+      }
+
+      this.openShopModal();
+    },
     openShopModal() {
       this.$refs.modal.openModal();
     },
+  },
+  mounted() {
+    this.getShops();
   },
 };
 </script>

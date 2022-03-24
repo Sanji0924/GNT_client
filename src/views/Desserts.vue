@@ -60,8 +60,8 @@
                 }}<span class="fs-7 badge bg-gray ms-2 lh-sm">甜點</span>
               </h5>
               <ul class="list-unstyled mb-0">
-                <li>地址: {{ dessert.Address }}</li>
-                <li>營業時間: 18:00 - 24:00</li>
+                <li>地址：{{ dessert.Address }}</li>
+                <li>低消：{{ dessert.Min }}</li>
               </ul>
             </div>
             <div class="card-footer bg-primary">

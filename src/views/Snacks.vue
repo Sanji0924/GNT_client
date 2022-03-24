@@ -61,8 +61,8 @@
               }}<span class="fs-7 badge bg-gray ms-2 lh-sm">小吃</span>
             </h5>
             <ul class="list-unstyled mb-0">
-              <li>地址: {{ snack.Address }}</li>
-              <li>營業時間: 18:00 - 24:00</li>
+              <li>地址：{{ snack.Address }}</li>
+              <li>低消：{{ snack.Min }}</li>
             </ul>
           </div>
           <div class="card-footer bg-primary">
