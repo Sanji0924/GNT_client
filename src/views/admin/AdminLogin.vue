@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     login() {
-      const api = `https://localhost:44333/api/Login`;
+      const api = `https://localhost:44333/api/Login/AD`;
 
       this.$http
         .post(api, this.user)

@@ -122,7 +122,7 @@
               <button
                 type="button"
                 class="btn btn-primary btn-lg w-100"
-                @click="addMember"
+                @click="signUp"
               >
                 送出
               </button>
@@ -152,18 +152,18 @@ export default {
         Gender: "",
         BirthDate: "",
         Email: "",
-        RegisterDate: "",
-        BlackList: "",
-        Image: "",
+        // RegisterDate: "",
+        BlackList: false,
+        // Image: "",
         Account: "",
         Password: "",
-        Point: "",
+        // Point: "",
       },
     };
   },
   methods: {
-    addMember() {
-      const api = `https://localhost:44356/api/MemberInfoes`;
+    signUp() {
+      const api = `https://localhost:44333/api/MemberInfoes1`;
 
       this.$http
         .post(api, this.user)
@@ -173,7 +173,7 @@ export default {
         })
         .catch((err) => {
           console.dir(err);
-          alert(err.response.data.Message);
+          // alert(err.response.data.Message);
         });
     },
   },

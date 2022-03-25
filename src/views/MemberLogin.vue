@@ -14,6 +14,7 @@
                 class="form-control"
                 id="floatingInput"
                 placeholder="name@example.com"
+                v-model="user.Account"
               />
               <label for="floatingInput">帳號</label>
             </div>
@@ -23,6 +24,7 @@
                 class="form-control"
                 id="floatingPassword"
                 placeholder="請輸入密碼"
+                v-model="user.Password"
               />
               <label for="floatingPassword">密碼</label>
             </div>
@@ -34,9 +36,13 @@
                 class="btn btn-outline-primary btn-lg w-100 me-3"
                 >註冊</router-link
               >
-              <router-link to="/index" class="btn btn-primary btn-lg w-100"
-                >登入</router-link
+              <button
+                type="button"
+                @click="login"
+                class="btn btn-primary btn-lg w-100"
               >
+                登入
+              </button>
 
               <!-- <button type="submit" class="btn btn-primary btn-lg w-100">登入</button> -->
             </div>
@@ -56,6 +62,36 @@ export default {
   components: {
     FrontNavbar,
     FrontFooter,
+  },
+  data() {
+    return {
+      user: {
+        Account: "",
+        Password: "",
+      },
+    };
+  },
+  methods: {
+    login() {
+      const api = `https://localhost:44333/api/Login/Member`;
+
+      this.$http
+        .post(api, this.user)
+        .then((res) => {
+          console.log(res);
+          alert(res.data.message);
+          if (res.data.message === "登入成功") {
+            this.$router.push("/index");
+          } else if (res.data.message === "登入失敗") {
+            return;
+          }
+          // this.bars = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
   },
 };
 </script>

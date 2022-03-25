@@ -13,6 +13,13 @@
                 arrow_forward
               </span>
             </router-link>
+            <button
+              type="button"
+              class="btn btn-outline-light"
+              @click="openRouletteModal"
+            >
+              輪盤
+            </button>
           </div>
         </div>
       </section>
@@ -101,6 +108,7 @@
       </div>
     </section>
     <FrontFooter></FrontFooter>
+    <Roulette ref="modal"></Roulette>
   </div>
 </template>
 
@@ -108,6 +116,7 @@
 import FrontNavbar from "../components/FrontNavbar.vue";
 import FrontFooter from "../components/FrontFooter.vue";
 import LeafletComponent from "../components/LeafletComponent.vue";
+import Roulette from "../components/RouletteModal.vue";
 
 import Swiper from "../components/Swiper.vue";
 
@@ -122,6 +131,12 @@ export default {
     FrontFooter,
     LeafletComponent,
     Swiper,
+    Roulette,
+  },
+  methods: {
+    openRouletteModal() {
+      this.$refs.modal.openModal();
+    },
   },
 };
 </script>

@@ -63,30 +63,32 @@
         >
           <thead>
             <tr>
-              <th>會員編號</th>
-              <th>會員名稱</th>
+              <th width="80">會員編號</th>
+              <th width="100">會員名稱</th>
               <th>會員 Email</th>
-              <th>審核狀態</th>
-              <th></th>
+              <th width="100">是否黑名單</th>
+              <th width="150"></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>m001</th>
-              <td>Lorem ipsum</td>
-              <td>Lorem ipsum dolor sit amet.</td>
-              <td>
-                <span>已審核</span>
-                <span class="text-primary">審核中</span>
-                <span class="fw-bold d-flex align-items-center">
+            <tr v-for="member in members" :key="member.MemberID">
+              <th>{{ member.MemberID }}</th>
+              <td>{{ member.Name }}</td>
+              <td>{{ member.Email }}</td>
+              <td class="text-center">
+                <span
+                  v-if="member.BlackList"
+                  class="fw-bold d-flex align-items-center"
+                >
                   <span class="material-icons"> person_off </span>黑名單
                 </span>
+                <span v-else>否</span>
               </td>
               <td class="text-center">
                 <button
                   type="button"
-                  class="btn btn-outline-gray btn-sm"
-                  @click="openMemberModal"
+                  class="btn btn-outline-gray btn-sm me-md-2"
+                  @click="openMemberModal(member)"
                 >
                   編輯
                 </button>
@@ -99,7 +101,12 @@
         </table>
       </div>
     </section>
-    <AdminMemberModal ref="modal"></AdminMemberModal>
+    <AdminMemberModal
+      ref="modal"
+      :tempMember="tempMember"
+      :birthDate="birthDate"
+      @get-member="getMember"
+    ></AdminMemberModal>
   </div>
 </template>
 
@@ -110,10 +117,36 @@ export default {
   components: {
     AdminMemberModal,
   },
+  data() {
+    return {
+      members: [],
+      tempMember: {},
+      birthDate: "",
+    };
+  },
   methods: {
-    openMemberModal() {
+    getMember() {
+      const api = `https://localhost:44333/api/MemberInfoes1`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.members = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    openMemberModal(item) {
+      this.tempMember = { ...item };
+      this.birthDate = item.BirthDate;
       this.$refs.modal.openModal();
     },
+  },
+  mounted() {
+    this.getMember();
   },
 };
 </script>
