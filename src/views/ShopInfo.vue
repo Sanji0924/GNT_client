@@ -156,6 +156,7 @@
 import SwiperShopReviews from "../components/SwiperShopReviews.vue";
 
 export default {
+  props: ["type"],
   components: {
     SwiperShopReviews,
   },
@@ -167,7 +168,7 @@ export default {
     };
   },
   watch: {
-    $$route() {
+    $route() {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },

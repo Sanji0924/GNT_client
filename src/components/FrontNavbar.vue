@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar navbar-expand-lg navbar-dark header">
       <div class="container">
-        <router-link class="navbar-brand" to="/index">
+        <router-link class="navbar-brand" to="/">
           <img class="logoImg" src="../assets/images/logo_full.svg" alt="" />
         </router-link>
         <button
@@ -147,12 +147,25 @@
 </template>
 
 <script>
+// import { EventBus } from "../assets/methods/eventBus";
+
 export default {
+  props: ["isMember"],
   data() {
     return {
-      isMember: false,
+      // isMember: false,
     };
   },
+  // created() {
+
+  // },
+  // mounted() {
+  //   EventBus.$on("send-member", (isMember) => {
+  //     this.isMember = isMember;
+  //     alert("this.isMember: " + this.isMember);
+  //     // alert("isMember" + isMember);
+  //   });
+  // },
 };
 </script>
 

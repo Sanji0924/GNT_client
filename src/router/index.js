@@ -5,13 +5,17 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/index",
+    path: "/",
     component: () => import("../views/Home.vue"),
   },
   {
     path: "/shops",
     component: () => import("../views/Front.vue"),
     children: [
+      {
+        path: "all",
+        component: () => import("../views/Shop.vue"),
+      },
       {
         path: "bars",
         component: () => import("../views/Bars.vue"),

@@ -45,7 +45,7 @@
             <h3 class="h4 text-dark mb-3">精選主題</h3>
             <div class="row">
               <div class="col-12 mb-3">
-                <router-link to="/shops/bars" class="link-hover-opacity">
+                <router-link to="/shops/all" class="link-hover-opacity">
                   <div
                     class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
                     style="max-height: 125px"
@@ -122,7 +122,10 @@
                 </router-link>
               </div>
               <div class="col-6 mb-3">
-                <router-link to="/shops/nightviews" class="link-hover-opacity">
+                <router-link
+                  :to="`/shops/nightviews`"
+                  class="link-hover-opacity"
+                >
                   <div
                     class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
                   >

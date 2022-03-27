@@ -1,13 +1,13 @@
 <template>
   <div>
-    <FrontNavbar></FrontNavbar>
+    <FrontNavbar :isMember="isMember"></FrontNavbar>
     <div class="container-fuild">
       <section class="container-fuild">
         <div class="banner d-flex align-items-center pt-6">
           <div class="container mb-0 mt-3 mb-md-4">
-            <h1 class="text-primary fw-bold">好夜台南</h1>
+            <h1 class="text-primary fw-bold">好夜台南{{ isMember }}</h1>
             <p class="fs-3 text-primary">美好夜晚，盡在台南</p>
-            <router-link to="/shops" class="btn btn-light">
+            <router-link to="/shops/all" class="btn btn-light">
               更多內容
               <span class="material-icons align-middle fs-6">
                 arrow_forward
@@ -49,64 +49,65 @@
           <Swiper></Swiper>
         </div>
       </section>
-    </div>
-    <section class="container pt-6 pb-5" id="review">
-      <div class="row justify-content-center">
-        <div class="col-10 col-md-6 col-lg-5">
-          <h3 class="h2 text-center">意見回饋</h3>
-          <form action="#">
-            <input type="hidden" name="memberID" id="memberID" />
-            <div class="mb-3">
-              <label for="memberEmail" class="form-label">會員帳號</label
-              ><span class="text-danger ms-2">必填</span>
-              <input
-                type="email"
-                class="form-control"
-                id="memberEmail"
-                name="memberEmail"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="type" class="form-label">類別</label
-              ><span class="text-danger ms-2">必填</span>
-              <select class="form-select" name="type" id="type">
-                <option value="" disabled selected>請選擇類別</option>
-                <option value="推薦商家">推薦商家</option>
-                <!-- <option value="行程規劃">行程規劃</option> -->
-                <option value="店家資訊更新">店家資訊更新</option>
-                <option value="系統錯誤回饋">系統錯誤回饋</option>
-                <option value="其他">其他</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="reviewDate" class="form-label">填寫日期</label>
-              <input
-                type="date"
-                class="form-control"
-                id="reviewDate"
-                name="reviewDate"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="reviewContent" class="form-label">留言</label
-              ><span class="text-danger ms-2">必填</span>
-              <textarea
-                class="form-control"
-                name="reviewContent"
-                id="reviewContent"
-                cols="20"
-                rows="5"
-              ></textarea>
-            </div>
-            <div class="form-floating mb-3 text-center">
-              <button type="submit" class="btn btn-primary btn-lg w-25">
-                送出
-              </button>
-            </div>
-          </form>
+      <section class="container pt-6 pb-5" id="review">
+        <div class="row justify-content-center">
+          <div class="col-10 col-md-6 col-lg-5">
+            <h3 class="h2 text-center">意見回饋</h3>
+            <form action="#">
+              <input type="hidden" name="memberID" id="memberID" />
+              <div class="mb-3">
+                <label for="memberEmail" class="form-label">會員帳號</label
+                ><span class="text-danger ms-2">必填</span>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="memberEmail"
+                  name="memberEmail"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="type" class="form-label">類別</label
+                ><span class="text-danger ms-2">必填</span>
+                <select class="form-select" name="type" id="type">
+                  <option value="" disabled selected>請選擇類別</option>
+                  <option value="推薦商家">推薦商家</option>
+                  <!-- <option value="行程規劃">行程規劃</option> -->
+                  <option value="店家資訊更新">店家資訊更新</option>
+                  <option value="系統錯誤回饋">系統錯誤回饋</option>
+                  <option value="其他">其他</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="reviewDate" class="form-label">填寫日期</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="reviewDate"
+                  name="reviewDate"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="reviewContent" class="form-label">留言</label
+                ><span class="text-danger ms-2">必填</span>
+                <textarea
+                  class="form-control"
+                  name="reviewContent"
+                  id="reviewContent"
+                  cols="20"
+                  rows="5"
+                ></textarea>
+              </div>
+              <div class="form-floating mb-3 text-center">
+                <button type="submit" class="btn btn-primary btn-lg w-25">
+                  送出
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+    <!-- <router-view></router-view> -->
     <FrontFooter></FrontFooter>
     <Roulette ref="modal"></Roulette>
   </div>
@@ -117,13 +118,14 @@ import FrontNavbar from "../components/FrontNavbar.vue";
 import FrontFooter from "../components/FrontFooter.vue";
 import LeafletComponent from "../components/LeafletComponent.vue";
 import Roulette from "../components/RouletteModal.vue";
-
 import Swiper from "../components/Swiper.vue";
+import { EventBus } from "../assets/methods/eventBus";
 
 export default {
   data() {
     return {
-      isMember: false,
+      isMember: true,
+      memberName: "",
     };
   },
   components: {
@@ -137,6 +139,12 @@ export default {
     openRouletteModal() {
       this.$refs.modal.openModal();
     },
+  },
+  mounted() {
+    EventBus.$on("send", (member) => {
+      console.log(member);
+      this.memberName = member;
+    });
   },
 };
 </script>

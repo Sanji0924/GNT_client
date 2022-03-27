@@ -3,10 +3,7 @@
     <footer class="footer">
       <div class="container-fuild bg-dark py-5">
         <div class="container text-center">
-          <router-link
-            class="text-white h4 link-hover-opacity mb-3"
-            to="/index"
-          >
+          <router-link class="text-white h4 link-hover-opacity mb-3" to="/">
             <img class="logoImg" src="../assets/images/logo.svg" alt="" />
           </router-link>
           <ul class="d-flex justify-content-center list-unstyled">

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="banner banner-bar d-flex align-items-end mb-6">
+    <div class="banner banner-shop d-flex align-items-end mb-6">
       <div class="container mb-4">
-        <h1 class="text-primary fw-bold">找尋優質的酒吧</h1>
-        <p class="fs-3 text-primary">今朝有酒，今朝醉</p>
+        <h1 class="text-primary fw-bold">台南的夜生活都在這裡</h1>
+        <p class="fs-3 text-primary">夜來夜好玩</p>
       </div>
     </div>
     <div>
-      <h2 class="text-white mb-3">精選酒吧</h2>
+      <h2 class="text-white mb-3">所有店家</h2>
       <div class="mb-3">
         <label>
           <input type="checkbox" value="調酒" />
@@ -26,7 +26,6 @@
           <span>輕酒精</span>
         </label>
       </div>
-
       <!-- <ul class="list-unstyled d-flex">
         <li>
           <a href="#" class="btn btn-outline-primary me-3">全部</a>
@@ -44,8 +43,8 @@
       <div class="row">
         <div
           class="col-12 col-md-6 col-lg-4 mb-4"
-          v-for="bar in bars"
-          :key="bar.ShopID"
+          v-for="shop in shops"
+          :key="shop.ShopID"
         >
           <div class="card border-primary rounded-lg w-100 overflow-hidden">
             <div class="position-relative">
@@ -54,7 +53,7 @@
               </a>
               <div
                 class="card-img bg-primary"
-                :style="{ backgroundImage: `url(${bar.Image1})` }"
+                :style="{ backgroundImage: `url(${shop.Image1})` }"
               ></div>
             </div>
             <div class="card-body">
@@ -75,17 +74,17 @@
                 </div>
               </div>
               <h5 class="card-title fs-5 fw-bold d-flex align-items-center">
-                {{ bar.Name
+                {{ shop.Name
                 }}<span class="fs-7 badge bg-gray ms-2 lh-sm">調酒</span>
               </h5>
               <ul class="list-unstyled mb-0">
-                <li>地址：{{ bar.Address }}</li>
-                <li>低消：{{ bar.Min }}</li>
+                <li>地址：{{ shop.Address }}</li>
+                <li>低消：{{ shop.Min }}</li>
               </ul>
             </div>
             <div class="card-footer bg-primary">
               <router-link
-                :to="`shop/${bar.ShopID}`"
+                :to="`shop/${shop.ShopID}`"
                 class="fs-4 text-center text-dark"
                 >查看更多</router-link
               >
@@ -104,18 +103,18 @@
 export default {
   data() {
     return {
-      bars: [],
+      shops: [],
     };
   },
   methods: {
-    getBars() {
-      const api = `https://localhost:44333/api/ShopInfoes/type/bar`;
+    getShops() {
+      const api = `https://localhost:44333/api/ShopInfoes`;
 
       this.$http
         .get(api)
         .then((res) => {
           console.log(res);
-          this.bars = res.data;
+          this.shops = res.data;
         })
         .catch((err) => {
           console.dir(err);
@@ -124,7 +123,8 @@ export default {
     },
   },
   mounted() {
-    this.getBars();
+    this.getShops();
+    // console.log(this.$route.params.type);
   },
 };
 </script>
