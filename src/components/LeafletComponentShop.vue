@@ -1,6 +1,6 @@
 <template>
   <div>
-    <l-map :zoom="zoom" :center="center" style="height: 500px; width: 100%">
+    <l-map :zoom="zoom" :center="center" style="height: 300px; width: 100%">
       <l-control-layers position="topright"></l-control-layers>
       <l-tile-layer
         v-for="tileProvider in tileProviders"
@@ -19,9 +19,7 @@
       >
         <l-popup>
           {{ item.shopName }}
-          <router-link :to="`shops/shop/${item.shopID}`">
-            點擊查看店家
-          </router-link>
+          <a href="#" @click.prevent="replace(item.shopID)"> 點擊查看店家 </a>
         </l-popup>
       </l-marker>
     </l-map>
@@ -47,6 +45,7 @@ export default {
     LPopup,
     LControlLayers,
   },
+  props: ["id"],
   data() {
     return {
       tileProviders: [
@@ -65,22 +64,15 @@ export default {
             '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> <a href="https://www.openstreetmap.org/copyright"> &copyOpenStreetMap</a>',
         },
       ],
-      // shopName: "我是商店",
       zoom: 13,
       path: "http://leafletjs.com/examples/custom-icons/leaf-green.png",
       center: [22.996, 120.2],
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      // urlGoogle: "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-      // urlDark:
-      //   "https://{s}.tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=15IcrzrfcUzGjoEPHByJUZl9BP5KL0eCqCUBvNXbqbkfEUPKwewonYHQX7NXx80B",
-      // attribution:
-      //   '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      // marker: latLng(22.9968355, 120.2009086),
-      iconAll: icon({
+      iconCurrent: icon({
         iconUrl: "marker.svg",
         iconSize: [50, 50],
       }),
-      iconBar: icon({
+      iconOther: icon({
         iconUrl: "barMarker.svg",
         iconSize: [50, 50],
       }),
@@ -112,26 +104,33 @@ export default {
           console.log(res);
           this.shops = res.data;
 
+          let center = [];
           this.shops.forEach((item) => {
             let shopID = item.ShopID;
             let shopName = item.Name;
             let point = latLng(item.Latitude, item.Longitude);
-            let icon = this.iconBar;
-            if (item.Type === "酒吧") {
-              icon = this.iconBar;
-            } else if (item.Type === "咖啡甜點") {
-              icon = this.iconDessert;
-            } else if (item.Type === "夜間景點") {
-              icon = this.iconNightView;
-            } else if (item.Type === "小吃宵夜") {
-              icon = this.iconSnack;
+
+            let icon = this.iconOther;
+            if (shopID === this.id) {
+              let lat = item.Latitude;
+              let lng = item.Longitude;
+              icon = this.iconCurrent;
+              console.log(lat, lng);
+              center.push(lat, lng);
             }
             this.markers.push({ point, shopID, shopName, icon });
+            this.center = center;
           });
         })
         .catch((err) => {
           console.dir(err);
         });
+    },
+    replace(id) {
+      console.log("點到ㄌ");
+      // this.$router.replace("/");
+      this.$router.push(`/shops/shop/${id}`);
+      this.$forceUpdate();
     },
   },
   mounted() {
