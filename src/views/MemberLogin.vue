@@ -70,7 +70,7 @@ export default {
         Account: "",
         Password: "",
       },
-      isMember: true,
+      isMember: false,
     };
   },
   methods: {
@@ -82,8 +82,11 @@ export default {
         .then((res) => {
           console.log(res);
           alert(res.data.message);
-          console.log(EventBus.$emit("send-member", res.data.name));
           EventBus.$emit("send", res.data.name);
+          const { id } = res.data;
+          this.isMember = true;
+          document.cookie = `memberToken=${this.isMember}; expires=; path=/`;
+          document.cookie = `memberID=${id}; expires=; path=/`;
           this.$router.push("/");
         })
         .catch((err) => {

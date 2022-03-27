@@ -5,9 +5,9 @@
       <section class="container-fuild">
         <div class="banner d-flex align-items-center pt-6">
           <div class="container mb-0 mt-3 mb-md-4">
-            <h1 class="text-primary fw-bold">好夜台南{{ isMember }}</h1>
+            <h1 class="text-primary fw-bold">好夜台南</h1>
             <p class="fs-3 text-primary">美好夜晚，盡在台南</p>
-            <router-link to="/shops/all" class="btn btn-light">
+            <router-link to="/shops/all" class="btn btn-light me-3">
               更多內容
               <span class="material-icons align-middle fs-6">
                 arrow_forward
@@ -124,7 +124,7 @@ import { EventBus } from "../assets/methods/eventBus";
 export default {
   data() {
     return {
-      isMember: true,
+      isMember: false,
       memberName: "",
     };
   },
@@ -141,6 +141,13 @@ export default {
     },
   },
   mounted() {
+    let myCookie = document.cookie.replace(
+      /(?:(?:^|.*;\s*)memberToken\s*=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    if (myCookie === "true") {
+      this.isMember = true;
+    }
     EventBus.$on("send", (member) => {
       console.log(member);
       this.memberName = member;

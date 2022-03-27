@@ -36,11 +36,12 @@
               to="/memberLogin"
               >會員登入</router-link
             >
-            <router-link
+            <a
               class="nav-item nav-link mx-2"
               v-if="isMember"
-              to="/memberLogin"
-              >會員登出</router-link
+              href="#"
+              @click.prevent="logout"
+              >會員登出</a
             >
             <div class="dropdown">
               <a
@@ -54,7 +55,7 @@
                 主題頁面<span class="material-icons"> expand_more </span>
               </a>
               <ul
-                class="dropdown-menu dropdown-menu-end py-0 right-0 bg-dark text-sm-center"
+                class="dropdown-menu dropdown-menu-end py-0 right-0 text-sm-center"
                 aria-labelledby="navbarDropdown"
               >
                 <li>
@@ -152,20 +153,16 @@
 export default {
   props: ["isMember"],
   data() {
-    return {
-      // isMember: false,
-    };
+    return {};
   },
-  // created() {
-
-  // },
-  // mounted() {
-  //   EventBus.$on("send-member", (isMember) => {
-  //     this.isMember = isMember;
-  //     alert("this.isMember: " + this.isMember);
-  //     // alert("isMember" + isMember);
-  //   });
-  // },
+  methods: {
+    logout() {
+      document.cookie = `memberToken=; expires=; path=/`;
+      alert("已登出，畫面將跳轉回首頁");
+      this.$router.push("/");
+      this.$router.go(0);
+    },
+  },
 };
 </script>
 
@@ -185,6 +182,7 @@ export default {
 
 .dropdown-menu {
   min-width: 7.5rem;
+  background-color: rgba($color: #000002, $alpha: 0.8);
 }
 
 .dropdown-item:hover {
