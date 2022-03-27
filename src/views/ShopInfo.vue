@@ -94,14 +94,15 @@
           <span class="material-icons me-1"> explore </span>地理位置
           <a href="#" class="btn btn-outline-primary ms-3">加入行程</a>
         </h3>
-        <iframe
+        <!-- <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4243.307024416957!2d120.20138141180786!3d22.99669524328408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e76610fee14bb%3A0xaf06feac97d775ef!2z5L6d6IiK5a6kIEFsd2F5cw!5e0!3m2!1szh-TW!2stw!4v1646055978791!5m2!1szh-TW!2stw"
           width="100%"
           height="250"
           allowfullscreen="true"
           loading="lazy"
           class="rounded-lg"
-        ></iframe>
+        ></iframe> -->
+        <LeafletComponentShop :id="shop.ShopID"></LeafletComponentShop>
       </section>
       <section class="mb-5">
         <h3
@@ -153,11 +154,13 @@
 </template>
 
 <script>
+import LeafletComponentShop from "../components/LeafletComponentShop.vue";
 import SwiperShopReviews from "../components/SwiperShopReviews.vue";
 
 export default {
   props: ["type"],
   components: {
+    LeafletComponentShop,
     SwiperShopReviews,
   },
   data() {
