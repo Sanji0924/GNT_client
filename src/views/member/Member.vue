@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FrontNavbar></FrontNavbar>
+    <FrontNavbar :isMember="isMember"></FrontNavbar>
     <div class="container-fuild d-flex justify-content-between bg-white">
       <input type="checkbox" id="checkShow" hidden />
       <section class="container-fuild side side-member bg-white pt-6 px-3">
@@ -79,8 +79,17 @@ export default {
   },
   data() {
     return {
-      isMember: true,
+      isMember: false,
     };
+  },
+  mounted() {
+    let myCookie = document.cookie.replace(
+      /(?:(?:^|.*;\s*)memberToken\s*=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    if (myCookie === "true") {
+      this.isMember = true;
+    }
   },
 };
 </script>

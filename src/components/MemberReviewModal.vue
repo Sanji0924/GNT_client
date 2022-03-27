@@ -26,7 +26,7 @@
                 class="form-control"
                 id="shopName"
                 disabled
-                v-model="test.shopName"
+                v-model="tempReviews.ShopName"
               />
             </div>
             <div class="mb-3">
@@ -35,7 +35,7 @@
                 name="rank"
                 id="rank"
                 class="form-select"
-                v-model="test.shopRank"
+                v-model="tempReviews.Score"
               >
                 <option selected disabled>請選擇評分</option>
                 <option :value="rank" v-for="rank in 5" :key="rank + '443'">
@@ -50,7 +50,7 @@
                 class="form-control"
                 id="date"
                 disabled
-                v-model="test.date"
+                :value="tempReviews.ReviewDate.split('T')[0]"
               />
             </div>
             <div class="mb-3">
@@ -61,7 +61,7 @@
                 id="shopContent"
                 cols="20"
                 rows="3"
-                v-model="test.content"
+                v-model="tempReviews.RContent"
               ></textarea>
             </div>
           </form>
@@ -85,7 +85,7 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
-  props: ["test"],
+  props: ["tempReviews"],
   data() {
     return {
       modal: "",
@@ -94,6 +94,9 @@ export default {
   methods: {
     openModal() {
       this.modal.show();
+    },
+    closeModal() {
+      this.modal.hide();
     },
   },
   mounted() {

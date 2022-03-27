@@ -1,0 +1,16 @@
+@import "../helpers/mixin";
+
+.table-favorite,
+.table-reviews {
+  width: 900px;
+  overflow-x: auto;
+  overflow: hidden;
+  @include pad {
+    overflow-x: auto;
+    width: 700px;
+  }
+  @include desktop {
+    overflow-x: auto;
+    width: 100%;
+  }
+}

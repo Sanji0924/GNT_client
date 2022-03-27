@@ -5,14 +5,14 @@
       <div class="col-12 col-md-6 col-lg-4">
         <h2 class="h4 mb-3">基本資料</h2>
         <ul class="list-unstyled bg-light rounded-lg p-3">
-          <li>姓名：{{ user.name }}</li>
-          <li>性別：{{ user.gender }}</li>
-          <li>電話：{{ user.tel }}</li>
-          <li>地址：{{ user.address }}</li>
-          <li>生日：{{ user.birth }}</li>
+          <li>姓名：{{ user.Name }}</li>
+          <li>性別：{{ user.Gender }}</li>
+          <li>電話：{{ user.Phone }}</li>
+          <li>地址：{{ user.Address }}</li>
+          <li>生日：{{ user.BirthDate.split("T")[0] }}</li>
           <hr />
-          <li>帳號：{{ user.account }}</li>
-          <li>密碼：{{ user.password }}</li>
+          <li>帳號：{{ user.Account }}</li>
+          <li>密碼：***</li>
         </ul>
 
         <div class="d-flex justify-content-end">
@@ -20,7 +20,7 @@
             id="btnEdit"
             type="button"
             class="btn btn-outline-gray justify-content-end"
-            @click="changeEdit"
+            @click="changeEdit(user)"
           >
             編輯
           </button>
@@ -37,7 +37,7 @@
               id="name"
               name="name"
               placeholder="請輸入姓名"
-              v-model="user.name"
+              v-model="tempUser.Name"
             />
           </div>
           <div class="mb-3">
@@ -47,24 +47,24 @@
                 type="radio"
                 id="gender"
                 name="gender"
-                value="男性"
-                v-model="user.gender"
-              />男性
+                value="男"
+                v-model="tempUser.Gender"
+              />男
               <input
                 type="radio"
                 id="gender"
                 name="gender"
-                value="女性"
+                value="女"
                 class="ms-3"
-                v-model="user.gender"
-              />女性
+                v-model="tempUser.Gender"
+              />女
               <input
                 type="radio"
                 id="gender"
                 name="gender"
                 value="其他"
                 class="ms-3"
-                v-model="user.gender"
+                v-model="tempUser.Gender"
               />其他
             </div>
           </div>
@@ -76,7 +76,7 @@
               id="tel"
               name="tel"
               placeholder="請輸入電話"
-              v-model="user.tel"
+              v-model="tempUser.Phone"
             />
           </div>
           <div class="mb-3">
@@ -87,7 +87,7 @@
               id="address"
               name="address"
               placeholder="請輸入地址"
-              v-model="user.address"
+              v-model="tempUser.Address"
             />
           </div>
           <div class="mb-3">
@@ -97,7 +97,7 @@
               class="form-control"
               id="birth"
               name="birth"
-              v-model="user.birth"
+              v-model="tempUser.BirthDate.split('T')[0]"
             />
           </div>
           <div class="mb-3">
@@ -108,7 +108,7 @@
               id="email"
               name="email"
               placeholder="請輸入 Email"
-              v-model="user.email"
+              v-model="tempUser.Email"
             />
           </div>
           <div class="mb-3">
@@ -118,22 +118,37 @@
               class="form-control"
               id="account"
               name="account"
-              v-model="user.account"
+              v-model="tempUser.Account"
             />
           </div>
-          <div class="mb-3">
+          <div class="passwordArea mb-3">
             <label for="password" class="form-label">密碼</label>
             <input
-              type="password"
+              :type="inputType"
               class="form-control"
               id="password"
               name="password"
-              v-model="user.password"
+              v-model="tempUser.Password"
             />
+            <span
+              class="material-icons clickEye"
+              v-if="isShowPassword"
+              @click="showPassword"
+            >
+              visibility_off
+            </span>
+            <span class="material-icons clickEye" v-else @click="showPassword">
+              visibility
+            </span>
           </div>
           <!-- </fieldset> -->
           <div class="form-floating text-end">
-            <button id="btnConfirm" type="submit" class="btn btn-light w-25">
+            <button
+              id="btnConfirm"
+              type="submit"
+              class="btn btn-light w-25"
+              @click.prevent="updateData"
+            >
               確定
             </button>
           </div>
@@ -148,38 +163,82 @@ export default {
   data() {
     return {
       user: {
-        name: "王王王",
-        gender: "其他",
-        tel: "0912345678",
-        address: "台南市365號",
-        birth: "2022-03-30",
-        email: "qqq@gmail.com",
-        account: "qqq123",
-        password: "123456",
+        MemberID: 0,
       },
+      tempUser: {},
       isEdit: false,
+      isShowPassword: false,
+      inputType: "password",
     };
   },
   methods: {
-    changeEdit() {
+    changeEdit(item) {
       this.isEdit = !this.isEdit;
+      this.tempUser = { ...item };
+    },
+    getMemberID() {
+      let memberId = document.cookie.replace(
+        /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.user.MemberID = memberId;
     },
     getData() {
-      const api = `https://localhost:44356/api/MemberInfoes`;
+      const api = `https://localhost:44333/api/MemberInfoes1/${this.user.MemberID}`;
 
       this.$http
         .get(api)
         .then((res) => {
           console.log(res);
-          // this.reviews = res.data;
+          this.user = res.data;
+          console.log(this.user);
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    updateData() {
+      const api = `https://localhost:44333/api/MemberInfoes1/${this.user.MemberID}`;
+
+      this.$http
+        .post(api, this.tempUser)
+        .then((res) => {
+          console.log(res);
+          this.getData();
+          // this.user = res.data;
+          // console.log(this.user);
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+    showPassword() {
+      this.isShowPassword = !this.isShowPassword;
+      if (this.isShowPassword) {
+        this.inputType = "text";
+      } else {
+        this.inputType = "password";
+      }
+    },
   },
   mounted() {
-    // this.getData();
+    this.getMemberID();
+    this.getData();
   },
 };
 </script>
+
+<style lang="scss">
+.passwordArea {
+  position: relative;
+}
+.clickEye {
+  position: absolute;
+  right: 10px;
+  top: 55%;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+}
+</style>
