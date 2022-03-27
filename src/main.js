@@ -1,4 +1,5 @@
 import Vue from "vue";
+// Vue.prototype.$EventBus = new Vue();
 
 import "../node_modules/material-icons/iconfont/material-icons.css";
 import "bootstrap";
@@ -16,6 +17,8 @@ import VueAwesomeSwiper from "vue-awesome-swiper";
 
 import VueC3 from "vue-c3";
 
+// import "./assets/methods/eventBus";
+
 import App from "./App.vue";
 import router from "./router";
 
@@ -25,6 +28,7 @@ const app = new Vue({
   router,
   render: (h) => h(App),
 });
+// Vue.prototype.$bus = new Vue();
 
 Vue.component("l-map", LMap);
 Vue.component("l-tile-layer", LTileLayer);

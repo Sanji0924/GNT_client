@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { EventBus } from "../assets/methods/eventBus";
 import FrontNavbar from "../components/FrontNavbar.vue";
 import FrontFooter from "../components/FrontFooter.vue";
 
@@ -69,6 +70,7 @@ export default {
         Account: "",
         Password: "",
       },
+      isMember: true,
     };
   },
   methods: {
@@ -80,18 +82,18 @@ export default {
         .then((res) => {
           console.log(res);
           alert(res.data.message);
-          if (res.data.message === "登入成功") {
-            this.$router.push("/index");
-          } else if (res.data.message === "登入失敗") {
-            return;
-          }
-          // this.bars = res.data;
+          console.log(EventBus.$emit("send-member", res.data.name));
+          EventBus.$emit("send", res.data.name);
+          this.$router.push("/");
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
+          alert(`${err.response.data.Message}，請再重新登入`);
         });
     },
+  },
+  beforeDestroy() {
+    this.$off("send", this.isMember);
   },
 };
 </script>
