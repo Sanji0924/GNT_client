@@ -29,17 +29,14 @@
                 <button
                   type="button"
                   class="btn btn-outline-gray btn-sm me-md-2"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
-                  @click="openReviewModal(review)"
+                  @click="openReviewModal('edit', review)"
                 >
                   編輯
                 </button>
                 <button
                   type="button"
                   class="btn btn-outline-danger btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
+                  @click="openReviewModal('delete', review)"
                 >
                   刪除
                 </button>
@@ -52,28 +49,38 @@
     <MemberReviewModal
       ref="modal"
       :tempReviews="tempReviews"
+      @update-review="updateReview"
     ></MemberReviewModal>
+    <DeleteModal
+      ref="delModal"
+      :type="delType"
+      @delete-item="deleteReview"
+    ></DeleteModal>
   </div>
 </template>
 
 <script>
 import MemberReviewModal from "../../components/MemberReviewModal.vue";
+import DeleteModal from "../../components/DeleteModal.vue";
 
 export default {
   components: {
     MemberReviewModal,
+    DeleteModal,
   },
   data() {
     return {
       reviews: [],
       tempReviews: {},
       memberID: 0,
-      test: {
-        shopName: "依舊室 Always Bar",
-        shopRank: 5,
-        content: "好喝超好喝",
-        date: "2020/01/02",
-      },
+      shopID: 0,
+      delType: "",
+      // test: {
+      //   shopName: "依舊室 Always Bar",
+      //   shopRank: 5,
+      //   content: "好喝超好喝",
+      //   date: "2020/01/02",
+      // },
     };
   },
   methods: {
@@ -82,47 +89,76 @@ export default {
         /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
       );
-      this.memberID = memberId;
+      this.memberID = Number(memberId);
     },
     getReviews() {
-      const api = `https://localhost:44333/api/shopreviews?memberid=${this.memberID}`;
+      const api = `https://localhost:44333/api/shopreviews/${this.memberID}`;
 
       this.$http
         .get(api)
         .then((res) => {
           console.log(res);
-          this.reviews = res.data;
+          if (res.data === "此會員無評論") {
+            this.reviews = [];
+          } else {
+            this.reviews = res.data;
+          }
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    getDate(date) {
-      let newDate = date.split("T")[0];
-      return newDate;
     },
     updateReview() {
-      const api = `https://localhost:44333/api/shopreviews?memberid=${this.memberID}`;
+      const api = `https://localhost:44333/api/shopreviews/${this.memberID}/${this.shopID}`;
+      console.log(this.tempReviews);
 
       this.$http
-        .get(api)
+        .put(api, this.tempReviews)
         .then((res) => {
           console.log(res);
-          this.reviews = res.data;
+          this.getReviews();
+          alert(res.data);
+          this.$refs.modal.closeModal();
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
         });
     },
-    openReviewModal(item) {
-      this.$refs.modal.openModal();
+    deleteReview() {
+      const api = `https://localhost:44333/api/shopreviews/${this.memberID}/${this.shopID}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          console.log(res);
+          this.getReviews();
+          alert(res.data);
+          this.$refs.delModal.closeModal();
+          // this.reviews = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+    openReviewModal(status, item) {
+      if (status === "delete") {
+        this.$refs.delModal.openModal();
+        this.delType = "shopReview";
+      } else if (status === "edit") {
+        this.$refs.modal.openModal();
+      }
+
       this.tempReviews = {
+        MemberID: this.memberID,
         RContent: item.RContent,
-        ReviewDate: item.ReviewDate,
+        ReviewDate: item.ReviewDate.split("T")[0],
         Score: item.Score,
         ShopName: item.ShopInfo.Name,
+        ShopID: item.ShopID,
       };
-      console.log(this.tempReviews);
+      this.shopID = this.tempReviews.ShopID;
+
+      console.log(item);
     },
   },
   mounted() {

@@ -50,7 +50,7 @@
                 class="form-control"
                 id="date"
                 disabled
-                :value="tempReviews.ReviewDate.split('T')[0]"
+                :value="tempReviews.ReviewDate"
               />
             </div>
             <div class="mb-3">
@@ -74,7 +74,9 @@
           >
             關閉
           </button>
-          <button type="button" class="btn btn-primary">儲存</button>
+          <button type="button" class="btn btn-primary" @click="update">
+            儲存
+          </button>
         </div>
       </div>
     </div>
@@ -97,6 +99,9 @@ export default {
     },
     closeModal() {
       this.modal.hide();
+    },
+    update() {
+      this.$emit("update-review", this.tempReviews);
     },
   },
   mounted() {
