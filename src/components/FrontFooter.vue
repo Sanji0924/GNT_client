@@ -21,7 +21,7 @@
             </li>
           </ul>
           <p class="text-white mb-3 mt-3">© 2022 LOGO All Rights Reserved.</p>
-          <router-link to="/admin/shops" class="text-white fs-6"
+          <router-link to="/adminLogin" class="text-white fs-6"
             >進入後台</router-link
           >
         </div>
