@@ -9,7 +9,7 @@
           <li>性別：{{ user.Gender }}</li>
           <li>電話：{{ user.Phone }}</li>
           <li>地址：{{ user.Address }}</li>
-          <li>生日：{{ user.BirthDate.split("T")[0] }}</li>
+          <li>生日：{{ user.BirthDate }}</li>
           <hr />
           <li>帳號：{{ user.Account }}</li>
           <li>密碼：***</li>
@@ -97,7 +97,7 @@
               class="form-control"
               id="birth"
               name="birth"
-              v-model="tempUser.BirthDate.split('T')[0]"
+              v-model="tempUser.BirthDate"
             />
           </div>
           <div class="mb-3">
@@ -191,6 +191,7 @@ export default {
         .then((res) => {
           console.log(res);
           this.user = res.data;
+          this.user.BirthDate = res.data.BirthDate.split("T")[0];
           console.log(this.user);
         })
         .catch((err) => {
