@@ -158,9 +158,10 @@ export default {
   methods: {
     logout() {
       document.cookie = `memberToken=; expires=; path=/`;
+      document.cookie = `memberID=; expires=; path=/`;
       alert("已登出，畫面將跳轉回首頁");
       this.$router.push("/");
-      this.$router.go(0);
+      // this.$router.go(0);
     },
   },
 };
