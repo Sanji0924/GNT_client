@@ -42,109 +42,111 @@
                 </div>
               </div>
             </form>
-            <h3 class="h4 text-dark mb-3">精選主題</h3>
-            <div class="row">
-              <div class="col-12 mb-3">
-                <router-link to="/shops/all" class="link-hover-opacity">
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                    style="max-height: 125px"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1627481958426-3f165fcdd3c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80"
-                      class="img-fluid overflow-hidden rounded-5"
-                      alt=""
-                    />
+            <section>
+              <h3 class="h4 text-dark mb-3">精選主題</h3>
+              <div class="row">
+                <div class="col-12 mb-3">
+                  <router-link to="/shops/all" class="link-hover-opacity">
                     <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
+                      class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
+                      style="max-height: 125px"
                     >
-                      <h5 class="card-title fs-3 fw-bold mb-0">全部主題</h5>
+                      <img
+                        src="https://images.unsplash.com/photo-1627481958426-3f165fcdd3c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80"
+                        class="img-fluid overflow-hidden rounded-5"
+                        alt=""
+                      />
+                      <div
+                        class="card-img-overlay d-flex justify-content-center align-items-center"
+                      >
+                        <h5 class="card-title fs-3 fw-bold mb-0">全部主題</h5>
+                      </div>
                     </div>
-                  </div>
-                </router-link>
-              </div>
-              <div class="col-6 mb-3">
-                <router-link to="/shops/bars" class="link-hover-opacity">
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1563282396-c299392870cb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                      class="img-fluid overflow-hidden rounded-5"
-                      alt=""
-                    />
+                  </router-link>
+                </div>
+                <div class="col-6 mb-3">
+                  <router-link to="/shops/bars" class="link-hover-opacity">
                     <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
+                      class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
                     >
-                      <h5 class="card-title fs-3 fw-bold mb-0">酒吧</h5>
+                      <img
+                        src="https://images.unsplash.com/photo-1563282396-c299392870cb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+                        class="img-fluid overflow-hidden rounded-5"
+                        alt=""
+                      />
+                      <div
+                        class="card-img-overlay d-flex justify-content-center align-items-center"
+                      >
+                        <h5 class="card-title fs-3 fw-bold mb-0">酒吧</h5>
+                      </div>
                     </div>
-                  </div>
-                </router-link>
-              </div>
-              <div class="col-6 mb-3">
-                <router-link to="/shops/snacks" class="link-hover-opacity">
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1533970526352-9c6c0d239190?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                      class="img-fluid"
-                      alt=""
-                    />
+                  </router-link>
+                </div>
+                <div class="col-6 mb-3">
+                  <router-link to="/shops/snacks" class="link-hover-opacity">
                     <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
+                      class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
                     >
-                      <h5 class="card-title fs-3 fw-bold mb-0">
-                        宵夜<br />小吃
-                      </h5>
+                      <img
+                        src="https://images.unsplash.com/photo-1533970526352-9c6c0d239190?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+                        class="img-fluid"
+                        alt=""
+                      />
+                      <div
+                        class="card-img-overlay d-flex justify-content-center align-items-center"
+                      >
+                        <h5 class="card-title fs-3 fw-bold mb-0">
+                          宵夜<br />小吃
+                        </h5>
+                      </div>
                     </div>
-                  </div>
-                </router-link>
-              </div>
-              <div class="col-6 mb-3">
-                <router-link to="/shops/desserts" class="link-hover-opacity">
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1541592391523-5ae8c2c88d10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                      class="img-fluid"
-                      alt=""
-                    />
+                  </router-link>
+                </div>
+                <div class="col-6 mb-3">
+                  <router-link to="/shops/desserts" class="link-hover-opacity">
                     <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
+                      class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
                     >
-                      <h5 class="card-title fs-3 fw-bold mb-0">
-                        咖啡<br />甜點
-                      </h5>
+                      <img
+                        src="https://images.unsplash.com/photo-1541592391523-5ae8c2c88d10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+                        class="img-fluid"
+                        alt=""
+                      />
+                      <div
+                        class="card-img-overlay d-flex justify-content-center align-items-center"
+                      >
+                        <h5 class="card-title fs-3 fw-bold mb-0">
+                          咖啡<br />甜點
+                        </h5>
+                      </div>
                     </div>
-                  </div>
-                </router-link>
-              </div>
-              <div class="col-6 mb-3">
-                <router-link
-                  :to="`/shops/nightviews`"
-                  class="link-hover-opacity"
-                >
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
+                  </router-link>
+                </div>
+                <div class="col-6 mb-3">
+                  <router-link
+                    :to="`/shops/nightviews`"
+                    class="link-hover-opacity"
                   >
-                    <img
-                      src="https://images.unsplash.com/photo-1506747111041-18b1844bf60f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
-                      class="img-fluid"
-                      alt=""
-                    />
                     <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
+                      class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
                     >
-                      <h5 class="card-title fs-3 fw-bold mb-0">
-                        夜間<br />景點
-                      </h5>
+                      <img
+                        src="https://images.unsplash.com/photo-1506747111041-18b1844bf60f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
+                        class="img-fluid"
+                        alt=""
+                      />
+                      <div
+                        class="card-img-overlay d-flex justify-content-center align-items-center"
+                      >
+                        <h5 class="card-title fs-3 fw-bold mb-0">
+                          夜間<br />景點
+                        </h5>
+                      </div>
                     </div>
-                  </div>
-                </router-link>
+                  </router-link>
+                </div>
               </div>
-            </div>
+            </section>
           </nav>
         </div>
       </section>
