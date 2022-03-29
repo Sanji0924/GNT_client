@@ -83,11 +83,11 @@ export default {
           console.log(res);
           alert(res.data.message);
           EventBus.$emit("send", res.data.name);
-          const { id } = res.data;
+          const { ID } = res.data;
           this.isMember = true;
           document.cookie = `memberToken=${this.isMember}; expires=; path=/`;
-          document.cookie = `memberID=${id}; expires=; path=/`;
-          this.$router.push("/");
+          document.cookie = `memberID=${ID}; expires=; path=/`;
+          this.$router.back();
         })
         .catch((err) => {
           console.dir(err);
