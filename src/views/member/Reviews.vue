@@ -169,5 +169,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/stylesheet/helpers/table";
+@import "../../assets/stylesheet/layout/table";
 </style>
