@@ -1,7 +1,16 @@
 <template>
-  <div>
+  <div v-if="!isLoading">
+    <!-- <div
+      class="spinner-border text-primary"
+      role="status"
+      v-if="isLoading"
+      style="z-index: 10000"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div> -->
     <l-map :zoom="zoom" :center="center" style="height: 300px; width: 100%">
       <l-control-layers position="topright"></l-control-layers>
+
       <l-tile-layer
         v-for="tileProvider in tileProviders"
         :key="tileProvider.name"
@@ -11,6 +20,7 @@
         :attribution="tileProvider.attribution"
         layer-type="base"
       />
+
       <l-marker
         :lat-lng="item.point"
         :icon="item.icon"
@@ -64,7 +74,7 @@ export default {
             '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> <a href="https://www.openstreetmap.org/copyright"> &copyOpenStreetMap</a>',
         },
       ],
-      zoom: 13,
+      zoom: 15,
       path: "http://leafletjs.com/examples/custom-icons/leaf-green.png",
       center: [22.996, 120.2],
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -76,26 +86,34 @@ export default {
         iconUrl: "barMarker.svg",
         iconSize: [50, 50],
       }),
-      iconNightView: icon({
-        iconUrl: "nightMarker.svg",
-        iconSize: [50, 50],
-      }),
-      iconDessert: icon({
-        iconUrl: "dessertMarker.svg",
-        iconSize: [50, 50],
-      }),
-      iconSnack: icon({
-        iconUrl: "snackMarker.svg",
-        iconSize: [50, 50],
-      }),
-      markers: [],
+      markers: [
+        {
+          point: latLng(),
+          shopID: this.id,
+          shopName: "",
+          icon: icon({
+            iconUrl: "barMarker.svg",
+            iconSize: [50, 50],
+          }),
+        },
+      ],
       barMarkers: [],
       shops: [],
       bars: [],
+      shopId: 0,
+      isLoading: true,
     };
+  },
+  watch: {
+    id() {
+      this.getPoints();
+      console.log("觸發元件 watch");
+    },
   },
   methods: {
     getPoints() {
+      this.markers = [];
+      this.isLoading = true;
       const api = `https://localhost:44333/api/ShopInfoes`;
 
       this.$http
@@ -103,7 +121,7 @@ export default {
         .then((res) => {
           console.log(res);
           this.shops = res.data;
-
+          console.log(this.shops);
           let center = [];
           this.shops.forEach((item) => {
             let shopID = item.ShopID;
@@ -112,29 +130,27 @@ export default {
 
             let icon = this.iconOther;
             if (shopID === this.id) {
-              let lat = item.Latitude;
-              let lng = item.Longitude;
               icon = this.iconCurrent;
-              console.log(lat, lng);
-              center.push(lat, lng);
+              center.push(item.Latitude, item.Longitude);
             }
             this.markers.push({ point, shopID, shopName, icon });
             this.center = center;
           });
+          this.isLoading = false;
+          this.$emit("send-loading", this.isLoading);
         })
         .catch((err) => {
           console.dir(err);
         });
     },
     replace(id) {
-      console.log("點到ㄌ");
-      // this.$router.replace("/");
+      this.$emit("change-page", id);
       this.$router.push(`/shops/shop/${id}`);
-      this.$forceUpdate();
     },
   },
   mounted() {
-    this.getPoints();
+    // this.getPoints();
+    // this.shopId = this.id;
   },
 };
 </script>
