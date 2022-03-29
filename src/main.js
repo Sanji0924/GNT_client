@@ -4,6 +4,10 @@ import Vue from "vue";
 import "../node_modules/material-icons/iconfont/material-icons.css";
 import "bootstrap";
 
+import VueLoading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+
 import axios from "axios";
 import VueAxios from "vue-axios";
 
@@ -30,6 +34,8 @@ const app = new Vue({
 });
 // Vue.prototype.$bus = new Vue();
 
+Vue.component("loading", VueLoading);
+Vue.component("pulse-loader", PulseLoader);
 Vue.component("l-map", LMap);
 Vue.component("l-tile-layer", LTileLayer);
 Vue.component("l-marker", LMarker);
