@@ -1,102 +1,32 @@
 <template>
-  <swiper class="swiper" :options="swiperOption">
-    <swiper-slide>
-      <div class="card h-100 border-0 rounded-0">
-        <div class="card-body">
-          <h5 class="card-title">Lorem, ipsum.</h5>
-          <ul class="list-unstyled d-flex align-items-center text-light mb-2">
-            <li>
-              <span class="material-icons"> star </span>
-            </li>
-          </ul>
-          <p class="card-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
-            sint numquam dolorum praesentium pariatur? Consequatur?
-          </p>
+  <div>
+    <p v-if="shopReviews.length == 0" class="fs-5 text-primary text-center">
+      尚未有人分享，趕快至下方分享您對這間店的心得
+    </p>
+    <swiper v-else class="swiper" :options="swiperOption">
+      <swiper-slide v-for="item in shopReviews" :key="item.MemberID">
+        <div class="card w-100 h-100 border-1 rounded-0">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.MemberID }}</h5>
+            <ul class="list-unstyled d-flex align-items-center text-light mb-2">
+              <li>
+                <span
+                  class="material-icons"
+                  v-for="star in item.Score"
+                  :key="star"
+                >
+                  star
+                </span>
+              </li>
+            </ul>
+            <p class="card-text">
+              {{ item.RContent }}
+            </p>
+          </div>
         </div>
-      </div>
-    </swiper-slide>
-    <swiper-slide>
-      <div class="card h-100 border-0 rounded-0">
-        <div class="card-body">
-          <h5 class="card-title">Lorem, ipsum.</h5>
-          <ul class="list-unstyled d-flex align-items-center text-light mb-2">
-            <li>
-              <span class="material-icons"> star </span>
-            </li>
-          </ul>
-          <p class="card-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
-            sint numquam dolorum praesentium pariatur? Consequatur?
-          </p>
-        </div>
-      </div>
-    </swiper-slide>
-    <swiper-slide>
-      <div class="card h-100 border-0 rounded-0">
-        <div class="card-body">
-          <h5 class="card-title">Lorem, ipsum.</h5>
-          <ul class="list-unstyled d-flex align-items-center text-light mb-2">
-            <li>
-              <span class="material-icons"> star </span>
-            </li>
-          </ul>
-          <p class="card-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
-            sint numquam dolorum praesentium pariatur? Consequatur?
-          </p>
-        </div>
-      </div>
-    </swiper-slide>
-    <swiper-slide>
-      <div class="card h-100 border-0 rounded-0">
-        <div class="card-body">
-          <h5 class="card-title">Lorem, ipsum.</h5>
-          <ul class="list-unstyled d-flex align-items-center text-light mb-2">
-            <li>
-              <span class="material-icons"> star </span>
-            </li>
-          </ul>
-          <p class="card-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
-            sint numquam dolorum praesentium pariatur? Consequatur?
-          </p>
-        </div>
-      </div>
-    </swiper-slide>
-    <swiper-slide>
-      <div class="card h-100 border-0 rounded-0">
-        <div class="card-body">
-          <h5 class="card-title">Lorem, ipsum.</h5>
-          <ul class="list-unstyled d-flex align-items-center text-light mb-2">
-            <li>
-              <span class="material-icons"> star </span>
-            </li>
-          </ul>
-          <p class="card-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
-            sint numquam dolorum praesentium pariatur? Consequatur?
-          </p>
-        </div>
-      </div>
-    </swiper-slide>
-    <swiper-slide>
-      <div class="card h-100 border-0 rounded-0">
-        <div class="card-body">
-          <h5 class="card-title">Lorem, ipsum.</h5>
-          <ul class="list-unstyled d-flex align-items-center text-light mb-2">
-            <li>
-              <span class="material-icons"> star </span>
-            </li>
-          </ul>
-          <p class="card-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
-            sint numquam dolorum praesentium pariatur? Consequatur?
-          </p>
-        </div>
-      </div>
-    </swiper-slide>
-  </swiper>
+      </swiper-slide>
+    </swiper>
+  </div>
 </template>
 
 <script>
@@ -104,6 +34,7 @@ import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 
 export default {
+  props: ["shopId"],
   components: {
     Swiper,
     SwiperSlide,
@@ -134,7 +65,35 @@ export default {
           },
         },
       },
+      shopReviews: [],
     };
+  },
+  watch: {
+    shopId() {
+      this.getShopReviews();
+      console.log("觸發元件 watch");
+    },
+  },
+  methods: {
+    getShopReviews() {
+      const api = `https://localhost:44333/api/shopreviews`;
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.shopReviews = res.data.filter(
+            (item) => item.ShopID == this.shopId
+          );
+          console.log(this.shopReviews);
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+    replace(id) {
+      this.$emit("change-page", id);
+      this.$router.push(`/shops/shop/${id}`);
+    },
   },
 };
 </script>
@@ -146,6 +105,7 @@ export default {
   border: 1px transparent solid;
 
   .swiper-slide {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
