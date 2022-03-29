@@ -149,7 +149,9 @@
         </div>
       </section>
       <section class="container pt-6">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </section>
     </div>
     <FrontFooter></FrontFooter>
