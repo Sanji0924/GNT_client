@@ -102,7 +102,23 @@
           loading="lazy"
           class="rounded-lg"
         ></iframe> -->
-        <LeafletComponentShop :id="shop.ShopID"></LeafletComponentShop>
+        <div
+          class="spinner-border text-primary"
+          role="status"
+          v-if="isLoading"
+          style="z-index: 10000"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <keep-alive>
+          <LeafletComponentShop
+            :id="shop.ShopID"
+            ref="map"
+            @change-page="changePage"
+            @send-loading="changeLoading"
+          >
+          </LeafletComponentShop>
+        </keep-alive>
       </section>
       <section class="mb-5">
         <h3
@@ -110,7 +126,11 @@
         >
           <span class="material-icons me-1"> share </span>心得分享
         </h3>
-        <SwiperShopReviews></SwiperShopReviews>
+        <SwiperShopReviews
+          ref="swiperReviews"
+          :shop-id="shop.ShopID"
+          @change-page="changePage"
+        ></SwiperShopReviews>
       </section>
       <div class="row justify-content-center">
         <section class="col-12 col-md-8 col-lg-6 mb-5">
@@ -119,16 +139,20 @@
           >
             <span class="material-icons me-1"> edit </span>撰寫心得
           </h3>
-          <form action="#">
+          <form action="#" ref="form">
             <div class="mb-3">
               <label for="rank" class="form-label text-white">評分</label>
-              <select name="rank" id="rank" class="form-select">
-                <option selected disabled>請選擇評分</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
+              <select
+                name="rank"
+                id="rank"
+                class="form-select"
+                required
+                v-model.number="review.Score"
+              >
+                <option :value="0" disabled selected>請選擇評分</option>
+                <option :value="score" v-for="score in 5" :key="score">
+                  {{ score }}
+                </option>
               </select>
             </div>
             <div class="mb-3">
@@ -141,10 +165,19 @@
                 id="shopContent"
                 cols="20"
                 rows="5"
+                v-model="review.RContent"
+                required
               ></textarea>
             </div>
             <div class="form-floating mb-3 text-center">
-              <button type="submit" class="btn btn-primary btn-lg">送出</button>
+              <button
+                type="submit"
+                class="btn btn-primary btn-lg"
+                :disabled="!review.Score || !review.RContent"
+                @click.prevent="addShopReview"
+              >
+                送出
+              </button>
             </div>
           </form>
         </section>
@@ -168,6 +201,15 @@ export default {
       shop: {
         notes: [],
       },
+      review: {
+        MemberID: 0,
+        ShopID: 0,
+        RContent: "",
+        Score: 0,
+      },
+      shopReviews: [],
+      shopId: 0,
+      isLoading: true,
     };
   },
   watch: {
@@ -175,33 +217,82 @@ export default {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },
+    shopId() {
+      this.isLoading = true;
+      this.getShopInfo();
+      console.log("觸發 watch");
+    },
+    // immediate: true,
   },
   methods: {
     getShopInfo() {
       const { id } = this.$route.params;
       const api = `https://localhost:44333/api/ShopInfoes/${id}`;
-
+      this.shopId = id;
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
-          console.log(res.data.Note.split("/"));
+          // this.isLoading = true;
+          // console.log(res);
+          // console.log(res.data.Note.split("/"));
 
           this.shop = res.data;
           this.shop.notes = res.data.Note.split("/");
+          // this.isLoading = false;
         })
         .catch((err) => {
           console.dir(err);
           // alert(err.response.data.Message);
         });
     },
+    addShopReview() {
+      this.review.ShopID = this.shopId;
+      const api = `https://localhost:44333/api/shopreviews`;
+      console.log(this.review.MemberID);
+      if (!this.review.MemberID) {
+        alert("請先登入");
+        this.$router.push("/memberLogin");
+      } else {
+        this.$http
+          .post(api, this.review)
+          .then((res) => {
+            console.log(res);
+            alert(res.data);
+            this.$refs.swiperReviews.getShopReviews();
+            this.review.Score = 0;
+            this.review.RContent = "";
+          })
+          .catch((err) => {
+            console.dir(err);
+            alert("您已經在此店家留言過，請至會員後台修改心得");
+            this.$refs.form.reset();
+          });
+      }
+    },
+    getMemberID() {
+      let memberId = document.cookie.replace(
+        /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.review.MemberID = Number(memberId);
+      console.log(this.review.MemberID);
+    },
     backToPrePage() {
       this.$router.back();
+    },
+    changePage(id) {
+      console.log(id);
+      this.shopId = id;
+      console.log(this.shopId);
+    },
+    changeLoading(status) {
+      this.isLoading = status;
     },
   },
   mounted() {
     this.getShopInfo();
-    console.log(this.$router);
+    this.getMemberID();
+    // console.log(this.$router);
   },
 };
 </script>
@@ -221,9 +312,7 @@ export default {
     transition: all 0.3s;
   }
 }
-
 .shop-img {
-  // background-image: url("https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
