@@ -1,12 +1,14 @@
 <template>
   <div class="container-fuild d-flex justify-content-between bg-white">
     <input type="checkbox" id="checkShow" hidden />
-    <section class="container-fuild side side-member bg-white pt-6 px-3">
+    <section
+      class="container-fuild side side-admin side-member bg-white pt-6 px-3"
+    >
       <div class="container pt-5 side-area">
         <nav class="nav flex-column side-nav">
           <label
             for="checkShow"
-            class="nav-icon nav-icon-member text-dark d-flex"
+            class="nav-icon nav-icon-admin nav-icon-member text-dark d-flex"
           >
             <span class="material-icons"> arrow_forward_ios </span>
           </label>
@@ -25,16 +27,24 @@
           <div class="row">
             <ul class="list-unstyled col-12 text-center">
               <li>
-                <a href="./index.html" class="d-flex admin-side-menu-link py-2">
+                <a
+                  href="#"
+                  class="d-flex admin-side-menu-link py-2"
+                  @click.prevent="getMembers"
+                >
                   <span class="material-icons me-2"> person_search </span>全部
                 </a>
               </li>
               <li>
-                <a href="./index.html" class="d-flex admin-side-menu-link py-2">
-                  <span class="material-icons me-2"> person_search </span>審核中
+                <a
+                  href="./index.html"
+                  class="d-flex admin-side-menu-link py-2"
+                  @click.prevent="getBlackList"
+                >
+                  <span class="material-icons me-2"> person_search </span>黑名單
                 </a>
               </li>
-              <li>
+              <!-- <li>
                 <a
                   href="./memberInfo.html"
                   class="d-flex admin-side-menu-link py-2"
@@ -49,7 +59,7 @@
                 >
                   <span class="material-icons me-2"> person_search </span>黑名單
                 </a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </nav>
@@ -63,17 +73,19 @@
         >
           <thead>
             <tr>
-              <th width="80">會員編號</th>
+              <th width="80" class="text-center">會員編號</th>
               <th width="100">會員名稱</th>
+              <th width="100">會員性別</th>
               <th>會員 Email</th>
-              <th width="100">是否黑名單</th>
+              <th width="100" class="text-center">黑名單</th>
               <th width="150"></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="member in members" :key="member.MemberID">
-              <th>{{ member.MemberID }}</th>
+              <th class="text-center">{{ member.MemberID }}</th>
               <td>{{ member.Name }}</td>
+              <td>{{ member.Gender }}</td>
               <td>{{ member.Email }}</td>
               <td class="text-center">
                 <span
@@ -92,7 +104,11 @@
                 >
                   編輯
                 </button>
-                <button type="button" class="btn btn-outline-danger btn-sm">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  @click="deleteMember(member.MemberID)"
+                >
                   刪除
                 </button>
               </td>
@@ -105,12 +121,13 @@
       ref="modal"
       :tempMember="tempMember"
       :birthDate="birthDate"
-      @get-member="getMember"
+      @update-member="updateMember"
     ></AdminMemberModal>
   </div>
 </template>
 
 <script>
+import getToken from "../../assets/methods/adminToken.js";
 import AdminMemberModal from "../../components/AdminMemberModal.vue";
 
 export default {
@@ -125,8 +142,8 @@ export default {
     };
   },
   methods: {
-    getMember() {
-      const api = `https://localhost:44333/api/MemberInfoes1`;
+    getMembers() {
+      const api = `https://localhost:44333/api/MemberInfoes1/Admin`;
 
       this.$http
         .get(api)
@@ -139,14 +156,64 @@ export default {
           // alert(err.response.data.Message);
         });
     },
+    getBlackList() {
+      const api = `https://localhost:44333/api/MemberInfoes1/Admin/BlackList`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.members = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    updateMember(member) {
+      const api = `https://localhost:44333/api/MemberInfoes1/Admin/${member.MemberID}`;
+
+      this.$http
+        .put(api, member)
+        .then((res) => {
+          console.log(res);
+          alert(res.data);
+          this.getMembers();
+          this.$refs.modal.closeModal();
+          // this.members = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    deleteMember(id) {
+      const api = `https://localhost:44333/api/MemberInfoes1/Admin/${id}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          console.log(res);
+          alert(res.data);
+          this.getMembers();
+          this.$refs.modal.closeModal();
+          // this.members = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
     openMemberModal(item) {
       this.tempMember = { ...item };
-      this.birthDate = item.BirthDate;
+      // this.birthDate = item.BirthDate;
       this.$refs.modal.openModal();
     },
   },
   mounted() {
-    this.getMember();
+    getToken();
+    console.log(this.$http.defaults.headers.common["Authorization"]);
+    this.getMembers();
   },
 };
 </script>

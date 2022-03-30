@@ -1,5 +1,11 @@
 <template>
-  <div class="modal fade" id="exampleModal" tabindex="-1" ref="modal">
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    ref="modal"
+    style="z-index: 11000"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -30,6 +36,7 @@
                 class="form-control"
                 id="memberName"
                 v-model="tempMember.Name"
+                disabled
               />
             </div>
             <div class="mb-3 col-12">
@@ -39,15 +46,23 @@
                 class="form-control"
                 id="memberEmail"
                 v-model="tempMember.Email"
+                disabled
               />
             </div>
             <div class="mb-3 col-6">
               <label for="memberGender" class="form-label">性別</label>
-              <select name="memberGender" id="memberGender" class="form-select">
+              <input
+                type="text"
+                class="form-control"
+                id="memberGender"
+                v-model="tempMember.Gender"
+                disabled
+              />
+              <!-- <select name="memberGender" id="memberGender" class="form-select" v-model="tempMember.Gender" disabled>
                 <option :value="tempMember.Gender">男性</option>
                 <option :value="tempMember.Gender">女性</option>
                 <option :value="tempMember.Gender">其他</option>
-              </select>
+              </select> -->
             </div>
             <div class="mb-3 col-6">
               <label for="memberTel" class="form-label">會員電話</label>
@@ -56,6 +71,7 @@
                 class="form-control"
                 id="memberTel"
                 v-model="tempMember.Phone"
+                disabled
               />
             </div>
             <div class="mb-3">
@@ -65,22 +81,30 @@
                 class="form-control"
                 id="memberAddress"
                 v-model="tempMember.Address"
+                disabled
               />
             </div>
             <div class="mb-3 col-6">
               <label for="memberBirth" class="form-label">會員生日</label>
               <input
-                type="date"
+                type="text"
                 class="form-control"
                 id="memberBirth"
-                v-model="birth"
+                v-model="tempMember.BirthDate"
+                disabled
               />
             </div>
             <div class="mb-3 col-6">
               <label for="memberRegisterDate" class="form-label"
                 >註冊日期</label
               >
-              <input type="date" class="form-control" id="memberRegisterDate" />
+              <input
+                type="text"
+                class="form-control"
+                id="memberRegisterDate"
+                v-model="tempMember.RegisterDate"
+                disabled
+              />
             </div>
             <div class="mb-3 col-6">
               <input
@@ -104,11 +128,7 @@
           >
             關閉
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="updateMember(tempMember.MemberID)"
-          >
+          <button type="button" class="btn btn-primary" @click="update">
             儲存
           </button>
         </div>
@@ -125,7 +145,6 @@ export default {
   data() {
     return {
       modal: "",
-      birth: "",
     };
   },
   methods: {
@@ -140,30 +159,13 @@ export default {
       console.log(this.birth);
       // return editDate;
     },
-    updateMember(id) {
-      const api = `https://localhost:44333/api/MemberInfoes1/${id}`;
-
-      this.$http
-        .put(api, this.tempMember)
-        .then((res) => {
-          console.log(res);
-          this.closeModal();
-          this.getMember();
-
-          // this.members = res.data;
-        })
-        .catch((err) => {
-          console.dir(err);
-          // alert(err.response.data.Message);
-        });
-    },
-    getMember() {
-      this.$emit("get-member");
+    update() {
+      this.$emit("update-member", this.tempMember);
     },
   },
   mounted() {
     this.modal = new Modal(this.$refs.modal);
-    this.getDate(this.birthDate);
+    // this.getDate(this.birthDate);
   },
 };
 </script>
