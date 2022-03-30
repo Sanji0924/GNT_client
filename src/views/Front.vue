@@ -1,7 +1,9 @@
 <template>
   <div>
     <FrontNavbar :isMember="isMember"></FrontNavbar>
-    <div class="container-fuild d-flex justify-content-between bg-dark">
+    <div
+      class="container-fuild d-flex justify-content-between bg-dark position-relative"
+    >
       <input type="checkbox" id="checkShow" hidden />
       <section class="container-fuild side bg-white pt-6 px-3">
         <div class="container pt-5 side-area">
@@ -146,6 +148,21 @@
                   </router-link>
                 </div>
               </div>
+              <h3 class="h4 text-dark mb-3">商家標籤</h3>
+              <div class="mb-3">
+                <label
+                  class="tagLabel mb-2"
+                  v-for="(tag, key) in tags"
+                  :key="key"
+                >
+                  <input
+                    type="checkbox"
+                    :value="tag.TagName"
+                    class="tagInput"
+                  />
+                  <span class="fs-7">{{ tag.TagName }}</span>
+                </label>
+              </div>
             </section>
           </nav>
         </div>
@@ -171,7 +188,23 @@ export default {
   data() {
     return {
       isMember: false,
+      tags: [],
     };
+  },
+  methods: {
+    getAllTags() {
+      const api = `https://localhost:44333/api/Tag`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.tags = res.data;
+        })
+        .catch(() => {
+          // console.dir(err);
+        });
+    },
   },
   mounted() {
     let myCookie = document.cookie.replace(
@@ -181,6 +214,7 @@ export default {
     if (myCookie === "true") {
       this.isMember = true;
     }
+    this.getAllTags();
   },
 };
 </script>
@@ -198,5 +232,28 @@ export default {
     opacity: 0.7;
     transition: all 0.3s;
   }
+}
+
+.tagLabel {
+  padding: 0;
+  margin-right: 16px;
+  cursor: pointer;
+}
+.tagInput[type="checkbox"] {
+  display: none;
+}
+.tagInput[type="checkbox"] + span {
+  display: inline-block;
+  background-color: transparent;
+  padding: 8px 16px;
+  border: 1px solid #e98830;
+  color: #e98830;
+  user-select: none; /* 防止文字被滑鼠選取反白 */
+  border-radius: 10px;
+}
+
+.tagInput[type="checkbox"]:checked + span {
+  color: #000002;
+  background-color: #e98830;
 }
 </style>
