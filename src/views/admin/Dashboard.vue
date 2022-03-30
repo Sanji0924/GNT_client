@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-gray header">
       <div class="container">
-        <router-link class="navbar-brand" to="/index">
+        <router-link class="navbar-brand" to="/">
           <img class="logoImg" src="../../assets/images/logo_full.svg" alt="" />
         </router-link>
         <button
@@ -57,10 +57,7 @@
     <footer class="footer w-100">
       <div class="container-fuild bg-gray py-5">
         <div class="container text-center">
-          <router-link
-            class="text-white h4 link-hover-opacity mb-3"
-            to="/index"
-          >
+          <router-link class="text-white h4 link-hover-opacity mb-3" to="/">
             <img class="logoImg" src="../../assets/images/logo.svg" alt="" />
           </router-link>
           <ul class="d-flex justify-content-center list-unstyled">
@@ -85,6 +82,26 @@
     </footer>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    checkToken() {
+      let token = document.cookie.replace(
+        /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.$http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      // console.log(token);
+      console.log(this.$http.defaults.headers.common["Authorization"]);
+    },
+  },
+  mounted() {
+    // this.checkToken();
+  },
+};
+</script>
+
 <style lang="scss">
 @import "../../assets/stylesheet/layout/sidebar";
 .logoImg {
