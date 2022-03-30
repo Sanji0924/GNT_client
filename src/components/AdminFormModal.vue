@@ -26,26 +26,49 @@
                 class="form-control"
                 id="feedbackId"
                 disabled
+                v-model="form.ReviewID"
               />
             </div>
             <div class="mb-3 col-6">
               <label for="memberId" class="form-label">會員編號</label>
-              <input type="text" class="form-control" id="memberId" disabled />
+              <input
+                type="text"
+                class="form-control"
+                id="memberId"
+                disabled
+                v-model="form.MemberID"
+              />
             </div>
             <div class="mb-3 col-12">
               <label for="feedbackType" class="form-label">表單類別</label>
-              <input type="text" class="form-control" id="feedbackType" />
+              <input
+                type="text"
+                class="form-control"
+                id="feedbackType"
+                disabled
+                v-model="form.Type"
+              />
             </div>
             <div class="mb-3 col-6">
               <label for="feedbackDate" class="form-label">填寫日期</label>
-              <input type="date" class="form-control" id="feedbackDate" />
+              <input
+                type="text"
+                class="form-control"
+                id="feedbackDate"
+                disabled
+                v-model="form.ReviewDate"
+              />
             </div>
             <div class="mb-3 col-6">
               <label for="feedbackStatus" class="form-label">表單狀態</label>
-              <select id="feedbackStatus" class="form-select">
-                <option value="">已處理</option>
-                <option value="">處理中</option>
-                <option value="">未處理</option>
+              <select
+                id="feedbackStatus"
+                class="form-select"
+                v-model="form.Status"
+              >
+                <option value="已處理">已處理</option>
+                <option value="處理中">處理中</option>
+                <option value="未處理">未處理</option>
               </select>
             </div>
             <div class="mb-3">
@@ -55,6 +78,8 @@
                 id="feedbackContent"
                 cols="20"
                 rows="3"
+                disabled
+                v-model="form.RContent"
               ></textarea>
             </div>
             <div class="mb-3">
@@ -64,6 +89,7 @@
                 id="remark"
                 cols="20"
                 rows="3"
+                v-model="form.Remark"
               ></textarea>
             </div>
           </form>
@@ -76,7 +102,14 @@
           >
             關閉
           </button>
-          <button type="button" class="btn btn-primary">儲存</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="update"
+            :disabled="isLoading"
+          >
+            儲存
+          </button>
         </div>
       </div>
     </div>
@@ -87,14 +120,25 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
+  props: ["form"],
   data() {
     return {
       modal: "",
+      isLoading: false,
     };
   },
   methods: {
     openModal() {
       this.modal.show();
+    },
+    closeModal() {
+      this.modal.hide();
+    },
+    update() {
+      this.isLoading = true;
+      console.log("觸發元件 update");
+      this.$emit("update", this.form);
+      this.isLoading = false;
     },
   },
   mounted() {

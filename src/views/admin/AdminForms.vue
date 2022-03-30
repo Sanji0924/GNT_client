@@ -1,12 +1,12 @@
 <template>
   <div class="container-fuild d-flex justify-content-between bg-white">
     <input type="checkbox" id="checkShow" hidden />
-    <section class="container-fuild side side-member bg-white pt-6 px-3">
+    <section class="container-fuild side-admin side-member bg-white pt-6 px-3">
       <div class="container pt-5 side-area">
         <nav class="nav flex-column side-nav">
           <label
             for="checkShow"
-            class="nav-icon nav-icon-member text-dark d-flex"
+            class="nav-icon nav-icon-member nav-icon-admin text-dark d-flex"
           >
             <span class="material-icons"> arrow_forward_ios </span>
           </label>
@@ -17,55 +17,67 @@
                 class="form-control mb-3"
                 id="keyword"
                 placeholder="輸入關鍵字搜尋"
+                v-model="keywords"
               />
-              <button type="button" class="btn btn-gray">搜尋</button>
+              <button
+                type="button"
+                class="btn btn-gray"
+                @click="getKeywordForms(keywords)"
+              >
+                搜尋
+              </button>
             </div>
           </form>
           <h3 class="h4 text-dark mb-3">類別</h3>
           <div class="row">
             <ul class="list-unstyled col-12 text-center">
               <li>
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click="getForms"
                 >
                   <span class="material-icons me-2"> find_in_page </span>全部
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click="getTypeForms('推薦店家')"
                 >
                   <span class="material-icons me-2"> find_in_page </span
                   >推薦店家
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  tp="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click="getTypeForms('系統回饋')"
                 >
                   <span class="material-icons me-2"> find_in_page </span
                   >系統回饋
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click="getTypeForms('店家資訊更新')"
                 >
                   <span class="material-icons me-2"> find_in_page </span
                   >店家資訊更新
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
+                  @click="getTypeForms('其他')"
                 >
                   <span class="material-icons me-2"> find_in_page </span>其他
-                </router-link>
+                </a>
               </li>
               <li class="dropdown">
                 <a
@@ -87,6 +99,7 @@
                     <a
                       href="#"
                       class="text-dark d-flex admin-side-menu-link py-2"
+                      @click="getStatusForms('未處理')"
                     >
                       <span class="material-icons me-2"> edit </span>未處理
                     </a>
@@ -95,6 +108,7 @@
                     <a
                       href="#"
                       class="text-dark d-flex admin-side-menu-link py-2"
+                      @click="getStatusForms('處理中')"
                     >
                       <span class="material-icons me-2"> edit </span>處理中
                     </a>
@@ -103,6 +117,7 @@
                     <a
                       href="#"
                       class="text-dark d-flex admin-side-menu-link py-2"
+                      @click="getStatusForms('已處理')"
                     >
                       <span class="material-icons me-2"> edit </span>已處理
                     </a>
@@ -131,25 +146,33 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>f001</th>
-              <td>m001</td>
-              <td>推薦店家</td>
-              <td>2021/01/01</td>
+            <tr v-for="item in forms" :key="item.ReviewID">
+              <th>{{ item.ReviewID }}</th>
+              <td>{{ item.MemberID }}</td>
+              <td>{{ item.Type }}</td>
+              <td>{{ item.ReviewDate }}</td>
               <td>
-                <span>已處理</span>
-                <span class="text-primary">處理中</span>
-                <span class="text-danger"> 未處理 </span>
+                <span v-if="item.Status === '已處理'">已處理</span>
+                <span class="text-primary" v-else-if="item.Status === '處理中'"
+                  >處理中</span
+                >
+                <span class="text-danger" v-else-if="item.Status === '未處理'">
+                  未處理
+                </span>
               </td>
               <td class="text-center">
                 <button
                   type="button"
                   class="btn btn-outline-gray btn-sm"
-                  @click="openFormModal"
+                  @click="openFormModal(item, 'edit')"
                 >
                   編輯
                 </button>
-                <button type="button" class="btn btn-outline-danger btn-sm">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  @click="openFormModal(item, 'delete')"
+                >
                   刪除
                 </button>
               </td>
@@ -158,21 +181,143 @@
         </table>
       </div>
     </section>
-    <AdminFormModal ref="modal"></AdminFormModal>
+    tempForm:{}
+    <AdminFormModal
+      ref="modal"
+      :form="tempForm"
+      @update="updateForm"
+    ></AdminFormModal>
+    <DeleteModal
+      ref="delModal"
+      :type="delType"
+      @delete-item="deleteForm"
+    ></DeleteModal>
   </div>
 </template>
 
 <script>
 import AdminFormModal from "../../components/AdminFormModal.vue";
+import DeleteModal from "../../components/DeleteModal.vue";
+import getToken from "../../assets/methods/adminToken.js";
 
 export default {
   components: {
     AdminFormModal,
+    DeleteModal,
+  },
+  data() {
+    return {
+      forms: [],
+      tempForm: {
+        ReviewDate: "",
+      },
+      isLoading: false,
+      delType: "websiteReview",
+      keywords: "",
+    };
   },
   methods: {
-    openFormModal() {
-      this.$refs.modal.openModal();
+    openFormModal(item, status) {
+      if (status === "edit") {
+        this.tempForm = { ...item };
+        this.$refs.modal.openModal();
+      } else if (status === "delete") {
+        this.tempForm = { ...item };
+        this.$refs.delModal.openModal();
+      }
     },
+    getForms() {
+      let api = `https://localhost:44333/api/websitereview`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          this.forms = res.data;
+          this.keywords = "";
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    getTypeForms(type) {
+      const api = `https://localhost:44333/api/websitereview/type/${type}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          this.forms = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    getStatusForms(status) {
+      const api = `https://localhost:44333/api/websitereview/status/${status}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          this.forms = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    getKeywordForms(keywords) {
+      const api = `https://localhost:44333/api/websitereview/keywords/${keywords}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          this.forms = res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    updateForm(item) {
+      console.log(item);
+      const api = `https://localhost:44333/api/websitereview/admin/${item.ReviewID}`;
+
+      this.$http
+        .put(api, item)
+        .then((res) => {
+          this.isLoading = true;
+          alert(res.data);
+          this.getForms();
+          this.$refs.modal.closeModal();
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    deleteForm() {
+      const api = `https://localhost:44333/api/websitereview/admin/${this.tempForm.ReviewID}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          this.isLoading = true;
+          alert(res.data);
+          this.getForms();
+          this.$refs.delModal.closeModal();
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+  },
+  mounted() {
+    this.getForms();
+    getToken();
+    console.log(this.$http.defaults.headers.common["Authorization"]);
+    // this.getToken();
   },
 };
 </script>

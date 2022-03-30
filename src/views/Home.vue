@@ -54,38 +54,49 @@
           <div class="col-10 col-md-6 col-lg-5">
             <h3 class="h2 text-center">意見回饋</h3>
             <form action="#">
-              <input type="hidden" name="memberID" id="memberID" />
+              <input
+                type="hidden"
+                name="memberID"
+                id="memberID"
+                v-model="review.MemberID"
+              />
               <div class="mb-3">
-                <label for="memberEmail" class="form-label">會員帳號</label
-                ><span class="text-danger ms-2">必填</span>
+                <label for="memberEmail" class="form-label">會員名稱</label>
                 <input
-                  type="email"
+                  type="text"
                   class="form-control"
-                  id="memberEmail"
-                  name="memberEmail"
+                  id="memberAccount"
+                  name="memberAccount"
+                  v-model="review.MemberID"
+                  disabled
                 />
               </div>
               <div class="mb-3">
                 <label for="type" class="form-label">類別</label
                 ><span class="text-danger ms-2">必填</span>
-                <select class="form-select" name="type" id="type">
+                <select
+                  class="form-select"
+                  name="type"
+                  id="type"
+                  v-model="review.Type"
+                >
                   <option value="" disabled selected>請選擇類別</option>
                   <option value="推薦商家">推薦商家</option>
-                  <!-- <option value="行程規劃">行程規劃</option> -->
                   <option value="店家資訊更新">店家資訊更新</option>
-                  <option value="系統錯誤回饋">系統錯誤回饋</option>
+                  <option value="系統回饋">系統錯誤回饋</option>
                   <option value="其他">其他</option>
                 </select>
               </div>
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <label for="reviewDate" class="form-label">填寫日期</label>
                 <input
                   type="date"
                   class="form-control"
                   id="reviewDate"
                   name="reviewDate"
+                  v-model="review.ReviewDate"
                 />
-              </div>
+              </div> -->
               <div class="mb-3">
                 <label for="reviewContent" class="form-label">留言</label
                 ><span class="text-danger ms-2">必填</span>
@@ -95,10 +106,15 @@
                   id="reviewContent"
                   cols="20"
                   rows="5"
+                  v-model="review.RContent"
                 ></textarea>
               </div>
               <div class="form-floating mb-3 text-center">
-                <button type="submit" class="btn btn-primary btn-lg w-25">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg w-25"
+                  @click.prevent="addWebsiteReview"
+                >
                   送出
                 </button>
               </div>
@@ -119,13 +135,19 @@ import FrontFooter from "../components/FrontFooter.vue";
 import LeafletComponent from "../components/LeafletComponent.vue";
 import Roulette from "../components/RouletteModal.vue";
 import Swiper from "../components/Swiper.vue";
-import { EventBus } from "../assets/methods/eventBus";
+// import { EventBus } from "../assets/methods/eventBus";
 
 export default {
   data() {
     return {
       isMember: false,
       memberName: "",
+      review: {
+        MemberID: 0,
+        Type: "",
+        RContent: "",
+        // ReviewDate: "",
+      },
     };
   },
   components: {
@@ -139,6 +161,37 @@ export default {
     openRouletteModal() {
       this.$refs.modal.openModal();
     },
+    getMemberInfo() {
+      const api = `https://localhost:44333/api/websitereview`;
+
+      this.$http
+        .post(api, this.review)
+        .then((res) => {
+          this.isLoading = true;
+          alert(res.data);
+          this.getForms();
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    addWebsiteReview() {
+      const api = `https://localhost:44333/api/websitereview`;
+
+      this.$http
+        .post(api, this.review)
+        .then((res) => {
+          console.log(res);
+          // this.isLoading = true;
+          // alert(res.data);
+          // this.getForms();
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
   },
   mounted() {
     let myCookie = document.cookie.replace(
@@ -148,10 +201,14 @@ export default {
     if (myCookie === "true") {
       this.isMember = true;
     }
-    EventBus.$on("send", (member) => {
-      console.log(member);
-      this.memberName = member;
-    });
+    this.review.MemberID = document.cookie.replace(
+      /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    // EventBus.$on("send", (member) => {
+    //   console.log(member);
+    //   this.memberName = member;
+    // });
   },
 };
 </script>

@@ -9,20 +9,14 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-danger text-white">
-          <h5
-            class="modal-title"
-            id="exampleModalLabel"
-            v-if="type === 'shopReview'"
-          >
-            刪除評論
+          <h5 class="modal-title" id="exampleModalLabel">
+            <template v-if="type === 'shopReview'"> 刪除評論 </template>
+            <template v-else-if="type === 'websiteReview'">
+              刪除意見回饋
+            </template>
+            <template v-else-if="type === 'shopInfo'"> 刪除店家 </template>
           </h5>
-          <h5
-            class="modal-title"
-            id="exampleModalLabel"
-            v-else-if="type === 'shopInfo'"
-          >
-            刪除店家
-          </h5>
+
           <button
             type="button"
             class="btn-close text-white"
@@ -34,6 +28,11 @@
           <template v-if="type === 'shopReview'">
             是否刪除
             <strong class="text-danger">此評論</strong>（刪除後將無法恢復）。
+          </template>
+          <template v-if="type === 'websiteReview'">
+            是否刪除
+            <strong class="text-danger">此意見回饋</strong
+            >（刪除後將無法恢復）。
           </template>
         </div>
         <!-- <div class="modal-body">
