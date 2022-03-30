@@ -1,7 +1,9 @@
 <template>
   <div class="container-fuild d-flex justify-content-between bg-white">
     <input type="checkbox" id="checkShow" hidden />
-    <section class="container-fuild side-admin side-member bg-white pt-6 px-3">
+    <section
+      class="container-fuild side side-admin side-member bg-white pt-6 px-3"
+    >
       <div class="container pt-5 side-area">
         <nav class="nav flex-column side-nav">
           <label
@@ -35,7 +37,7 @@
                 <a
                   href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
-                  @click="getForms"
+                  @click.prevent="getForms"
                 >
                   <span class="material-icons me-2"> find_in_page </span>全部
                 </a>
@@ -44,7 +46,7 @@
                 <a
                   href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
-                  @click="getTypeForms('推薦店家')"
+                  @click.prevent="getTypeForms('推薦店家')"
                 >
                   <span class="material-icons me-2"> find_in_page </span
                   >推薦店家
@@ -54,7 +56,7 @@
                 <a
                   href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
-                  @click="getTypeForms('系統回饋')"
+                  @click.prevent="getTypeForms('系統回饋')"
                 >
                   <span class="material-icons me-2"> find_in_page </span
                   >系統回饋
@@ -64,7 +66,7 @@
                 <a
                   href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
-                  @click="getTypeForms('店家資訊更新')"
+                  @click.prevent="getTypeForms('店家資訊更新')"
                 >
                   <span class="material-icons me-2"> find_in_page </span
                   >店家資訊更新
@@ -74,7 +76,7 @@
                 <a
                   href="#"
                   class="text-dark d-flex admin-side-menu-link py-2"
-                  @click="getTypeForms('其他')"
+                  @click.prevent="getTypeForms('其他')"
                 >
                   <span class="material-icons me-2"> find_in_page </span>其他
                 </a>
@@ -150,7 +152,7 @@
               <th>{{ item.ReviewID }}</th>
               <td>{{ item.MemberID }}</td>
               <td>{{ item.Type }}</td>
-              <td>{{ item.ReviewDate }}</td>
+              <td>{{ item.ReviewDate.split("T")[0] }}</td>
               <td>
                 <span v-if="item.Status === '已處理'">已處理</span>
                 <span class="text-primary" v-else-if="item.Status === '處理中'"
@@ -314,9 +316,9 @@ export default {
     },
   },
   mounted() {
-    this.getForms();
     getToken();
     console.log(this.$http.defaults.headers.common["Authorization"]);
+    this.getForms();
     // this.getToken();
   },
 };
