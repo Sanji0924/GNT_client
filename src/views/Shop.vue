@@ -25,24 +25,12 @@
         </button>
       </h2>
 
-      <div class="mb-3">
-        <label>
-          <input type="checkbox" value="調酒" />
-          <span>調酒</span>
+      <!-- <div class="mb-3">
+        <label class="tagLabel mb-2" v-for="(tag, key) in tags" :key="key">
+          <input type="checkbox" :value="tag.TagName" class="tagInput" />
+          <span class="fs-7">{{ tag.TagName }}</span>
         </label>
-        <label>
-          <input type="checkbox" value="餐酒館" />
-          <span>餐酒館</span>
-        </label>
-        <label>
-          <input type="checkbox" value="水果特調" />
-          <span>水果特調</span>
-        </label>
-        <label>
-          <input type="checkbox" value="輕酒精" />
-          <span>輕酒精</span>
-        </label>
-      </div>
+      </div> -->
       <div class="row">
         <template v-for="shop in shops">
           <div
@@ -70,7 +58,7 @@
                 >
                   <div class="d-flex align-items-center">
                     <span class="material-icons text-primary">star</span>
-                    <span class="ms-2">4.5</span>
+                    <span class="ms-2">{{ shop.score }}</span>
                   </div>
                   <div>
                     <a
@@ -122,8 +110,8 @@ export default {
     return {
       shops: [],
       toggleTag: false,
+      tags: [],
       isLoading: true,
-      fullPage: false,
       loader: {
         width: 150,
         height: 150,
@@ -140,18 +128,16 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res);
           this.isLoading = true;
           this.shops = res.data;
           this.shops.forEach((item, index) => {
-            this.getShopTags(item.ShopID, index);
-            // console.log(item.TagName);
+            // this.getShopTags(item.ShopID, index);
+            this.getShopScore(item.ShopID, index);
           });
           this.isLoading = false;
         })
-        .catch((err) => {
-          console.dir(err);
-          // alert(err.response.data.Message);
+        .catch(() => {
+          // console.dir(err);
         });
     },
     getShopTags(shopId, index) {
@@ -168,9 +154,35 @@ export default {
           });
           // console.log(this.shops);
         })
-        .catch((err) => {
-          console.dir(err);
-          // alert(err.response.data.Message);
+        .catch(() => {
+          // console.dir(err);
+        });
+    },
+    getShopScore(shopId, index) {
+      const api = `https://localhost:44333/api/shopreviews/score/${shopId}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          // console.log(res);
+          this.shops[index].score = res.data;
+        })
+        .catch(() => {
+          // console.dir(err.response.data.Message);
+          this.shops[index].score = "尚未有評分";
+        });
+    },
+    getAllTags() {
+      const api = `https://localhost:44333/api/Tag`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.tags = res.data;
+        })
+        .catch(() => {
+          // console.dir(err);
         });
     },
     showTag() {
@@ -179,7 +191,7 @@ export default {
   },
   mounted() {
     this.getShops();
-    // console.log(this.$route.params.type);
+    this.getAllTags();
   },
 };
 </script>
