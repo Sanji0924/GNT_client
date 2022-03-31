@@ -1,9 +1,7 @@
 <template>
   <div>
     <FrontNavbar :isMember="isMember"></FrontNavbar>
-    <div
-      class="container-fuild d-flex justify-content-between bg-dark position-relative"
-    >
+    <div class="container-fuild bg-dark position-relative">
       <input type="checkbox" id="checkShow" hidden />
       <section class="container-fuild side bg-white pt-6 px-3">
         <div class="container pt-5 side-area">
@@ -167,7 +165,7 @@
           </nav>
         </div>
       </section>
-      <section class="container pt-6">
+      <section>
         <keep-alive>
           <router-view></router-view>
         </keep-alive>

@@ -80,11 +80,11 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           this.shopReviews = res.data.filter(
             (item) => item.ShopID == this.shopId
           );
-          console.log(this.shopReviews);
+          // console.log(this.shopReviews);
         })
         .catch((err) => {
           console.dir(err);

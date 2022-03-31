@@ -89,6 +89,9 @@ export default {
     );
     if (myCookie === "true") {
       this.isMember = true;
+    } else {
+      alert("請先登入");
+      this.$router.push("/memberlogin");
     }
   },
 };

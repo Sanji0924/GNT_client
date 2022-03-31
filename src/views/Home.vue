@@ -3,7 +3,7 @@
     <FrontNavbar :isMember="isMember"></FrontNavbar>
     <div class="container-fuild">
       <section class="container-fuild">
-        <div class="banner d-flex align-items-center pt-6">
+        <div class="banner d-flex align-items-center">
           <div class="container mb-0 mt-3 mb-md-4">
             <h1 class="text-primary fw-bold">好夜台南</h1>
             <p class="fs-3 text-primary">美好夜晚，盡在台南</p>

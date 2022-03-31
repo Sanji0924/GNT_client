@@ -119,9 +119,9 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           this.shops = res.data;
-          console.log(this.shops);
+          // console.log(this.shops);
           let center = [];
           this.shops.forEach((item) => {
             let shopID = item.ShopID;
