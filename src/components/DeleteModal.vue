@@ -15,6 +15,7 @@
               刪除意見回饋
             </template>
             <template v-else-if="type === 'shopInfo'"> 刪除店家 </template>
+            <template v-else-if="type === 'favorite'"> 移除我的最愛 </template>
           </h5>
 
           <button
@@ -33,6 +34,12 @@
             是否刪除
             <strong class="text-danger">此意見回饋</strong
             >（刪除後將無法恢復）。
+          </template>
+          <template v-if="type === 'favorite'">
+            是否從我的最愛中移除
+            <strong class="text-danger" v-if="item.ShopInfo">{{
+              item.ShopInfo.Name
+            }}</strong>
           </template>
         </div>
         <!-- <div class="modal-body">
@@ -64,7 +71,7 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
-  props: ["type"],
+  props: ["type", "item"],
   data() {
     return {
       modal: "",
@@ -78,7 +85,7 @@ export default {
       this.modal.hide();
     },
     deleteItem() {
-      this.$emit("delete-item");
+      this.$emit("delete-item", this.item);
     },
   },
   mounted() {

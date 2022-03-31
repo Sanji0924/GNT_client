@@ -17,13 +17,27 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" v-if="favorite.MemberID">
           <div class="container-fliud">
             <div class="row">
               <div class="col-12 col-md-5">
                 <img
-                  src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
-                  alt=""
+                  :src="favorite.ShopInfo.Image1"
+                  alt="favorite.ShopInfo.PhotoSource"
+                  class="mb-3"
+                  width="100%"
+                />
+                <img
+                  v-if="favorite.ShopInfo.Image2"
+                  :src="favorite.ShopInfo.Image2"
+                  alt="favorite.ShopInfo.PhotoSource"
+                  class="mb-3"
+                  width="100%"
+                />
+                <img
+                  v-if="favorite.ShopInfo.Image3"
+                  :src="favorite.ShopInfo.Image3"
+                  alt="favorite.ShopInfo.PhotoSource"
                   class="mb-3"
                   width="100%"
                 />
@@ -31,26 +45,32 @@
               <div class="col-12 col-md-6 col-lg-7">
                 <div class="mb-3">
                   <h5 class="text-primary">店家名稱</h5>
-                  <p>{{ test.shopName }}</p>
+                  <p>{{ favorite.ShopInfo.Name }}</p>
                 </div>
                 <div class="mb-3">
                   <h5 class="text-primary">店家地址</h5>
-                  <p>{{ test.shopAddress }}</p>
+                  <p>{{ favorite.ShopInfo.Address }}</p>
                 </div>
                 <div class="mb-3">
                   <h5 class="text-primary">營業時間</h5>
-                  <p>{{ test.openTime }}</p>
+                  <p>星期一：{{ favorite.ShopInfo.Monday }}</p>
+                  <p>星期二：{{ favorite.ShopInfo.Tuesday }}</p>
+                  <p>星期三：{{ favorite.ShopInfo.Wednesday }}</p>
+                  <p>星期四：{{ favorite.ShopInfo.Thursday }}</p>
+                  <p>星期五：{{ favorite.ShopInfo.Friday }}</p>
+                  <p>星期六：{{ favorite.ShopInfo.Saturday }}</p>
+                  <p>星期日：{{ favorite.ShopInfo.Sunday }}</p>
                 </div>
                 <div class="mb-3">
                   <h5 class="text-primary">個人低消</h5>
-                  <p>{{ test.minimum }}</p>
+                  <p>{{ favorite.ShopInfo.Min }}</p>
                 </div>
                 <div class="mb-3">
                   <h5 class="text-primary">聯絡方式</h5>
                   <a
-                    :href="`tel:`"
+                    :href="`tel:${favorite.ShopInfo.Phone}`"
                     class="text-dark border-bottom border-1 border-dark d-inline-block"
-                    >{{ test.contact }}</a
+                    >{{ favorite.ShopInfo.Phone }}</a
                   >
                 </div>
               </div>
@@ -76,7 +96,7 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
-  props: ["test"],
+  props: ["favorite"],
   data() {
     return {
       modal: "",
@@ -88,7 +108,9 @@ export default {
     },
   },
   mounted() {
-    this.modal = new Modal(this.$refs.modal);
+    setTimeout(() => {
+      this.modal = new Modal(this.$refs.modal);
+    }, 1000);
   },
 };
 </script>
