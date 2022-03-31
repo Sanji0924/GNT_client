@@ -1,8 +1,18 @@
 <template>
   <div class="container mb-4">
+    <loading
+      :active="isLoading"
+      loader="spinner"
+      :color="loader.color"
+      :width="loader.width"
+      :height="loader.height"
+      :lock-scroll="loader.lockScroll"
+      :is-full-page="loader.isFullPage"
+    >
+    </loading>
     <h1 class="h2 mb-5 mt-5">分享紀錄</h1>
     <div class="row">
-      <div class="col-12 col-md-10 table-responsive-lg">
+      <div class="col-12 table-responsive-lg">
         <h2 class="h4 mb-3">已分享的心得</h2>
         <table class="table align-middle table-hover table-striped">
           <thead>
@@ -14,35 +24,34 @@
               <th width="120"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr
-              v-for="review in reviews"
-              :key="review.ShopID + review.RContent"
-            >
-              <th>{{ review.ShopInfo.Name }}</th>
-              <td class="text-center">{{ review.Score }}</td>
-              <td>
-                {{ review.RContent }}
-              </td>
-              <td>{{ review.ReviewDate.split("T")[0] }}</td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-outline-gray btn-sm me-md-2"
-                  @click="openReviewModal('edit', review)"
-                >
-                  編輯
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger btn-sm"
-                  @click="openReviewModal('delete', review)"
-                >
-                  刪除
-                </button>
-              </td>
-            </tr>
-          </tbody>
+          <keep-alive>
+            <tbody>
+              <tr v-for="review in reviews" :key="review.ShopID">
+                <th>{{ review.ShopName }}</th>
+                <td class="text-center">{{ review.Score }}</td>
+                <td>
+                  {{ review.RContent }}
+                </td>
+                <td>{{ review.ReviewDate }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-outline-gray btn-sm me-md-2"
+                    @click="openReviewModal('edit', review)"
+                  >
+                    編輯
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    @click="openReviewModal('delete', review)"
+                  >
+                    刪除
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </keep-alive>
         </table>
       </div>
     </div>
@@ -75,12 +84,14 @@ export default {
       memberID: 0,
       shopID: 0,
       delType: "",
-      // test: {
-      //   shopName: "依舊室 Always Bar",
-      //   shopRank: 5,
-      //   content: "好喝超好喝",
-      //   date: "2020/01/02",
-      // },
+      isLoading: true,
+      loader: {
+        width: 150,
+        height: 150,
+        color: "#000",
+        lockScroll: true,
+        isFullPage: false,
+      },
     };
   },
   methods: {
@@ -97,27 +108,44 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
+          this.isLoading = true;
           console.log(res);
-          if (res.data === "此會員無評論") {
-            this.reviews = [];
-          } else {
-            this.reviews = res.data;
-          }
+          this.reviews = res.data;
+          this.reviews.forEach((item, index) => {
+            this.getShopName(item.ShopID, index);
+          });
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 500);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    updateReview() {
-      const api = `https://localhost:44333/api/shopreviews/${this.memberID}/${this.shopID}`;
-      console.log(this.tempReviews);
+    getShopName(id, index) {
+      const api = `https://localhost:44333/api/shopinfoes/${id}`;
 
       this.$http
-        .put(api, this.tempReviews)
+        .get(api)
+        .then((res) => {
+          this.reviews[index].ShopName = res.data[0].Name;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateReview(item) {
+      const api = `https://localhost:44333/api/shopreviews/${item.MemberID}/${item.ShopID}`;
+      console.log(item);
+      delete item.ShopName;
+      // delete item.ReviewDate;
+      console.log(item);
+
+      this.$http
+        .put(api, item)
         .then((res) => {
           console.log(res);
           this.getReviews();
-          alert(res.data);
           this.$refs.modal.closeModal();
         })
         .catch((err) => {
@@ -142,23 +170,23 @@ export default {
     },
     openReviewModal(status, item) {
       if (status === "delete") {
+        this.tempReviews = { ...item };
         this.$refs.delModal.openModal();
         this.delType = "shopReview";
       } else if (status === "edit") {
+        this.tempReviews = { ...item };
         this.$refs.modal.openModal();
       }
 
       this.tempReviews = {
         MemberID: this.memberID,
         RContent: item.RContent,
-        ReviewDate: item.ReviewDate.split("T")[0],
+        ReviewDate: item.ReviewDate,
         Score: item.Score,
-        ShopName: item.ShopInfo.Name,
+        ShopName: item.ShopName,
         ShopID: item.ShopID,
       };
       this.shopID = this.tempReviews.ShopID;
-
-      console.log(item);
     },
   },
   mounted() {

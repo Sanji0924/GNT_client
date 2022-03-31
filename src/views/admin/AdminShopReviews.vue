@@ -1,26 +1,48 @@
 <template>
   <div class="container-fuild d-flex justify-content-between bg-white">
     <input type="checkbox" id="checkShow" hidden />
-    <section class="container-fuild side side-member bg-white pt-6 px-3">
+    <section
+      class="container-fuild side side-admin side-member bg-white pt-6 px-3"
+    >
       <div class="container pt-5 side-area">
         <nav class="nav flex-column side-nav">
           <label
             for="checkShow"
-            class="nav-icon nav-icon-member text-dark d-flex"
+            class="nav-icon nav-icon-admin nav-icon-member text-dark d-flex"
           >
             <span class="material-icons"> arrow_forward_ios </span>
           </label>
-          <form action="#" class="mb-3">
+          <form action="#" class="mb-3" ref="form">
             <div class="mb-3 d-flex flex-column">
               <input
                 type="text"
                 class="form-control mb-3"
                 id="keyword"
                 placeholder="輸入關鍵字搜尋"
+                v-model="keywords"
               />
-              <button type="button" class="btn btn-gray">搜尋</button>
+              <button
+                type="button"
+                class="btn btn-gray"
+                @click="getKeywords(keywords)"
+              >
+                搜尋
+              </button>
             </div>
           </form>
+          <div class="row">
+            <ul class="list-unstyled col-12 text-center">
+              <li>
+                <a
+                  href="#"
+                  class="text-dark d-flex admin-side-menu-link py-2"
+                  @click.prevent="getShopReviews"
+                >
+                  <span class="material-icons me-2"> find_in_page </span>全部
+                </a>
+              </li>
+            </ul>
+          </div>
           <!-- <h3 class="h4 text-dark mb-3">類別</h3> -->
           <!-- <div class="row">
             <ul class="list-unstyled col-12 text-center">
@@ -122,24 +144,23 @@
         >
           <thead>
             <tr>
-              <th width="150">店家 ID</th>
-              <th width="100">會員 ID</th>
-              <th width="50">評分</th>
-              <th width="180">內容</th>
+              <th width="80" class="text-center">店家 ID</th>
+              <th width="80" class="text-center">會員 ID</th>
+              <th width="50" class="text-center">評分</th>
+              <th>內容</th>
               <th width="150">填寫日期</th>
-              <th width="50"></th>
+              <th width="80"></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>f001</th>
-              <td>m001</td>
-              <td>5</td>
+            <tr v-for="(item, key) in shopReviews" :key="key + item.MemberID">
+              <th class="text-center">{{ item.ShopID }}</th>
+              <td class="text-center">{{ item.MemberID }}</td>
+              <td class="text-center">{{ item.Score }}</td>
               <td>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius,
-                ipsum?
+                {{ item.RContent }}
               </td>
-              <td>2021/01/01</td>
+              <td>{{ item.ReviewDate }}</td>
               <td class="text-center">
                 <!-- <button
                   type="button"
@@ -148,7 +169,11 @@
                 >
                   編輯
                 </button> -->
-                <button type="button" class="btn btn-outline-danger btn-sm">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  @click="openDelModal(item)"
+                >
                   刪除
                 </button>
               </td>
@@ -157,6 +182,94 @@
         </table>
       </div>
     </section>
-    <AdminFormModal ref="modal"></AdminFormModal>
+    <!-- <AdminFormModal ref="modal"></AdminFormModal> -->
+    <DeleteModal
+      ref="delModal"
+      @delete-item="deleteShopReview"
+      :type="delType"
+    ></DeleteModal>
   </div>
 </template>
+
+<script>
+import DeleteModal from "../../components/DeleteModal.vue";
+
+export default {
+  data() {
+    return {
+      shopReviews: [],
+      tempShopReview: {},
+      delType: "shopReview",
+      keywords: "",
+    };
+  },
+  components: {
+    DeleteModal,
+  },
+  methods: {
+    getShopReviews() {
+      const api = `https://localhost:44333/api/shopreviews`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.shopReviews = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getKeywords(keywords) {
+      const api = `https://localhost:44333/api/shopreviews/keywords/${keywords}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          // this.isLoading = true;
+          // alert(res.data);
+          console.log(res);
+          this.shopReviews = res.data;
+          this.$refs.form.reset();
+          // this.getShopReviews();
+          // this.$refs.delModal.closeModal();
+        })
+        .catch((err) => {
+          console.dir(err);
+          alert(err.response.data.Message);
+          this.$refs.form.reset();
+        });
+    },
+    openDelModal(item) {
+      this.tempShopReview = { ...item };
+      this.$refs.delModal.openModal();
+    },
+    deleteShopReview() {
+      const api = `https://localhost:44333/api/shopreviews/Admin/${this.tempShopReview.MemberID}/${this.tempShopReview.ShopID}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          // this.isLoading = true;
+          alert(res.data);
+          this.getShopReviews();
+          this.$refs.delModal.closeModal();
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+  },
+  mounted() {
+    this.getShopReviews();
+    console.log(this.$http.defaults.headers.common["Authorization"]);
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.main {
+  height: calc(100vh - 272px);
+}
+</style>
