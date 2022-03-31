@@ -183,7 +183,6 @@
         </table>
       </div>
     </section>
-    tempForm:{}
     <AdminFormModal
       ref="modal"
       :form="tempForm"
@@ -200,7 +199,7 @@
 <script>
 import AdminFormModal from "../../components/AdminFormModal.vue";
 import DeleteModal from "../../components/DeleteModal.vue";
-import getToken from "../../assets/methods/adminToken.js";
+// import getToken from "../../assets/methods/adminToken.js";
 
 export default {
   components: {
@@ -316,7 +315,7 @@ export default {
     },
   },
   mounted() {
-    getToken();
+    // getToken();
     console.log(this.$http.defaults.headers.common["Authorization"]);
     this.getForms();
     // this.getToken();
