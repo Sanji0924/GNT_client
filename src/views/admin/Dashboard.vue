@@ -53,7 +53,10 @@
         </div>
       </div>
     </nav>
-    <router-view></router-view>
+    <!-- <section class="main pt-7">
+      <h1>請選擇要前往的頁面</h1>
+    </section> -->
+    <router-view v-if="isAdmin"></router-view>
     <footer class="footer w-100">
       <div class="container-fuild bg-gray py-5">
         <div class="container text-center">
@@ -85,19 +88,29 @@
 
 <script>
 export default {
+  data() {
+    return {
+      isAdmin: false,
+    };
+  },
   methods: {
     checkToken() {
+      // this.isAdmin = false;
       let token = document.cookie.replace(
         /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
       );
       this.$http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      // console.log(token);
-      console.log(this.$http.defaults.headers.common["Authorization"]);
+      if (!token) {
+        alert("請先登入");
+        this.$router.push("/adminlogin");
+      } else {
+        this.isAdmin = true;
+      }
     },
   },
   mounted() {
-    // this.checkToken();
+    this.checkToken();
   },
 };
 </script>
@@ -120,5 +133,8 @@ export default {
   width: 100%;
   top: 0;
   z-index: 10000;
+}
+.main {
+  height: calc(100vh - 272px);
 }
 </style>

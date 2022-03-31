@@ -95,14 +95,18 @@ export default {
         .then((res) => {
           console.log(res);
           const { token, expiretime } = res.data;
-          document.cookie = `token=${token}; expires=${expiretime}; path=/`;
+          let timeStamp = Number(expiretime).toFixed();
+          document.cookie = `token=${token}; expires=${new Date(
+            Number(timeStamp)
+          )}}; path=/`;
+          this.$http.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${token}`;
           alert(res.data.message);
-          this.$router.push("/admin/shops");
-          // this.bars = res.data;
+          this.$router.push("/admin");
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
   },
