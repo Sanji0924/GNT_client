@@ -12,7 +12,7 @@
     min-width: 300px;
     box-shadow: none;
     @include desktop {
-      box-shadow: 5px 0 10px rgba($color: #eee, $alpha: 0.5);
+      // box-shadow: 5px 0 10px rgba($color: #eee, $alpha: 0.5);
     }
   }
   @include desktop {
