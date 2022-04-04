@@ -39,7 +39,7 @@
                   <button
                     type="button"
                     class="btn btn-outline-gray btn-sm me-2"
-                    @click="openShopModal(item, 'more')"
+                    @click="openShopModal(item.ShopInfo, 'more')"
                   >
                     查看更多
                   </button>

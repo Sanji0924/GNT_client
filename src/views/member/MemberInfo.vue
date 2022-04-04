@@ -1,7 +1,7 @@
 <template>
-  <div class="container mb-4">
+  <div class="mb-4">
     <h1 class="h2 mb-5 mt-5">會員資料</h1>
-    <div class="row justify-content-between">
+    <div class="row">
       <div class="col-12 col-md-6 col-lg-4">
         <h2 class="h4 mb-3">基本資料</h2>
         <ul class="list-unstyled bg-light rounded-lg p-3">
@@ -190,12 +190,11 @@ export default {
         .get(api)
         .then((res) => {
           console.log(res);
-          this.user = res.data;
-          this.user.BirthDate = res.data.BirthDate.split("T")[0];
+          this.user = res.data[0];
           console.log(this.user);
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
         });
     },
     updateData() {

@@ -169,6 +169,8 @@ export default {
         .post(api, this.user)
         .then((res) => {
           console.log(res);
+          alert("註冊成功");
+          this.$router.push("/memberlogin");
           // this.reviews = res.data;
         })
         .catch((err) => {
