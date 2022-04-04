@@ -21,7 +21,7 @@
           id="navbarSupportedContent"
         >
           <div class="navbar-nav text-sm-center">
-            <router-link class="nav-item nav-link text-white mx-2" to="/index"
+            <router-link class="nav-item nav-link text-white mx-2" to="/"
               >前台首頁</router-link
             >
             <router-link
@@ -44,11 +44,11 @@
               to="/admin/shopreviews"
               >商家評論</router-link
             >
-            <router-link
+            <!-- <router-link
               class="nav-item nav-link text-white mx-2"
               to="/admin/data"
               >後台數據</router-link
-            >
+            > -->
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
       <h1>請選擇要前往的頁面</h1>
     </section> -->
     <router-view v-if="isAdmin"></router-view>
-    <footer class="footer w-100">
+    <!-- <footer class="footer w-100">
       <div class="container-fuild bg-gray py-5">
         <div class="container text-center">
           <router-link class="text-white h4 link-hover-opacity mb-3" to="/">
@@ -82,7 +82,7 @@
           <p class="text-white mb-0 mt-3">© 2022 LOGO All Rights Reserved.</p>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 

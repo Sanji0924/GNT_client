@@ -1,34 +1,57 @@
 @import "../helpers/mixin";
 
 .side {
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
+  overflow-y: auto;
   z-index: 9999;
-  transform: translateX(-100%);
+  transform: translateX(-101%);
   transition: transform 0.4s;
-  min-width: 350px;
+  min-width: 360px;
+  max-width: 400px;
   &-member {
-    min-width: 300px;
+    // min-width: 300px;
+    overflow: visible;
+    position: fixed;
+    height: 100vh;
     box-shadow: none;
+    transform: translateX(-101%);
     @include desktop {
-      // box-shadow: 5px 0 10px rgba($color: #eee, $alpha: 0.5);
+      position: sticky;
+      transform: translateX(0%);
+      box-shadow: 5px 0 10px rgba($color: #eee, $alpha: 0.5);
     }
   }
   @include desktop {
+    // overflow-y: scroll;
     // position: sticky;
     // height: 100vh;
     // transform: translateX(0%);
   }
-  &-admin {
-    position: fixed;
-    // transform: translateX(-100%);
-    // transition: transform 0.4s;
-    @include desktop {
-      position: sticky;
-      // height: 100vh;
-      transform: translateX(0%);
-    }
+  // &-area {
+  //   position: fixed;
+  //   height: 100%;
+  // }
+  &-area {
+    position: relative;
+  }
+}
+// 客製化卷軸
+#sideBar {
+  //捲軸底色
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #ddd;
+  }
+  //捲軸寬度
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: black;
+  }
+  //捲軸本體顏色
+  &::-webkit-scrollbar-thumb {
+    background-color: gray;
   }
 }
 .side-nav {
@@ -37,17 +60,29 @@
   // height: 100%;
 }
 .nav-icon {
+  display: none;
   position: absolute;
-  right: -62px;
-  top: 30%;
+  // right: -34px;
+  top: 50%;
+  line-height: 0;
   padding: 10px 5px;
   border-radius: 0px 10px 10px 0px;
   background-color: rgba($color: #fbaa57, $alpha: 1);
   z-index: 1000;
-  &-member {
-    top: 0;
+  &-out {
+    display: block;
+    position: fixed;
+  }
+  &-member,
+  &-admin {
+    display: block;
+    top: 50%;
+    right: -34px;
     color: #fff !important;
     background-color: rgba($color: #495057, $alpha: 0.8);
+    @include desktop {
+      display: none;
+    }
   }
   &-admin {
     @include desktop {
@@ -73,9 +108,17 @@
 }
 #checkShow:checked + .side .nav-icon,
 #checkShow:checked + .side-admin .nav-icon {
-  right: -28px;
+  display: block;
+  right: 0px;
   border-radius: 10px 0 0 10px;
 }
+
+#checkShow:checked + .nav-icon,
+#checkShow:checked + .side-admin .nav-icon {
+  right: 0px;
+  border-radius: 10px 0 0 10px;
+}
+
 #checkShow:checked + .side .material-icons,
 #checkShow:checked + .side-admin .material-icons {
   transform: scaleX(-1);
@@ -102,4 +145,28 @@
     width: 100%;
     transition: all 0.4s;
   }
+}
+
+// 標籤樣式
+.tagLabel {
+  padding: 0;
+  // margin-right: 8px;
+  cursor: pointer;
+}
+.tagInput[type="checkbox"] {
+  display: none;
+}
+.tagInput[type="checkbox"] + span {
+  display: inline-block;
+  background-color: transparent;
+  padding: 4px 8px;
+  border: 1px solid #1c6e8c;
+  color: #1c6e8c;
+  user-select: none; /* 防止文字被滑鼠選取反白 */
+  border-radius: 10px;
+}
+
+.tagInput[type="checkbox"]:checked + span {
+  color: #fff;
+  background-color: #1c6e8c;
 }

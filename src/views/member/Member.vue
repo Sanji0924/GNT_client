@@ -3,20 +3,24 @@
     <FrontNavbar :isMember="isMember"></FrontNavbar>
     <div class="container-fuild d-flex justify-content-between bg-white">
       <input type="checkbox" id="checkShow" hidden />
+
       <section class="container-fuild side side-member bg-white pt-6 px-3">
+        <label for="checkShow" class="nav-icon nav-icon-member text-dark">
+          <span class="material-icons .arrow"> arrow_forward_ios </span>
+        </label>
         <div class="container pt-5 side-area">
+          <!-- <label
+            for="checkShow"
+            class="nav-icon nav-icon-member text-dark d-flex"
+          >
+            <span class="material-icons"> arrow_forward_ios </span>
+          </label> -->
           <nav class="nav flex-column side-nav">
-            <label
-              for="checkShow"
-              class="nav-icon nav-icon-member text-dark d-flex"
-            >
-              <span class="material-icons"> arrow_forward_ios </span>
-            </label>
             <h3 class="h4 text-dark mb-3">選單</h3>
             <div class="row">
               <ul class="list-unstyled col-12 text-center">
                 <li>
-                  <router-link to="/index" class="d-flex member-menu-link py-2">
+                  <router-link to="/" class="d-flex member-menu-link py-2">
                     <span class="material-icons me-2"> house </span>回到首頁
                   </router-link>
                 </li>
@@ -61,7 +65,7 @@
           </nav>
         </div>
       </section>
-      <section class="container w-100 pt-6">
+      <section class="container pt-6">
         <router-view></router-view>
       </section>
     </div>
