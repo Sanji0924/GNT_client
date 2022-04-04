@@ -2,6 +2,16 @@
   <div>
     <FrontNavbar :isMember="isMember"></FrontNavbar>
     <div class="container-fuild">
+      <loading
+        :active="isLoading"
+        loader="spinner"
+        :color="loader.color"
+        :width="loader.width"
+        :height="loader.height"
+        :lock-scroll="loader.lockScroll"
+        :is-full-page="loader.isFullPage"
+      >
+      </loading>
       <section class="container-fuild">
         <div class="banner d-flex align-items-center">
           <div class="container mb-0 mt-3 mb-md-4">
@@ -13,17 +23,18 @@
                 arrow_forward
               </span>
             </router-link>
-            <button
+            <!-- <button
               type="button"
               class="btn btn-outline-light"
               @click="openRouletteModal"
+              v-if="this.$router.history.current.fullPath == '/'"
             >
-              輪盤
-            </button>
+              隨機輪盤
+            </button> -->
           </div>
         </div>
       </section>
-      <section class="container-fuild pt-6 pb-5">
+      <section class="container-fuild py-6">
         <div class="container">
           <div class="row">
             <div class="col height-50">
@@ -43,17 +54,21 @@
           </div>
         </div>
       </section>
-      <section class="container-fuild bg-dark pt-6 pb-5">
+      <section class="container-fuild bg-dark py-6">
         <div class="container">
           <h2 class="text-center text-primary mb-3">熱門商家</h2>
-          <Swiper></Swiper>
+
+          <Swiper
+            :member-id="review.MemberID"
+            @open-modal="openRouteModal"
+          ></Swiper>
         </div>
       </section>
-      <section class="container pt-6 pb-5" id="review">
+      <section class="container py-6" id="review">
         <div class="row justify-content-center">
           <div class="col-10 col-md-6 col-lg-5">
             <h3 class="h2 text-center">意見回饋</h3>
-            <form action="#">
+            <form action="#" ref="form">
               <input
                 type="hidden"
                 name="memberID"
@@ -67,7 +82,7 @@
                   class="form-control"
                   id="memberAccount"
                   name="memberAccount"
-                  v-model="review.MemberID"
+                  v-model="memberName"
                   disabled
                 />
               </div>
@@ -126,6 +141,13 @@
     <!-- <router-view></router-view> -->
     <FrontFooter></FrontFooter>
     <Roulette ref="modal"></Roulette>
+    <RouteModal
+      ref="routeModal"
+      :routes="memberRoutes"
+      :titles="memberRouteTitles"
+      :shop-id="shopId"
+      @get-routes="getRoutes"
+    ></RouteModal>
   </div>
 </template>
 
@@ -135,6 +157,7 @@ import FrontFooter from "../components/FrontFooter.vue";
 import LeafletComponent from "../components/LeafletComponent.vue";
 import Roulette from "../components/RouletteModal.vue";
 import Swiper from "../components/Swiper.vue";
+import RouteModal from "../components/RouteModal.vue";
 // import { EventBus } from "../assets/methods/eventBus";
 
 export default {
@@ -148,6 +171,17 @@ export default {
         RContent: "",
         // ReviewDate: "",
       },
+      memberRoutes: [],
+      memberRouteTitles: [],
+      isLoading: true,
+      loader: {
+        width: 150,
+        height: 150,
+        color: "#fff",
+        lockScroll: true,
+        isFullPage: true,
+      },
+      shopId: 0,
     };
   },
   components: {
@@ -156,20 +190,24 @@ export default {
     LeafletComponent,
     Swiper,
     Roulette,
+    RouteModal,
   },
   methods: {
     openRouletteModal() {
+      this.$refs.modal.getPoints();
+      this.$refs.modal.init();
+      this.$refs.modal.drawRouletteWheel();
       this.$refs.modal.openModal();
     },
     getMemberInfo() {
-      const api = `https://localhost:44333/api/websitereview`;
+      this.isLoading = true;
+      const api = `https://localhost:44333/api/MemberInfoes1/${this.review.MemberID}`;
 
       this.$http
-        .post(api, this.review)
+        .get(api)
         .then((res) => {
-          this.isLoading = true;
-          alert(res.data);
-          this.getForms();
+          console.log(res);
+          this.memberName = res.data[0].Name;
         })
         .catch((err) => {
           console.dir(err);
@@ -183,28 +221,63 @@ export default {
         .post(api, this.review)
         .then((res) => {
           console.log(res);
-          // this.isLoading = true;
-          // alert(res.data);
-          // this.getForms();
+          this.review.Type = "";
+          this.review.RContent = "";
+          alert(res.data);
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
+        });
+    },
+    gerMember() {
+      let myCookie = document.cookie.replace(
+        /(?:(?:^|.*;\s*)memberToken\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      if (myCookie === "true") {
+        this.isMember = true;
+      }
+      this.review.MemberID = document.cookie.replace(
+        /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.getMemberInfo();
+    },
+    openRouteModal(shopId) {
+      this.shopId = shopId;
+      this.$refs.routeModal.openModal();
+      if (!this.review.MemberID) {
+        alert("請先登入");
+        this.$router.push("/memberlogin");
+      }
+    },
+    getRoutes() {
+      this.memberRouteTitles = [];
+      const api = `https://localhost:44333/api/Routes/${this.review.MemberID}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.memberRoutes = res.data;
+          this.memberRoutes.forEach((item) => {
+            this.memberRouteTitles.push({
+              title: item.Title,
+              routeId: item.RouteID,
+            });
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
   },
   mounted() {
-    let myCookie = document.cookie.replace(
-      /(?:(?:^|.*;\s*)memberToken\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
-    if (myCookie === "true") {
-      this.isMember = true;
-    }
-    this.review.MemberID = document.cookie.replace(
-      /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
+    this.gerMember();
+    this.getRoutes();
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
     // EventBus.$on("send", (member) => {
     //   console.log(member);
     //   this.memberName = member;

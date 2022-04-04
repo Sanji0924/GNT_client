@@ -1,36 +1,52 @@
 <template>
-  <div>
-    <loading
-      :active="isLoading"
-      loader="spinner"
-      :color="loader.color"
-      :width="loader.width"
-      :height="loader.height"
-      :lock-scroll="loader.lockScroll"
-      :is-full-page="loader.isFullPage"
+  <div class="container-fulid">
+    <div
+      class="banner d-flex justify-content-center align-items-end mb-6"
+      v-if="shopType == 'all'"
     >
-    </loading>
-    <div class="banner banner-shop d-flex align-items-end mb-6">
       <div class="container mb-4">
         <h1 class="text-primary fw-bold">台南的夜生活都在這裡</h1>
         <p class="fs-3 text-primary">夜來夜好玩</p>
       </div>
     </div>
-    <div>
-      <h2 class="text-white mb-3">
-        所有店家
-        <button class="btn btn-light ms-3" @click="showTag">
-          <span v-if="!toggleTag">開啟商家標籤</span>
-          <span v-else>關閉標籤</span>
-        </button>
-      </h2>
-
-      <!-- <div class="mb-3">
-        <label class="tagLabel mb-2" v-for="(tag, key) in tags" :key="key">
-          <input type="checkbox" :value="tag.TagName" class="tagInput" />
-          <span class="fs-7">{{ tag.TagName }}</span>
-        </label>
-      </div> -->
+    <div
+      class="banner banner-bar d-flex align-items-end mb-6"
+      v-if="shopType == 'bar'"
+    >
+      <div class="container mb-4">
+        <h1 class="text-primary fw-bold">找尋優質的酒吧</h1>
+        <p class="fs-3 text-primary">今朝有酒，今朝醉</p>
+      </div>
+    </div>
+    <div
+      class="banner-dessert banner d-flex align-items-end mb-6"
+      v-if="shopType == 'dessert'"
+    >
+      <div class="container mb-4">
+        <h1 class="text-primary fw-bold">深夜裡的甜點店</h1>
+        <p class="fs-3 text-primary">來台南當螞蟻人</p>
+      </div>
+    </div>
+    <div
+      class="banner-viewpoint banner d-flex align-items-end mb-6"
+      v-if="shopType == 'viewpoint'"
+    >
+      <div class="container mb-4">
+        <h1 class="text-primary fw-bold">夜間景點</h1>
+        <p class="fs-3 text-primary">慢下來，一起欣賞台南夜景</p>
+      </div>
+    </div>
+    <div
+      class="banner-snack banner d-flex align-items-end mb-6"
+      v-if="shopType == 'snack'"
+    >
+      <div class="container mb-4">
+        <h1 class="text-primary fw-bold">宵夜小吃</h1>
+        <p class="fs-3 text-primary">快來當台南小吃霸主</p>
+      </div>
+    </div>
+    <div class="container">
+      <h2 class="text-white mb-3">所有店家</h2>
       <div class="row">
         <template v-for="shop in shops">
           <div
@@ -41,8 +57,22 @@
             <div class="card border-primary rounded-lg w-100 overflow-hidden">
               <div class="position-relative">
                 <a href="#" class="card-icon bg-transparent lh-sm">
-                  <span class="material-icons"> favorite </span>
+                  <span
+                    class="card-icon-istrue material-icons"
+                    v-if="memberFavorites.includes(shop.ShopID)"
+                    @click.prevent="removeFavorite(shop.ShopID)"
+                  >
+                    favorite
+                  </span>
+                  <span
+                    class="material-icons"
+                    v-else
+                    @click.prevent="addFavorite(shop.ShopID)"
+                  >
+                    favorite
+                  </span>
                 </a>
+
                 <p class="card-browse">
                   <span class="material-icons me-2"> visibility </span>
                   <span>{{ shop.Click }}</span>
@@ -60,31 +90,41 @@
                     <span class="material-icons text-primary">star</span>
                     <span class="ms-2">{{ shop.score }}</span>
                   </div>
-                  <div>
-                    <a
-                      href="#"
-                      class="btn btn-outline-primary bg-transparnt d-flex align-items-center lh-base"
-                    >
-                      <span class="material-icons fs-6 me-1">add</span>加入行程
-                    </a>
-                  </div>
                 </div>
                 <h5 class="card-title fs-5 fw-bold d-flex align-items-center">
                   {{ shop.Name }}
                 </h5>
-
-                <div v-if="toggleTag">
+                <div class="mb-3">
                   <span
                     class="fs-7 fw-light badge bg-info me-1 lh-sm"
                     v-for="tag in shop.tags"
-                    :key="tag + shop.tags.length + '123'"
+                    :key="tag"
                     >{{ tag }}</span
                   >
                 </div>
-                <ul class="list-unstyled mb-0">
+
+                <ul class="list-unstyled">
                   <li>地址：{{ shop.Address }}</li>
                   <li>低消：{{ shop.Min }}</li>
                 </ul>
+              </div>
+              <div class="card-footer bg-transparent border-0">
+                <div class="d-flex">
+                  <a
+                    href="#"
+                    class="btn btn-outline-info bg-transparnt d-flex align-items-center lh-base me-3"
+                    @click.prevent="addRoulette(shop.ShopID, shop.Name)"
+                  >
+                    <span class="material-icons fs-6 me-1">add</span>加入輪盤
+                  </a>
+                  <a
+                    href="#"
+                    class="btn btn-outline-primary bg-transparnt d-flex align-items-center lh-base"
+                    @click.prevent="openRouteModal(shop.ShopID)"
+                  >
+                    <span class="material-icons fs-6 me-1">add</span>加入行程
+                  </a>
+                </div>
               </div>
               <div class="card-footer bg-primary">
                 <router-link
@@ -92,26 +132,34 @@
                   class="fs-4 text-center text-dark"
                   >查看更多</router-link
                 >
-                <!-- <a href="./shop.html" class="btn btn-primary btn-lg w-100 rounded-0"
-            >查看更多</a
-          > -->
               </div>
             </div>
           </div>
         </template>
       </div>
     </div>
+    <RouteModal
+      ref="modal"
+      :routes="memberRoutes"
+      :titles="memberRouteTitles"
+      :shop-id="shopId"
+      @get-routes="getRoutes"
+    ></RouteModal>
   </div>
 </template>
 
 <script>
+import RouteModal from "../components/RouteModal.vue";
+
 export default {
+  props: ["allShops", "shopType"],
+  components: {
+    RouteModal,
+  },
   data() {
     return {
       shops: [],
-      toggleTag: false,
-      tags: [],
-      isLoading: true,
+      isLoading: false,
       loader: {
         width: 150,
         height: 150,
@@ -119,6 +167,11 @@ export default {
         lockScroll: true,
         isFullPage: false,
       },
+      memberID: 0,
+      memberRoutes: [],
+      memberRouteTitles: [],
+      memberFavorites: [],
+      shopId: 0,
     };
   },
   methods: {
@@ -128,97 +181,162 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          this.isLoading = true;
+          // this.isLoading = true;
           this.shops = res.data;
           this.shops.forEach((item, index) => {
-            // this.getShopTags(item.ShopID, index);
+            this.shops[index].tags = item.TagIds.split(",");
             this.getShopScore(item.ShopID, index);
           });
-          this.isLoading = false;
         })
         .catch(() => {
           // console.dir(err);
         });
     },
-    getShopTags(shopId, index) {
-      const api = `https://localhost:44333/api/shoptag/${shopId}`;
+    getShopScore() {
+      let api = `https://localhost:44333/api/shopreviews/score`;
 
-      this.$http
-        .get(api)
-        .then((res) => {
-          // console.log(res);
-          let tags = [];
-          res.data.forEach((item) => {
-            tags.push(item.TagName);
-            this.shops[index].tags = tags;
+      this.shops.forEach((item, index) => {
+        api = `https://localhost:44333/api/shopreviews/score/${item.ShopID}`;
+        this.$http
+          .get(api)
+          .then((res) => {
+            this.shops[index].score = res.data;
+          })
+          .catch(() => {
+            this.shops[index].score = "尚未有評分";
           });
-          // console.log(this.shops);
+      });
+    },
+    addRoute(id) {
+      const api = `https://localhost:44333/api/Routes/${id}`;
+
+      this.$http
+        .post(api)
+        .then((res) => {
+          console.log(res);
         })
-        .catch(() => {
-          // console.dir(err);
+        .catch((err) => {
+          console.log(err);
         });
     },
-    getShopScore(shopId, index) {
-      const api = `https://localhost:44333/api/shopreviews/score/${shopId}`;
+    getMember() {
+      let member = document.cookie.replace(
+        /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.memberID = Number(member);
+    },
+    getMemberFavorites() {
+      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}`;
 
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res);
-          this.shops[index].score = res.data;
+          res.data.forEach((item) => {
+            if (!this.memberFavorites.includes(item.ShopID)) {
+              this.memberFavorites.push(item.ShopID);
+            } else {
+              return;
+            }
+          });
         })
-        .catch(() => {
-          // console.dir(err.response.data.Message);
-          this.shops[index].score = "尚未有評分";
+        .catch((err) => {
+          console.dir(err);
         });
     },
-    getAllTags() {
-      const api = `https://localhost:44333/api/Tag`;
+    addFavorite(shopId) {
+      const api = `https://localhost:44333/api/MemberFavorites`;
+      let obj = {
+        MemberID: this.memberID,
+        ShopID: shopId,
+      };
+      this.$http
+        .post(api, obj)
+        .then((res) => {
+          if (!this.memberFavorites.includes(shopId)) {
+            this.memberFavorites.push(shopId);
+          } else {
+            return;
+          }
+          // this.memberFavorites = [];
+          this.getMemberFavorites();
+          alert(res.data);
+        })
+        .catch(() => {
+          // console.dir(err);
+          alert("此商家已經被加過囉");
+        });
+    },
+    removeFavorite(shopId) {
+      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}/${shopId}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          this.memberFavorites.filter((item, index) => {
+            if (item == shopId || this.memberFavorites.includes(item.ShopID)) {
+              this.memberFavorites.splice(index, 1);
+            }
+          });
+          this.getMemberFavorites();
+          alert(res.data);
+        })
+        .catch(() => {
+          // console.dir(err);
+          alert("此商家已經被加過囉");
+        });
+    },
+    addRoulette(id, name) {
+      if (localStorage.length >= 13) {
+        alert("最多只能加入 12 個輪盤項目");
+      } else {
+        localStorage.setItem(id, name);
+        alert("已加入隨機輪盤");
+      }
+    },
+    openRouteModal(shopId) {
+      this.shopId = shopId;
+      this.$refs.modal.openModal();
+      if (!this.memberID) {
+        alert("請先登入");
+        this.$router.push("/memberlogin");
+      }
+    },
+    getRoutes() {
+      this.memberRouteTitles = [];
+      const api = `https://localhost:44333/api/Routes/${this.memberID}`;
 
       this.$http
         .get(api)
         .then((res) => {
           console.log(res);
-          this.tags = res.data;
+          this.memberRoutes = res.data;
+          this.memberRoutes.forEach((item) => {
+            this.memberRouteTitles.push({
+              title: item.Title,
+              routeId: item.RouteID,
+            });
+          });
         })
-        .catch(() => {
-          // console.dir(err);
+        .catch((err) => {
+          console.log(err);
         });
     },
-    showTag() {
-      this.toggleTag = !this.toggleTag;
+  },
+  watch: {
+    allShops() {
+      this.shops = this.allShops;
     },
   },
   mounted() {
-    this.getShops();
-    this.getAllTags();
+    // this.getShops();
+    this.getMember();
+    this.getMemberFavorites();
+    this.getRoutes();
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../assets/stylesheet/layout/card";
-
-label {
-  padding: 0;
-  margin-right: 16px;
-  cursor: pointer;
-}
-input[type="checkbox"] {
-  display: none;
-}
-input[type="checkbox"] + span {
-  display: inline-block;
-  background-color: transparent;
-  padding: 8px 16px;
-  border: 1px solid #e98830;
-  color: #e98830;
-  user-select: none; /* 防止文字被滑鼠選取反白 */
-  border-radius: 10px;
-}
-
-input[type="checkbox"]:checked + span {
-  color: #000002;
-  background-color: #e98830;
-}
 </style>

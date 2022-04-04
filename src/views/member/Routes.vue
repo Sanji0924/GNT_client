@@ -1,155 +1,304 @@
 <template>
   <div class="container mb-4">
-    <h1 class="h2 mb-5 mt-5">行程規劃</h1>
+    <h1 class="h2 d-flex align-items-center mb-5 mt-5">
+      行程規劃
+      <button type="button" class="btn btn-info ms-3" @click="showMap">
+        <span v-if="!isShow">打開地圖</span>
+        <span v-else>關閉地圖</span>
+      </button>
+    </h1>
     <div class="row">
-      <div class="col-12 col-md-10">
-        <h2 class="h4 mb-5">已建立的行程</h2>
-        <div class="row">
-          <h5 class="offset-1 mb-5">行程一</h5>
-          <!-- <div class="route col-md-4">
-          <a tabindex="0" class="text-dark link-hover-opacity bg-light text-center mb-3" data-bs-container="body"
-            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-            data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點 1
-          </a>
-          <a tabindex="0" class="text-dark link-hover-opacity bg-light text-center mb-3" data-bs-container="body"
-            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-            data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點 2
-          </a>
-        </div> -->
-          <!-- <ul class="route list-unstyled col-md-4">
-          <li class="route-item border-dark border-1 rounded-pill mb-3">
-            <a tabindex="0" class="text-dark link-hover-opacity bg-light text-center py-2 " data-bs-container="body"
-              data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-              data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點1
-            </a>
-          </li>
-          <li class="border-dark border-1 bg-light rounded-pill">
-            <a tabindex="0" class="text-dark link-hover-opacity text-center py-2 " data-bs-container="body"
-              data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-              data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點2
-            </a>
-          </li>
-        </ul> -->
-          <div class="route-list col-12 col-md-4">
-            <div class="d-flex align-items-center mb-3 ms-5">
-              <a
-                tabindex="0"
-                class="route-list-link text-dark link-hover-opacity text-center ps-5"
-                data-bs-container="body"
-                data-bs-toggle="popover"
-                data-bs-placement="bottom"
-                data-bs-trigger="focus"
-                role="bottom"
-                data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00"
-                >地點1
-              </a>
-              <a
-                href="#"
-                class="link-hover-bg text-light border-2 border border-light rounded-3 lh-sm ms-2"
+      <div class="col-12">
+        <h2 class="h4 d-flex justify-content-between mb-5">
+          已建立的行程
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            @click="deleteAllRoutes"
+          >
+            移除全部行程
+          </button>
+        </h2>
+        <div class="row mb-4" v-for="route in routes" :key="route.RouteID">
+          <h5 class="d-flex align-items-center">
+            行程名稱：{{ route.Title }}
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm ms-5"
+              @click="deleteRoute(route.RouteID)"
+            >
+              移除此行程
+            </button>
+          </h5>
+
+          <div class="col-12 col-md-5">
+            <span>
+              <button
+                type="button"
+                class="btn btn-outline-gray btn-sm mb-3"
+                @click="openShopModal(route, 'edit')"
               >
-                <span class="material-icons align-middle fs-5"> clear </span>
-              </a>
-            </div>
-            <div class="d-flex align-items-center mb-3 ms-5">
-              <a
-                tabindex="0"
-                class="route-list-link text-dark link-hover-opacity text-center ps-5"
-                data-bs-container="body"
-                data-bs-toggle="popover"
-                data-bs-placement="bottom"
-                data-bs-trigger="focus"
-                role="bottom"
-                data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00"
-                >地點2
-              </a>
-              <a
-                href="#"
-                class="link-hover-bg text-light border-2 border border-light rounded-3 lh-sm ms-2"
-              >
-                <span class="material-icons align-middle fs-5"> clear </span>
-              </a>
-            </div>
-            <div class="d-flex align-items-center mb-3 ms-5">
-              <a
-                tabindex="0"
-                class="route-list-link text-dark link-hover-opacity text-center ps-5"
-                data-bs-container="body"
-                data-bs-toggle="popover"
-                data-bs-placement="bottom"
-                data-bs-trigger="focus"
-                role="bottom"
-                data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00"
-                >地點3
-              </a>
-              <a
-                href="#"
-                class="link-hover-bg text-light border-2 border border-light rounded-3 lh-sm ms-2"
-              >
-                <span class="material-icons align-middle fs-5"> clear </span>
-              </a>
-            </div>
-            <div class="d-flex align-items-center mb-3 ms-5">
-              <a
-                tabindex="0"
-                class="route-list-link text-dark link-hover-opacity text-center ps-5"
-                data-bs-container="body"
-                data-bs-toggle="popover"
-                data-bs-placement="bottom"
-                data-bs-trigger="focus"
-                role="bottom"
-                data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00"
-                >地點4
-              </a>
-              <a
-                href="#"
-                class="link-hover-bg text-light border-2 border border-light rounded-3 lh-sm ms-2"
-              >
-                <span class="material-icons align-middle fs-5"> clear </span>
-              </a>
-            </div>
-            <!-- <a tabindex="0" class="text-dark link-hover-opacity mb-3 text-center" data-bs-container="body"
-            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-            data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點2
-          </a>
-          <a tabindex="0" class="text-dark link-hover-opacity mb-3 text-center" data-bs-container="body"
-            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-            data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點3
-          </a>
-          <a tabindex="0" class="text-dark link-hover-opacity mb-3 text-center" data-bs-container="body"
-            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-            data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點4
-          </a>
-          <a tabindex="0" class="text-dark link-hover-opacity mb-3 text-center" data-bs-container="body"
-            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-            data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點5
-          </a>
-          <a tabindex="0" class="text-dark link-hover-opacity mb-3 text-center" data-bs-container="body"
-            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus" role="bottom"
-            data-bs-content="地址: 台南市中西區新美街 200 號,  營業時間: 18:00-24:00">地點6
-          </a> -->
+                編輯
+              </button>
+            </span>
+            <ul class="list-unstyled">
+              <li class="mb-2" v-if="route.ShopInfo">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo, 'shop')"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo.Name }}</a
+                >
+              </li>
+              <li class="mb-2" v-if="route.ShopInfo1">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo1, 'shop')"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo1.Name }}</a
+                >
+              </li>
+              <li class="mb-2" v-if="route.ShopInfo2">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo2, 'shop')"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo2.Name }}</a
+                >
+              </li>
+              <li class="mb-2" v-if="route.ShopInfo3">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo3, 'shop')"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo3.Name }}</a
+                >
+              </li>
+              <li class="mb-2" v-if="route.ShopInfo4">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo4, 'shop')"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo4.Name }}</a
+                >
+              </li>
+              <li class="mb-2" v-if="route.ShopInfo5">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo5, 'shop')"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo5.Name }}</a
+                >
+              </li>
+              <li class="mb-2" v-if="route.ShopInfo6">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo6, 'shop')"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo6.Name }}</a
+                >
+              </li>
+              <li class="mb-2" v-if="route.ShopInfo7">
+                <a
+                  href="#"
+                  class="d-flex align-items-center p-2"
+                  @click.prevent="openShopModal(route.ShopInfo7)"
+                  ><span class="material-icons me-2"> directions_run </span>
+                  {{ route.ShopInfo7.Name }}</a
+                >
+              </li>
+            </ul>
           </div>
-          <div class="col-12 col-md-8 mt-5 mt-md-0">
-            <iframe
+          <div class="col-12 col-md-7">
+            <LeafletComponentRoutes
+              v-if="isShow"
+              :route-point="route.wayPoints"
+              :marker-point="route.markers"
+            ></LeafletComponentRoutes>
+            <!-- <iframe
               class="rounded-lg"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d918.1920857575547!2d120.19986702920316!3d22.99554459906046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e7663ec76d519%3A0xd682bd8402d06879!2z6YKE5Zyo5oOzIFRoaW5raW5nIEJhcg!5e0!3m2!1szh-TW!2stw!4v1646187813258!5m2!1szh-TW!2stw"
               width="100%"
-              height="100%"
+              height="350"
               style="border: 0"
               allowfullscreen=""
               loading="lazy"
-            ></iframe>
+            ></iframe> -->
           </div>
-          <!-- <ul class="route-list list-unstyled">
-          <li><a href="#" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-              aria-controls="collapseExample">地點1</a></li>
-          <li>地點2</li>
-          <li>地點3</li>
-        </ul> -->
         </div>
       </div>
     </div>
+    <ShopInfoModal ref="modal" :favorite="tempShop"></ShopInfoModal>
+    <RouteEditModal
+      ref="routeModal"
+      :route="tempShop"
+      @update-route="updateRoute"
+    ></RouteEditModal>
   </div>
 </template>
+
+<script>
+import ShopInfoModal from "../../components/ShopInfoModal.vue";
+import RouteEditModal from "../../components/RouteEditModal.vue";
+import LeafletComponentRoutes from "../../components/LeafletComponentRoutes.vue";
+
+export default {
+  components: {
+    ShopInfoModal,
+    RouteEditModal,
+    LeafletComponentRoutes,
+  },
+  data() {
+    return {
+      memberId: 0,
+      routes: [
+        {
+          wayPoints: [],
+          markers: [],
+        },
+      ],
+      tempShop: {},
+      isShow: false,
+      // markers: [],
+    };
+  },
+  methods: {
+    getMemberID() {
+      let memberId = document.cookie.replace(
+        /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.memberId = Number(memberId);
+    },
+    getRoutes() {
+      const api = `https://localhost:44333/api/Routes/${this.memberId}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          // console.log(res);
+          this.routes = res.data;
+          this.routes.forEach((item, index) => {
+            this.routes[index].wayPoints = [];
+            this.routes[index].markers = [];
+            this.getRoutePoint(item.RouteID, index);
+          });
+          // console.log(this.routes);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    deleteRoute(routeId) {
+      const api = `https://localhost:44333/api/Routes/${routeId}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          // console.log(res);
+          this.getRoutes();
+          alert(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    deleteAllRoutes() {
+      const api = `https://localhost:44333/api/Routes/deleteAll/${this.memberId}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          // console.log(res);
+          this.getRoutes();
+          alert(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateRoute(item) {
+      const api = `https://localhost:44333/api/Routes/${item.RouteID}`;
+
+      this.$http
+        .put(api, item)
+        .then((res) => {
+          console.log(res);
+          alert(res.data);
+          this.getRoutes();
+          this.$refs.routeModal.closeModal();
+          // this.routes = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getRoutePoint(routeId, index) {
+      const api = `https://localhost:44333/api/Routes/RouteID/${routeId}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          // console.log(res.data[0]);
+          this.routes[index].wayPoints.push({
+            lat: res.data[0].ShopInfo.Latitude,
+            lng: res.data[0].ShopInfo.Longitude,
+          });
+          for (let i = 1; i <= 7; i++) {
+            if (res.data[0][`ShopInfo${i}`]) {
+              this.routes[index].wayPoints.push({
+                lat: res.data[0][`ShopInfo${i}`].Latitude,
+                lng: res.data[0][`ShopInfo${i}`].Longitude,
+              });
+            }
+          }
+          this.routes[index].markers.push({
+            lat: res.data[0][`ShopInfo`].Latitude,
+            lng: res.data[0][`ShopInfo`].Longitude,
+            shopID: res.data[0][`ShopInfo`].ShopID,
+            shopName: res.data[0][`ShopInfo`].Name,
+          });
+          for (let i = 1; i <= 7; i++) {
+            if (res.data[0][`ShopInfo${i}`]) {
+              this.routes[index].markers.push({
+                lat: res.data[0][`ShopInfo${i}`].Latitude,
+                lng: res.data[0][`ShopInfo${i}`].Longitude,
+                shopID: res.data[0][`ShopInfo${i}`].ShopID,
+                shopName: res.data[0][`ShopInfo${i}`].Name,
+              });
+            }
+          }
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+    openShopModal(item, status) {
+      this.tempShop = { ...item };
+
+      if (status === "shop") {
+        this.$refs.modal.openModal();
+      } else if (status === "edit") {
+        this.$refs.routeModal.openModal();
+      }
+    },
+    showMap() {
+      this.isShow = !this.isShow;
+    },
+  },
+  mounted() {
+    this.getMemberID();
+    this.getRoutes();
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 @import "../../assets/stylesheet/layout/routes";
