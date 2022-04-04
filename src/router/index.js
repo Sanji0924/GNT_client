@@ -102,7 +102,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  linkActiveClass: "active",
+  // linkActiveClass: "active",
   routes,
   // scrollBehavior() {
   //   return { x: 0, y: 0, behavior: "smooth" };

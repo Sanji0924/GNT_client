@@ -1,3 +1,4 @@
+@import "../helpers/mixin";
 .card {
   // height: 350px;
   &-img {
@@ -25,8 +26,23 @@
       transition: all 0.3s;
     }
   }
+  &-icon .material-icons {
+    color: #fff;
+    &:hover {
+      color: #e24623;
+      transition: all 0.3s;
+    }
+  }
+  &-icon .card-icon-istrue {
+    color: #e24623;
+    &:hover {
+      color: #fff;
+      transition: all 0.3s;
+    }
+  }
+
   &-body {
-    min-height: 200px;
+    min-height: 250px;
   }
   &-footer:hover {
     opacity: 0.8;
