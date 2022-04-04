@@ -11,8 +11,21 @@ import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import axios from "axios";
 import VueAxios from "vue-axios";
 
+import L from "leaflet";
 import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
+
+import iconRetinaUrl from "../public/marker.svg";
+import iconUrl from "../public/marker.svg";
+import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+});
 
 import VueAwesomeSwiper from "vue-awesome-swiper";
 
@@ -20,8 +33,6 @@ import VueAwesomeSwiper from "vue-awesome-swiper";
 // import VueAwesomeSwiper from "vue-awesome-swiper";
 
 import VueC3 from "vue-c3";
-
-// import "./assets/methods/eventBus";
 
 import App from "./App.vue";
 import router from "./router";
