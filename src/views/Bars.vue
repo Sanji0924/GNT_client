@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fulid">
     <loading
       :active="isLoading"
       loader="spinner"
@@ -16,47 +16,8 @@
         <p class="fs-3 text-primary">今朝有酒，今朝醉</p>
       </div>
     </div>
-    <div>
-      <h2 class="text-white mb-3">
-        精選酒吧
-        <button class="btn btn-light ms-3" @click="showTag">
-          <span v-if="!toggleTag">開啟商家標籤</span>
-          <span v-else>關閉標籤</span>
-        </button>
-      </h2>
-      <div class="mb-3">
-        <label>
-          <input type="checkbox" value="調酒" />
-          <span>調酒</span>
-        </label>
-        <label>
-          <input type="checkbox" value="餐酒館" />
-          <span>餐酒館</span>
-        </label>
-        <label>
-          <input type="checkbox" value="水果特調" />
-          <span>水果特調</span>
-        </label>
-        <label>
-          <input type="checkbox" value="輕酒精" />
-          <span>輕酒精</span>
-        </label>
-      </div>
-
-      <!-- <ul class="list-unstyled d-flex">
-        <li>
-          <a href="#" class="btn btn-outline-primary me-3">全部</a>
-        </li>
-        <li>
-          <a href="#" class="btn btn-outline-primary me-3">調酒</a>
-        </li>
-        <li>
-          <a href="#" class="btn btn-outline-primary me-3">日式酒館</a>
-        </li>
-        <li>
-          <a href="#" class="btn btn-outline-primary">精釀啤酒</a>
-        </li>
-      </ul> -->
+    <div class="container">
+      <h2 class="text-white mb-3">精選酒吧</h2>
       <div class="row">
         <!-- eslint-disable -->
         <template v-for="shop in bars">
@@ -68,7 +29,20 @@
             <div class="card border-primary rounded-lg w-100 overflow-hidden">
               <div class="position-relative">
                 <a href="#" class="card-icon bg-transparent lh-sm">
-                  <span class="material-icons"> favorite </span>
+                  <span
+                    class="card-icon-istrue material-icons"
+                    v-if="memberFavorites.includes(shop.ShopID)"
+                    @click.prevent="removeFavorite(shop.ShopID)"
+                  >
+                    favorite
+                  </span>
+                  <span
+                    class="material-icons"
+                    v-else
+                    @click.prevent="addFavorite(shop.ShopID)"
+                  >
+                    favorite
+                  </span>
                 </a>
                 <p class="card-browse">
                   <span class="material-icons me-2"> visibility </span>
@@ -99,11 +73,11 @@
                 <h5 class="card-title fs-5 fw-bold d-flex align-items-center">
                   {{ shop.Name }}
                 </h5>
-                <div v-if="toggleTag">
+                <div class="mb-3">
                   <span
                     class="fs-7 fw-light badge bg-info me-1 lh-sm"
-                    v-for="(tag, key) in shop.tags"
-                    :key="tag + key + '123'"
+                    v-for="tag in shop.tags"
+                    :key="tag"
                     >{{ tag }}</span
                   >
                 </div>
@@ -118,9 +92,6 @@
                   class="fs-4 text-center text-dark"
                   >查看更多</router-link
                 >
-                <!-- <a href="./shop.html" class="btn btn-primary btn-lg w-100 rounded-0"
-            >查看更多</a
-          > -->
               </div>
             </div>
           </div>
@@ -137,14 +108,15 @@ export default {
   data() {
     return {
       bars: [],
-      toggleTag: false,
+      memberID: 0,
+      memberFavorites: [],
       isLoading: true,
       loader: {
         width: 150,
         height: 150,
         color: "#fff",
         lockScroll: true,
-        isFullPage: false
+        isFullPage: true
       }
     };
   },
@@ -155,72 +127,112 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res);
           this.isLoading = true;
           this.bars = res.data;
           this.bars.forEach((item, index) => {
-            this.getShopTags(item.ShopID, index);
-            // console.log(item.TagName);
+            this.bars[index].tags = item.TagIds.split(",");
+            this.getShopScore(item.ShopID, index);
           });
-          this.isLoading = false;
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
-    getShopTags(shopId, index) {
-      const api = `https://localhost:44333/api/shoptag/${shopId}`;
+    getShopScore(shopId, index) {
+      const api = `https://localhost:44333/api/shopreviews/score/${shopId}`;
 
       this.$http
         .get(api)
         .then((res) => {
           // console.log(res);
-          let tags = [];
+          this.bars[index].score = res.data;
+        })
+        .catch(() => {
+          // console.dir(err.response.data.Message);
+          this.bars[index].score = "尚未有評分";
+        });
+    },
+    getMember() {
+      let member = document.cookie.replace(
+        /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.memberID = Number(member);
+    },
+    getMemberFavorites() {
+      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
           res.data.forEach((item) => {
-            tags.push(item.TagName);
-            this.bars[index].tags = tags;
+            if (!this.memberFavorites.includes(item.ShopID)) {
+              this.memberFavorites.push(item.ShopID);
+            } else {
+              return;
+            }
           });
-          // console.log(this.bars);
+          console.log(this.memberFavorites);
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
-    showTag() {
-      this.toggleTag = !this.toggleTag;
+    addFavorite(shopId) {
+      const api = `https://localhost:44333/api/MemberFavorites`;
+      let obj = {
+        MemberID: this.memberID,
+        ShopID: shopId
+      };
+
+      this.$http
+        .post(api, obj)
+        .then((res) => {
+          if (!this.memberFavorites.includes(shopId)) {
+            this.memberFavorites.push(shopId);
+          } else {
+            return;
+          }
+          this.getMemberFavorites();
+          alert(res.data);
+        })
+        .catch(() => {
+          // console.dir(err);
+          alert("此商家已經被加過囉");
+        });
+    },
+    removeFavorite(shopId) {
+      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}/${shopId}`;
+
+      this.$http
+        .delete(api)
+        .then((res) => {
+          this.memberFavorites.filter((item, index) => {
+            if (item == shopId || this.memberFavorites.includes(item.ShopID)) {
+              this.memberFavorites.splice(index, 1);
+            }
+          });
+          this.getMemberFavorites();
+          alert(res.data);
+        })
+        .catch(() => {
+          // console.dir(err);
+          alert("此商家已經被加過囉");
+        });
     }
   },
   mounted() {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
     this.getBars();
+    this.getMember();
+    this.getMemberFavorites();
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../assets/stylesheet/layout/card";
-
-label {
-  padding: 0;
-  margin-right: 16px;
-  cursor: pointer;
-}
-input[type="checkbox"] {
-  display: none;
-}
-input[type="checkbox"] + span {
-  display: inline-block;
-  background-color: transparent;
-  padding: 8px 16px;
-  border: 1px solid #e98830;
-  color: #e98830;
-  user-select: none; /* 防止文字被滑鼠選取反白 */
-  border-radius: 10px;
-}
-
-input[type="checkbox"]:checked + span {
-  color: #000002;
-  background-color: #e98830;
-}
 </style>
