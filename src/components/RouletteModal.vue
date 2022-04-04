@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" id="exampleModal" ref="modal" style="z-index: 11000">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-primary">
           <h5 class="modal-title" id="exampleModalLabel">輪盤小遊戲</h5>
@@ -12,18 +12,53 @@
           ></button>
         </div>
         <div class="modal-body">
-          <div class="container">
-            <div class="wheelArea">
-              <button type="button" id="spin_button" @click="btnEvent">
-                開始
+          <div class="container d-lg-flex">
+            <div
+              class="d-flex flex-column justify-content-center align-items-center"
+            >
+              <div class="wheelArea position-relative">
+                <button
+                  type="button"
+                  id="spin_button"
+                  @click="btnEvent"
+                  :disabled="isRoll"
+                >
+                  開始
+                </button>
+                <canvas id="canvas"></canvas>
+              </div>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="removerAll"
+              >
+                移除全部
               </button>
-
-              <canvas id="canvas"></canvas>
             </div>
-            <div class="addArea">
-              <input type="text" id="shopName" v-model="award" />
-              <button type="button" id="btnAdd" @click="addAward">加入</button>
-            </div>
+            <table class="table table-striped table-hover align-middle">
+              <thead>
+                <tr>
+                  <th class="text-center">編號</th>
+                  <th>景點名稱</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, key) in points" :key="key">
+                  <th class="text-center">{{ key + 1 }}</th>
+                  <td>{{ item.name }}</td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm text-white"
+                      @click="removerPoint(item.key)"
+                    >
+                      移除
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="modal-footer">
@@ -99,33 +134,38 @@ export default {
   data() {
     return {
       modal: "",
-      awards: ["1", "2", "3", "4", "5", "耍廢耍廢耍廢耍廢"],
-      award: "",
+      points: [],
+      isRoll: false,
     };
   },
   methods: {
     addAward() {
-      this.awards.push(this.award);
-      awardRadian = (Math.PI * 2) / this.awards.length;
+      this.points.push(this.award);
+      awardRadian = (Math.PI * 2) / this.points.length;
       this.drawRouletteWheel();
       this.award = "";
     },
     init() {
       (canvas = document.getElementById("canvas")),
-        (canvas.width = 500),
-        (canvas.height = 500),
+        // (canvas.width = 500),
+        // (canvas.height = 500),
+        (canvas.width = 350),
+        (canvas.height = 350),
         (context = canvas.getContext("2d")),
-        (OUTSIDE_RADIUAS = 200), // 轉盤的半徑
+        // (OUTSIDE_RADIUAS = 200), // 轉盤的半徑
+        // (INSIDE_RADIUAS = 0), // 用於非零環繞原則的內圓半徑
+        // (TEXT_RADIUAS = 160), // 轉盤內文字的半徑
+        (OUTSIDE_RADIUAS = 125), // 轉盤的半徑
         (INSIDE_RADIUAS = 0), // 用於非零環繞原則的內圓半徑
-        (TEXT_RADIUAS = 160), // 轉盤內文字的半徑
+        (TEXT_RADIUAS = 90), // 轉盤內文字的半徑
         (CENTER_X = canvas.width / 2),
         (CENTER_Y = canvas.height / 2),
-        // (this.awards = [
+        // (this.points = [
         //   // 轉盤內的獎品個數以及內容
 
         // ]),
         (startRadian = 0), // 繪製獎項的起始角，改變該值實現旋轉效果
-        (awardRadian = (Math.PI * 2) / this.awards.length), // 每一個獎項所佔的弧度
+        (awardRadian = (Math.PI * 2) / this.points.length), // 每一個獎項所佔的弧度
         (duration = 4000), // 旋轉事件
         (velocity = 10), // 旋轉速率
         (spinningTime = 0), // 旋轉當前時間
@@ -148,7 +188,7 @@ export default {
       // ----- ① 清空頁面元素，用於逐幀動畫
       context.clearRect(0, 0, canvas.width, canvas.height);
       // -----
-      for (let i = 0; i < this.awards.length; i++) {
+      for (let i = 0; i < this.points.length; i++) {
         let _startRadian = startRadian + awardRadian * i, // 每一個獎項所佔的起始弧度
           _endRadian = _startRadian + awardRadian; // 每一個獎項的終止弧度
         // ----- ② 使用非零環繞原則，繪製圓盤
@@ -185,11 +225,12 @@ export default {
           CENTER_Y + Math.sin(_startRadian + awardRadian / 2) * TEXT_RADIUAS
         );
         context.rotate(_startRadian + awardRadian / 2 + Math.PI / 2);
-        context.fillText(
-          this.awards[i],
-          -context.measureText(this.awards[i]).width / 2,
-          0
-        );
+        // context.fillText(
+        //   this.points[i],
+        //   -context.measureText(this.points[i]).width / 2,
+        //   0
+        // );
+        context.fillText(i + 1, -context.measureText(i + 1).width / 2, 0);
         context.restore();
         // -----
       }
@@ -209,12 +250,13 @@ export default {
       // -----
     },
     rotateWheel() {
+      this.isRoll = true;
       // 當 當前時間 大於 總時間，停止旋轉，並返回當前值
       spinningTime += 20;
       if (spinningTime >= spinTotalTime) {
         console.log(this.getValue());
-        alert(this.getValue());
-        // btnSpin.disabled = false;
+        alert(`轉到 ${this.getValue()} 囉`);
+        this.isRoll = false;
         return;
       }
 
@@ -233,42 +275,60 @@ export default {
         overAngle = (startAngle + pointerAngle) % 360, // 無論轉盤旋轉了多少圈，產生了多大的任意角，我們只需要求到當前位置起始角在360°範圍內的角度值
         restAngle = 360 - overAngle, // 360°減去已旋轉的角度值，就是剩下的角度值
         index = Math.floor(restAngle / awardAngle); // 剩下的角度值 除以 每一個獎品的角度值，就能得到這是第幾個獎品
-      return this.awards[index];
+      return this.points[index].name;
     },
     btnEvent() {
       console.log("點到ㄌ");
+
       spinningTime = 0; // 初始化當前時間
       spinTotalTime = Math.random() * 3 + duration; // 隨機定義一個時間總量
       spinningChange = Math.random() * 10 + velocity; // 隨機頂一個旋轉速率
       this.rotateWheel();
+      // this.isRoll = false;
       // btnSpin.disabled = true;
     },
     openModal() {
       this.modal.show();
     },
+    getPoints() {
+      this.points = [];
+      let keyArr = Object.keys(localStorage);
+      let index = keyArr.findIndex((el) => {
+        return el == "loglevel:webpack-dev-server";
+      });
+      keyArr.splice(index, 1);
+
+      keyArr.forEach((item) => {
+        this.points.push({ key: item, name: localStorage.getItem(item) });
+      });
+    },
+    removerPoint(key) {
+      localStorage.removeItem(key);
+      alert("已移除");
+      this.getPoints();
+      this.init();
+      this.drawRouletteWheel();
+    },
+    removerAll() {
+      localStorage.clear();
+      alert("已清除所有項目");
+      this.getPoints();
+      this.init();
+      this.drawRouletteWheel();
+    },
   },
-  updated() {},
   mounted() {
     this.modal = new Modal(this.$refs.modal);
-    this.init();
-    this.drawRouletteWheel();
+    // this.getPoints();
+    // this.init();
+    // this.drawRouletteWheel();
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
-  /* width: 500px; */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.wheelArea {
-  position: relative;
-}
 #spin_button {
-  font-family: "Noto Sans TC", sans-serif;
+  // font-family: "Noto Sans TC", sans-serif;
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
@@ -279,10 +339,6 @@ export default {
   text-align: center;
   background: #e98830;
   border-radius: 100%;
-  cursor: pointer;
-}
-
-.addArea {
-  text-align: center;
+  // cursor: pointer;
 }
 </style>

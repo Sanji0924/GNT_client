@@ -10,9 +10,6 @@
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -21,7 +18,7 @@
           id="navbarSupportedContent"
         >
           <div class="navbar-nav text-sm-center">
-            <router-link class="nav-item nav-link mx-2" to="/index"
+            <router-link class="nav-item nav-link mx-2" to="/"
               >首頁</router-link
             >
             <router-link
@@ -35,6 +32,12 @@
               v-if="!isMember"
               to="/memberLogin"
               >會員登入</router-link
+            >
+            <a
+              class="nav-item nav-link mx-2"
+              href="#"
+              @click.prevent="openRouletteModal"
+              >隨機輪盤</a
             >
             <a
               class="nav-item nav-link mx-2"
@@ -59,31 +62,43 @@
                 aria-labelledby="navbarDropdown"
               >
                 <li>
-                  <router-link
+                  <a
                     class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
-                    to="/shops/bars"
-                    >酒吧</router-link
+                    href="/shops/all"
+                    @click.prevent="getAllShops"
+                    >全部商家</a
                   >
                 </li>
                 <li>
-                  <router-link
+                  <a
                     class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
-                    to="/shops/desserts"
-                    >咖啡甜點</router-link
+                    href="/shops/all"
+                    @click.prevent="getTypeShops('bar')"
+                    >酒吧</a
                   >
                 </li>
                 <li>
-                  <router-link
+                  <a
                     class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
-                    to="/shops/snacks"
-                    >小吃宵夜</router-link
+                    href="/shops/desserts"
+                    @click.prevent="getTypeShops('dessert')"
+                    >咖啡甜點</a
                   >
                 </li>
                 <li>
-                  <router-link
+                  <a
                     class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
-                    to="/shops/nightviews"
-                    >夜間景點</router-link
+                    href="/shops/snacks"
+                    @click.prevent="getTypeShops('snack')"
+                    >小吃宵夜</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-white py-2 border-bottom border-1 border-primary"
+                    href="/shops/nightviews"
+                    @click.prevent="getTypeShops('viewpoint')"
+                    >夜間景點</a
                   >
                 </li>
               </ul>
@@ -144,16 +159,21 @@
         </div>
       </div>
     </nav>
+    <Roulette ref="modal"></Roulette>
   </div>
 </template>
 
 <script>
 // import { EventBus } from "../assets/methods/eventBus";
+import Roulette from "../components/RouletteModal.vue";
 
 export default {
   props: ["isMember"],
   data() {
     return {};
+  },
+  components: {
+    Roulette,
   },
   methods: {
     logout() {
@@ -162,6 +182,30 @@ export default {
       alert("已登出，畫面將跳轉回首頁");
       this.$router.push("/");
       // this.$router.go(0);
+    },
+    getAllShops() {
+      console.log(this.$router.history.current.fullPath);
+      if (this.$router.history.current.fullPath !== "/shops/all") {
+        this.$router.push("/shops/all");
+        this.$emit("get-all-shops");
+        console.log("路徑");
+      } else {
+        this.$emit("get-all-shops");
+      }
+    },
+    getTypeShops(type) {
+      if (this.$router.history.current.fullPath !== "/shops/all") {
+        this.$router.push("/shops/all");
+        this.$emit("get-type-shops", type);
+        console.log("觸發");
+      }
+      this.$emit("get-type-shops", type);
+    },
+    openRouletteModal() {
+      this.$refs.modal.getPoints();
+      this.$refs.modal.init();
+      this.$refs.modal.drawRouletteWheel();
+      this.$refs.modal.openModal();
     },
   },
 };
