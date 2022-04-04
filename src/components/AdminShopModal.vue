@@ -93,14 +93,26 @@
                   </select>
                 </div>
                 <div class="mb-3 col-6">
-                  <label for="shopTag" class="form-label">店家子分類</label>
-                  <select id="shopTag" class="form-select" multiple size="2">
-                    <option value="">...</option>
-                    <option value="">...</option>
-                    <option value="">...</option>
-                    <option value="">...</option>
-                    <option value="">...</option>
+                  <label for="shopTag" class="form-label"
+                    >店家子分類（複選）</label
+                  >
+                  <select
+                    id="shopTag"
+                    class="form-select"
+                    multiple
+                    size="3"
+                    v-model="selectTags"
+                  >
+                    <option :value="tag.Tag1" v-for="tag in tags" :key="tag.ID">
+                      {{ tag.TagName }}
+                    </option>
                   </select>
+                </div>
+                <div class="mb-3 col-6">
+                  <label for="shopTag" class="form-label"
+                    >店家子分類（複選）</label
+                  >
+                  <p v-if="selectTags">{{ selectTags.join(", ") }}</p>
                 </div>
               </div>
             </div>
@@ -110,27 +122,32 @@
                 <!-- <label for="shopOpenTime" class="form-label me-3">星期一</label> -->
                 <div
                   class="d-flex justify-content-between align-items-center mb-2"
-                  v-for="day in 7"
-                  :key="day + 1234"
+                  v-for="day in week"
+                  :key="day"
                 >
+                  <span>{{ toWeek(day) }}</span>
                   <input
+                    hidden
                     type="text"
                     class="form-control d-inline w-25 me-2"
                     id="shopOpenTime"
-                    :value="toWeek(day)"
+                    :value="tempShop[day]"
                     disabled
                   />
                   <input
-                    type="time"
+                    type="text"
                     class="form-control d-inline w-25"
                     id="shopOpenTime"
-                    v-model="tempShop.Monday"
+                    v-if="tempShop[day]"
+                    v-model="tempShop[day]"
                   />
                   到
                   <input
                     type="time"
                     class="form-control d-inline w-25"
                     id="shopOpenTime"
+                    v-if="tempShop[day]"
+                    v-model="tempShop[day].split('-')[1]"
                   />
                 </div>
               </div>
@@ -274,57 +291,66 @@ export default {
   data() {
     return {
       modal: "",
+      tags: [],
+      selectTags: [],
+      week: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      testTime: "",
+      testTime2: "",
     };
   },
   methods: {
     openModal() {
       this.modal.show();
     },
-    toWeek(week) {
-      switch (week) {
-        case 1:
+    toWeek(day) {
+      switch (day) {
+        case "Monday":
           return "星期一";
-        case 2:
+        case "Tuesday":
           return "星期二";
-        case 3:
+        case "Wednesday":
           return "星期三";
-        case 4:
+        case "Thursday":
           return "星期四";
-        case 5:
+        case "Friday":
           return "星期五";
-        case 6:
+        case "Saturday":
           return "星期六";
-        case 7:
+        case "Sunday":
           return "星期日";
         default:
           return "";
       }
     },
-    updateShop(id) {
-      let api = `https://localhost:44333/api/ShopInfoes`;
-      let method = "post";
+    getAllTags() {
+      this.selectTags = this.tempShop.tags;
+      const api = `https://localhost:44333/api/tag`;
 
-      if (!this.isNew) {
-        method = "put";
-        api = `https://localhost:44333/api/ShopInfoes/${id}`;
-      } else {
-        api = `https://localhost:44333/api/ShopInfoes`;
-      }
-
-      this.$http[method](api)
+      this.$http
+        .get(api)
         .then((res) => {
           console.log(res);
-          // this.shops = res.data;
-          this.$refs.shopInfo.getShop();
+          this.tags = res.data;
         })
         .catch((err) => {
-          console.dir(err);
-          // alert(err.response.data.Message);
+          console.log(err);
         });
+    },
+    update() {
+      this.$emit("update", this.tempShop);
     },
   },
   mounted() {
     this.modal = new Modal(this.$refs.modal);
+    this.getAllTags();
   },
 };
 </script>

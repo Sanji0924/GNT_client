@@ -87,6 +87,19 @@ export default {
     };
   },
   methods: {
+    checkToken() {
+      // this.isAdmin = false;
+      let token = document.cookie.replace(
+        /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.$http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      if (token) {
+        // alert("請先登入");
+        this.isAdmin = true;
+        this.$router.push("/admin/shops");
+      }
+    },
     login() {
       const api = `https://localhost:44333/api/Login/AD`;
 
@@ -95,22 +108,25 @@ export default {
         .then((res) => {
           console.log(res);
           const { token, expiretime } = res.data;
-          let timeStamp = Number(expiretime).toFixed();
+
           document.cookie = `token=${token}; expires=${new Date(
-            Number(timeStamp)
+            expiretime
           )}}; path=/`;
           this.$http.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${token}`;
           alert(res.data.message);
-          this.$router.push("/admin");
+          // this.$router.push("/admin");
+          this.checkToken();
         })
         .catch((err) => {
           console.dir(err);
         });
     },
   },
-  mounted() {},
+  mounted() {
+    this.checkToken();
+  },
 };
 </script>
 

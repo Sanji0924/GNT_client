@@ -1,17 +1,15 @@
 <template>
   <div class="container-fuild d-flex justify-content-between bg-white">
     <input type="checkbox" id="checkShow" hidden />
-    <section
-      class="container-fuild side side-admin side-member bg-white pt-6 px-3"
-    >
+    <section class="container-fuild side side-member bg-white pt-6 px-3">
+      <label
+        for="checkShow"
+        class="nav-icon nav-icon-admin nav-icon-member text-dark d-flex"
+      >
+        <span class="material-icons"> arrow_forward_ios </span>
+      </label>
       <div class="container pt-5 side-area">
         <nav class="nav flex-column side-nav">
-          <label
-            for="checkShow"
-            class="nav-icon nav-icon-admin nav-icon-member text-dark d-flex"
-          >
-            <span class="material-icons"> arrow_forward_ios </span>
-          </label>
           <form action="#" class="mb-3">
             <div class="mb-3 d-flex flex-column">
               <input
@@ -19,8 +17,16 @@
                 class="form-control mb-3"
                 id="keyword"
                 placeholder="輸入關鍵字搜尋"
+                v-model="keywords"
               />
-              <button type="button" class="btn btn-gray">搜尋</button>
+              <button
+                type="button"
+                class="btn btn-gray"
+                @click="searchMember(keywords)"
+                :disabled="!keywords"
+              >
+                搜尋
+              </button>
             </div>
           </form>
           <h3 class="h4 text-dark mb-3">類別</h3>
@@ -44,22 +50,6 @@
                   <span class="material-icons me-2"> person_search </span>黑名單
                 </a>
               </li>
-              <!-- <li>
-                <a
-                  href="./memberInfo.html"
-                  class="d-flex admin-side-menu-link py-2"
-                >
-                  <span class="material-icons me-2"> person_search </span>已審核
-                </a>
-              </li>
-              <li>
-                <a
-                  href="./favorite.html"
-                  class="d-flex admin-side-menu-link py-2"
-                >
-                  <span class="material-icons me-2"> person_search </span>黑名單
-                </a>
-              </li> -->
             </ul>
           </div>
         </nav>
@@ -139,6 +129,7 @@ export default {
       members: [],
       tempMember: {},
       birthDate: "",
+      keywords: "",
     };
   },
   methods: {
@@ -202,6 +193,19 @@ export default {
         .catch((err) => {
           console.dir(err);
           // alert(err.response.data.Message);
+        });
+    },
+    searchMember(keywords) {
+      const api = `https://localhost:44333/api/MemberInfoes1/Admin/Keywords/${keywords}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.members = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
     openMemberModal(item) {

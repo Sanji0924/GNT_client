@@ -131,7 +131,7 @@
         </nav>
       </div>
     </section>
-    <section class="container w-100 pt-6">
+    <section class="container pt-6">
       <h1 class="h2 mb-5 mt-5">表單資料管理</h1>
       <div class="table-responsive-md">
         <table
@@ -152,7 +152,9 @@
               <th>{{ item.ReviewID }}</th>
               <td>{{ item.MemberID }}</td>
               <td>{{ item.Type }}</td>
-              <td>{{ item.ReviewDate.split("T")[0] }}</td>
+              <td v-if="item.ReviewDate">
+                {{ item.ReviewDate.split("T")[0] }}
+              </td>
               <td>
                 <span v-if="item.Status === '已處理'">已處理</span>
                 <span class="text-primary" v-else-if="item.Status === '處理中'"

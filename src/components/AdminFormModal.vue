@@ -135,6 +135,7 @@ export default {
       this.modal.hide();
     },
     update() {
+      console.log(typeof this.form.ReviewDate);
       this.isLoading = true;
       console.log("觸發元件 update");
       this.$emit("update", this.form);

@@ -4,12 +4,14 @@
     ref="shopInfo"
   >
     <input type="checkbox" id="checkShow" hidden />
-    <section class="container-fuild side side-member bg-white pt-6 px-3">
+    <section
+      class="container-fuild side side-admin side-member bg-white pt-6 px-3"
+    >
       <div class="container pt-5 side-area">
         <nav class="nav flex-column side-nav">
           <label
             for="checkShow"
-            class="nav-icon nav-icon-member text-dark d-flex"
+            class="nav-icon nav-icon-admin nav-icon-member text-dark d-flex"
           >
             <span class="material-icons"> arrow_forward_ios </span>
           </label>
@@ -92,6 +94,7 @@
                     <a
                       href="#"
                       class="text-dark d-flex admin-side-menu-link py-2"
+                      @click.prevent="getEnableShops('true')"
                     >
                       <span class="material-icons me-2"> edit </span>啟用
                     </a>
@@ -100,6 +103,7 @@
                     <a
                       href="#"
                       class="text-dark d-flex admin-side-menu-link py-2"
+                      @click.prevent="getEnableShops('false')"
                     >
                       <span class="material-icons me-2"> edit </span>未啟用
                     </a>
@@ -117,7 +121,7 @@
         <button
           type="button"
           class="btn btn-primary d-flex align-items-center"
-          @click="updateShop('new')"
+          @click="openShopModal('new')"
         >
           新增店家
         </button>
@@ -129,7 +133,7 @@
           <thead>
             <tr>
               <th width="100" class="text-center">店家編號</th>
-              <th>店家名稱</th>
+              <th class="text-start">店家名稱</th>
               <th width="100">店家分類</th>
               <!-- <th>店家子分類</th> -->
               <th width="80" class="text-center">是否啟用</th>
@@ -139,7 +143,7 @@
           <tbody>
             <tr v-for="shop in shops" :key="shop.ShopID">
               <th class="text-center">{{ shop.ShopID }}</th>
-              <td>{{ shop.Name }}</td>
+              <td class="text-start">{{ shop.Name }}</td>
               <td>{{ shop.Type }}</td>
               <!-- <td>{{ shop.Tag }}</td> -->
               <td class="text-center">
@@ -150,7 +154,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-gray btn-sm me-md-2"
-                  @click="updateShop('update', shop)"
+                  @click="openShopModal('update', shop)"
                 >
                   編輯
                 </button>
@@ -167,6 +171,7 @@
       ref="modal"
       :tempShop="tempShop"
       :isNew="isNew"
+      @update="updateShop"
     ></AdminShopModal>
   </div>
 </template>
@@ -198,13 +203,56 @@ export default {
         .then((res) => {
           console.log(res);
           this.shops = res.data;
+          this.shops.forEach((item, index) => {
+            if (item.TagIds) {
+              this.shops[index].tags = item.TagIds.split(",");
+            }
+          });
         })
         .catch((err) => {
           console.dir(err);
           // alert(err.response.data.Message);
         });
     },
-    updateShop(status, item) {
+    getEnableShops(status) {
+      const api = `https://localhost:44333/api/ShopInfoes/Enable?isEnable=${status}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          console.log(res);
+          this.shops = res.data;
+          this.shops.forEach((item, index) => {
+            if (item.TagIds) {
+              this.shops[index].tags = item.TagIds.split(",");
+            }
+          });
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    updateShop(item) {
+      let api = `https://localhost:44333/api/ShopInfoes/Admin`;
+      let method = "post";
+
+      this.$http[method](api, item)
+        .then((res) => {
+          console.log(res);
+          // this.shops = res.data;
+          // this.shops.forEach((item, index) => {
+          //   if (item.TagIds) {
+          //     this.shops[index].tags = item.TagIds.split(",");
+          //   }
+          // });
+        })
+        .catch((err) => {
+          console.dir(err);
+          // alert(err.response.data.Message);
+        });
+    },
+    openShopModal(status, item) {
       if (status === "new") {
         this.isNew = true;
         this.tempShop = {};
@@ -212,10 +260,6 @@ export default {
         this.isNew = false;
         this.tempShop = { ...item };
       }
-
-      this.openShopModal();
-    },
-    openShopModal() {
       this.$refs.modal.openModal();
     },
   },
