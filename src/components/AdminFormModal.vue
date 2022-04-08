@@ -83,7 +83,7 @@
               ></textarea>
             </div>
             <div class="mb-3">
-              <label for="remark" class="form-label">備註</label>
+              <label for="remark" class="form-label">平台回覆</label>
               <textarea
                 class="form-control"
                 id="remark"

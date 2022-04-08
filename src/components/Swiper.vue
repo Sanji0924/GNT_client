@@ -36,14 +36,6 @@
               ></div>
             </div>
             <div class="card-body">
-              <div
-                class="fs-7 mb-1 d-flex justify-content-between align-items-center"
-              >
-                <div class="d-flex align-items-center">
-                  <span class="material-icons text-primary">star</span>
-                  <span class="ms-2">{{ shop.score }}</span>
-                </div>
-              </div>
               <h5 class="card-title fs-5 fw-bold d-flex align-items-center">
                 {{ shop.Name }}
               </h5>
@@ -89,15 +81,6 @@
           </div>
         </div>
       </swiper-slide>
-      <!-- <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide> -->
-      <!-- <RouteModal
-        ref="modal"
-        :routes="memberRoutes"
-        :titles="memberRouteTitles"
-        :shop-id="shopId"
-        @get-routes="getRoutes"
-      ></RouteModal> -->
     </swiper>
   </div>
 </template>
@@ -105,14 +88,12 @@
 <script>
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
-// import RouteModal from "../components/RouteModal.vue";
 
 export default {
   props: ["memberId"],
   components: {
     Swiper,
     SwiperSlide,
-    // RouteModal,
   },
   data() {
     return {
@@ -139,13 +120,16 @@ export default {
           },
         },
       },
+      isDisabled: false,
       shops: [],
       memberFavorites: [],
       memberRoutes: [],
       memberRouteTitles: [],
       shopId: 0,
+      routeArr: [],
     };
   },
+  inject: ["emitter"],
   methods: {
     getShops() {
       const api = `https://localhost:44333/api/ShopInfoes`;
@@ -190,7 +174,6 @@ export default {
             } else {
               return;
             }
-            console.log(this.memberFavorites);
           });
         })
         .catch((err) => {
@@ -212,19 +195,20 @@ export default {
       };
       this.$http
         .post(api, obj)
-        .then((res) => {
+        .then(() => {
           if (!this.memberFavorites.includes(shopId)) {
             this.memberFavorites.push(shopId);
           } else {
             return;
           }
-          // this.memberFavorites = [];
           this.getMemberFavorites();
-          alert(res.data);
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "已加入我的最愛",
+          });
         })
-        .catch(() => {
-          // console.dir(err);
-          alert("此商家已經被加過囉");
+        .catch((err) => {
+          console.dir(err);
         });
     },
     removeFavorite(shopId) {
@@ -232,32 +216,44 @@ export default {
 
       this.$http
         .delete(api)
-        .then((res) => {
+        .then(() => {
           this.memberFavorites.filter((item, index) => {
             if (item == shopId || this.memberFavorites.includes(item.ShopID)) {
               this.memberFavorites.splice(index, 1);
             }
           });
           this.getMemberFavorites();
-          alert(res.data);
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "已從我的最愛中移除",
+          });
         })
-        .catch(() => {
-          // console.dir(err);
-          alert("此商家已經被加過囉");
+        .catch((err) => {
+          console.dir(err);
         });
     },
     addRoulette(id, name) {
-      if (localStorage.length >= 13) {
+      if (localStorage.length >= 12) {
         alert("最多只能加入 12 個輪盤項目");
       } else {
-        localStorage.setItem(id, name);
-        alert("已加入隨機輪盤");
+        if (this.routeArr.includes(`${id}`)) {
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "此店家已經有囉",
+          });
+        } else {
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "已加入隨機輪盤",
+          });
+          localStorage.setItem(id, name);
+          this.routeArr = Object.keys(localStorage);
+        }
       }
     },
     openRouteModal(shopId) {
       this.shopId = shopId;
       this.$emit("open-modal", this.shopId);
-      // this.$refs.modal.openModal();
       if (!this.memberID) {
         alert("請先登入");
         this.$router.push("/memberlogin");
@@ -270,7 +266,6 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.memberRoutes = res.data;
           this.memberRoutes.forEach((item) => {
             this.memberRouteTitles.push({
@@ -285,6 +280,7 @@ export default {
     },
   },
   mounted() {
+    this.routeArr = Object.keys(localStorage);
     this.getShops();
     this.getMember();
     this.getMemberFavorites();
@@ -295,27 +291,4 @@ export default {
 
 <style lang="scss">
 @import "../assets/stylesheet/layout/card";
-
-// label {
-//   padding: 0;
-//   margin-right: 16px;
-//   cursor: pointer;
-// }
-// input[type="checkbox"] {
-//   display: none;
-// }
-// input[type="checkbox"] + span {
-//   display: inline-block;
-//   background-color: transparent;
-//   padding: 8px 16px;
-//   border: 1px solid #e98830;
-//   color: #e98830;
-//   user-select: none; /* 防止文字被滑鼠選取反白 */
-//   border-radius: 10px;
-// }
-
-// input[type="checkbox"]:checked + span {
-//   color: #000002;
-//   background-color: #e98830;
-// }
 </style>

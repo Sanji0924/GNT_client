@@ -13,8 +13,20 @@
             href="#"
             class="shop-icon text-danger rounded-3 d-flex align-items-center"
           >
-            <span class="material-icons"> favorite </span>
-            <!-- <span class="shop-icon-istrue material-icons"> favorite </span> -->
+            <span
+              class="shop-icon shop-icon-istrue material-icons"
+              v-if="memberFavorites.includes(shop.ShopID)"
+              @click.prevent="removeFavorite(shop.ShopID)"
+            >
+              favorite
+            </span>
+            <span
+              class="shop-icon material-icons"
+              v-else
+              @click.prevent="addFavorite(shop.ShopID)"
+            >
+              favorite
+            </span>
           </a>
         </div>
         <div
@@ -48,7 +60,7 @@
             </li>
             <li class="d-flex mb-2">
               <span class="material-icons me-1"> phone </span>聯絡電話：<a
-                class="d-inline text-dark border-1 border-bottom border-dark"
+                class="d-inline text-dark border-1 border-bottom border-dark link-hover-opacity"
                 :href="`tel:+886${shop.Phone}`"
                 >{{ shop.Phone }}</a
               >
@@ -56,7 +68,7 @@
             <li class="d-flex mb-2" v-if="shop.Facebook">
               <span class="material-icons me-1"> public </span>
               FaceBook：<a
-                class="d-inline text-dark border-1 border-bottom border-dark"
+                class="d-inline text-dark border-1 border-bottom border-dark link-hover-opacity"
                 :href="`${shop.Facebook}`"
                 target="blank"
                 >點我前往</a
@@ -65,7 +77,7 @@
             <li class="d-flex mb-3" v-if="shop.Instagram">
               <span class="material-icons me-1"> camera_alt </span>
               Instagram：<a
-                class="d-inline text-dark border-1 border-bottom border-dark"
+                class="d-inline text-dark border-1 border-bottom border-dark link-hover-opacity"
                 :href="`${shop.Instagram}`"
                 target="blank"
                 >點我前往</a
@@ -86,8 +98,12 @@
           <h3 class="text-white mb-3 d-flex align-items-center">
             <span class="material-icons me-1"> feed </span>商家備註
           </h3>
-          <div class="px-3">
-            <p class="text-white" v-for="note in shop.notes" :key="note + 123">
+          <div class="p-3 bg-light rounded-3">
+            <p
+              class="text-dark mb-0 pb-1"
+              v-for="note in shop.notes"
+              :key="note + 123"
+            >
               {{ note }}
             </p>
           </div>
@@ -103,20 +119,6 @@
                 >加入行程</a
               >
             </h3>
-            <!-- <select
-              class="form-select w-25 ms-3 mb-3"
-              v-model="memberRoutesTitle"
-              @change="addRoute(memberRoutesTitle)"
-            >
-              <option value="new" selected>建立新的行程</option>
-              <option
-                :value="item.RouteID"
-                v-for="item in memberRoutes"
-                :key="item.RouteID"
-              >
-                {{ item.Title }}
-              </option>
-            </select> -->
           </div>
           <div
             class="spinner-border text-primary"
@@ -198,10 +200,14 @@
                 <button
                   type="submit"
                   class="btn btn-primary btn-lg"
-                  :disabled="!review.Score || !review.RContent"
+                  :disabled="isDisabled || !review.RContent || !review.Score"
                   @click.prevent="addShopReview"
                 >
                   送出
+                  <span
+                    class="spinner-grow spinner-grow-sm"
+                    v-if="isDisabled"
+                  ></span>
                 </button>
               </div>
             </form>
@@ -233,12 +239,14 @@ export default {
   },
   data() {
     return {
+      isDisabled: false,
       shop: {
         notes: [],
       },
       review: {},
       memberRouteTitles: [],
       memberRoutes: [],
+      memberFavorites: [],
       shopReviews: [],
       shopId: 0,
       id: 0,
@@ -249,33 +257,30 @@ export default {
     shopId() {
       this.isLoading = true;
       this.getShopInfo();
-      // console.log("觸發 watch");
     },
   },
+  inject: ["emitter"],
   methods: {
     getShopInfo() {
       const { id } = this.$route.params;
       this.shopId = Number(id);
-      console.log(this.shopId);
       const api = `https://localhost:44333/api/ShopInfoes/${this.shopId}`;
       this.$http
         .get(api)
         .then((res) => {
-          // this.isLoading = true;
-          console.log(res);
-          // console.log(res.data.Note.split("/"));
           this.shop = res.data[0];
           if (this.shop.TagIds.length > 1) {
             this.shop.tags = res.data[0].TagIds.split(",");
           }
+
           if (this.shop.Note.length > 1) {
-            this.shop.notes = res.data.Note.split("/");
+            this.shop.notes = res.data[0].Note.split("/");
+          } else {
+            this.shop.notes = res.data[0].Note;
           }
-          // this.isLoading = false;
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     getRoutes() {
@@ -285,7 +290,6 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.memberRoutes = res.data;
           this.memberRoutes.forEach((item) => {
             this.memberRouteTitles.push({
@@ -299,28 +303,97 @@ export default {
         });
     },
     addShopReview() {
+      this.isDisabled = true;
       this.review.ShopID = this.shopId;
       const api = `https://localhost:44333/api/shopreviews`;
-      console.log(this.review.MemberID);
       if (!this.review.MemberID) {
         alert("請先登入");
         this.$router.push("/memberLogin");
       } else {
         this.$http
           .post(api, this.review)
-          .then((res) => {
-            console.log(res);
-            alert(res.data);
+          .then(() => {
+            this.emitter.emit("push-message", {
+              style: "success",
+              title: "已新增，感謝您的留言",
+            });
             this.$refs.swiperReviews.getShopReviews();
-            // this.review.Score = 0;
             this.review.RContent = "";
+            this.isDisabled = false;
           })
           .catch((err) => {
             console.dir(err);
-            alert("您已經在此店家留言過，請至會員後台修改心得");
+            this.emitter.emit("push-message", {
+              style: "danger",
+              title: "加入店家心得結果",
+              content: "您已經在此店家留言過，請至會員後台修改心得",
+            });
             this.$refs.form.reset();
           });
       }
+    },
+    getMemberFavorites() {
+      const api = `https://localhost:44333/api/MemberFavorites/${this.review.MemberID}`;
+
+      this.$http
+        .get(api)
+        .then((res) => {
+          res.data.forEach((item) => {
+            if (!this.memberFavorites.includes(item.ShopID)) {
+              this.memberFavorites.push(item.ShopID);
+            } else {
+              return;
+            }
+          });
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+    addFavorite(shopId) {
+      const api = `https://localhost:44333/api/MemberFavorites`;
+      let obj = {
+        MemberID: this.review.MemberID,
+        ShopID: shopId,
+      };
+      this.$http
+        .post(api, obj)
+        .then(() => {
+          if (!this.memberFavorites.includes(shopId)) {
+            this.memberFavorites.push(shopId);
+            this.emitter.emit("push-message", {
+              style: "success",
+              title: "已加入我的最愛",
+            });
+          } else {
+            return;
+          }
+          this.getMemberFavorites();
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+    removeFavorite(shopId) {
+      const api = `https://localhost:44333/api/MemberFavorites/${this.review.MemberID}/${shopId}`;
+
+      this.$http
+        .delete(api)
+        .then(() => {
+          this.memberFavorites.filter((item, index) => {
+            if (item == shopId || this.memberFavorites.includes(item.ShopID)) {
+              this.memberFavorites.splice(index, 1);
+              this.emitter.emit("push-message", {
+                style: "primary",
+                title: "已從我的最愛中移除",
+              });
+            }
+          });
+          this.getMemberFavorites();
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
     },
     getMemberID() {
       let memberId = document.cookie.replace(
@@ -335,9 +408,7 @@ export default {
       this.$router.back();
     },
     changePage(id) {
-      console.log(id);
       this.shopId = id;
-      console.log(this.shopId);
     },
     changeLoading(status) {
       this.isLoading = status;
@@ -353,7 +424,7 @@ export default {
   mounted() {
     this.getShopInfo();
     this.getMemberID();
-    // console.log(this.$router);
+    this.getMemberFavorites();
   },
 };
 </script>

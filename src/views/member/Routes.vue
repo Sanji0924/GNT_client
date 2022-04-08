@@ -25,7 +25,7 @@
             <button
               type="button"
               class="btn btn-outline-danger btn-sm ms-5"
-              @click="deleteRoute(route.RouteID)"
+              @click="openShopModal(route, 'delete')"
             >
               移除此行程
             </button>
@@ -41,74 +41,74 @@
                 編輯
               </button>
             </span>
-            <ul class="list-unstyled">
-              <li class="mb-2" v-if="route.ShopInfo">
+            <ul class="list-group">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo, 'shop')"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo.Name }}</a
                 >
               </li>
-              <li class="mb-2" v-if="route.ShopInfo1">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo1">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo1, 'shop')"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo1.Name }}</a
                 >
               </li>
-              <li class="mb-2" v-if="route.ShopInfo2">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo2">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo2, 'shop')"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo2.Name }}</a
                 >
               </li>
-              <li class="mb-2" v-if="route.ShopInfo3">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo3">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo3, 'shop')"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo3.Name }}</a
                 >
               </li>
-              <li class="mb-2" v-if="route.ShopInfo4">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo4">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo4, 'shop')"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo4.Name }}</a
                 >
               </li>
-              <li class="mb-2" v-if="route.ShopInfo5">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo5">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo5, 'shop')"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo5.Name }}</a
                 >
               </li>
-              <li class="mb-2" v-if="route.ShopInfo6">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo6">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo6, 'shop')"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo6.Name }}</a
                 >
               </li>
-              <li class="mb-2" v-if="route.ShopInfo7">
+              <li class="list-group-item mb-2" v-if="route.ShopInfo7">
                 <a
                   href="#"
-                  class="d-flex align-items-center p-2"
+                  class="d-flex align-items-center"
                   @click.prevent="openShopModal(route.ShopInfo7)"
                   ><span class="material-icons me-2"> directions_run </span>
                   {{ route.ShopInfo7.Name }}</a
@@ -122,15 +122,6 @@
               :route-point="route.wayPoints"
               :marker-point="route.markers"
             ></LeafletComponentRoutes>
-            <!-- <iframe
-              class="rounded-lg"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d918.1920857575547!2d120.19986702920316!3d22.99554459906046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e7663ec76d519%3A0xd682bd8402d06879!2z6YKE5Zyo5oOzIFRoaW5raW5nIEJhcg!5e0!3m2!1szh-TW!2stw!4v1646187813258!5m2!1szh-TW!2stw"
-              width="100%"
-              height="350"
-              style="border: 0"
-              allowfullscreen=""
-              loading="lazy"
-            ></iframe> -->
           </div>
         </div>
       </div>
@@ -141,6 +132,12 @@
       :route="tempShop"
       @update-route="updateRoute"
     ></RouteEditModal>
+    <DeleteModal
+      ref="delModal"
+      :type="type"
+      :item="tempShop"
+      @delete-item="deleteRoute"
+    ></DeleteModal>
   </div>
 </template>
 
@@ -148,12 +145,14 @@
 import ShopInfoModal from "../../components/ShopInfoModal.vue";
 import RouteEditModal from "../../components/RouteEditModal.vue";
 import LeafletComponentRoutes from "../../components/LeafletComponentRoutes.vue";
+import DeleteModal from "../../components/DeleteModal.vue";
 
 export default {
   components: {
     ShopInfoModal,
     RouteEditModal,
     LeafletComponentRoutes,
+    DeleteModal,
   },
   data() {
     return {
@@ -166,9 +165,10 @@ export default {
       ],
       tempShop: {},
       isShow: false,
-      // markers: [],
+      type: "route",
     };
   },
+  inject: ["emitter"],
   methods: {
     getMemberID() {
       let memberId = document.cookie.replace(
@@ -183,28 +183,29 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res);
           this.routes = res.data;
           this.routes.forEach((item, index) => {
             this.routes[index].wayPoints = [];
             this.routes[index].markers = [];
             this.getRoutePoint(item.RouteID, index);
           });
-          // console.log(this.routes);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    deleteRoute(routeId) {
-      const api = `https://localhost:44333/api/Routes/${routeId}`;
+    deleteRoute(item) {
+      const api = `https://localhost:44333/api/Routes/${item.RouteID}`;
 
       this.$http
         .delete(api)
-        .then((res) => {
-          // console.log(res);
+        .then(() => {
           this.getRoutes();
-          alert(res.data);
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "已將此行程移除",
+          });
+          this.$refs.delModal.closeModal();
         })
         .catch((err) => {
           console.log(err);
@@ -215,10 +216,12 @@ export default {
 
       this.$http
         .delete(api)
-        .then((res) => {
-          // console.log(res);
+        .then(() => {
           this.getRoutes();
-          alert(res.data);
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "已清空行程",
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -229,12 +232,14 @@ export default {
 
       this.$http
         .put(api, item)
-        .then((res) => {
-          console.log(res);
-          alert(res.data);
+        .then(() => {
           this.getRoutes();
+          this.showMap();
           this.$refs.routeModal.closeModal();
-          // this.routes = res.data;
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "修改成功",
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -246,7 +251,6 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res.data[0]);
           this.routes[index].wayPoints.push({
             lat: res.data[0].ShopInfo.Latitude,
             lng: res.data[0].ShopInfo.Longitude,
@@ -287,6 +291,8 @@ export default {
         this.$refs.modal.openModal();
       } else if (status === "edit") {
         this.$refs.routeModal.openModal();
+      } else if (status === "delete") {
+        this.$refs.delModal.openModal();
       }
     },
     showMap() {

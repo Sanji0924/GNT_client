@@ -1,5 +1,15 @@
 <template>
   <div class="container-fulid">
+    <loading
+      :active="isLoading"
+      loader="spinner"
+      :color="loader.color"
+      :width="loader.width"
+      :height="loader.height"
+      :lock-scroll="loader.lockScroll"
+      :is-full-page="loader.isFullPage"
+    >
+    </loading>
     <div
       class="banner d-flex justify-content-center align-items-end mb-6"
       v-if="shopType == 'all'"
@@ -46,7 +56,17 @@
       </div>
     </div>
     <div class="container">
-      <h2 class="text-white mb-3">所有店家</h2>
+      <h2 class="text-white mb-3">
+        <span v-if="shopType == 'all'">所有店家</span>
+        <span v-else-if="shopType == 'bar'">精選酒吧</span>
+        <span v-else-if="shopType == 'dessert'">精選甜點</span>
+        <span v-else-if="shopType == 'snack'">精選宵夜</span>
+        <span v-else-if="shopType == 'viewpoint'">精選夜景</span>
+        <button class="btn btn-primary btn-sm ms-3" @click="showScore">
+          <span v-if="!isShowScore">開啟店家評分</span>
+          <span v-else>關閉店家評分</span>
+        </button>
+      </h2>
       <div class="row">
         <template v-for="shop in shops">
           <div
@@ -86,7 +106,7 @@
                 <div
                   class="fs-7 mb-1 d-flex justify-content-between align-items-center"
                 >
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center" v-if="isShowScore">
                     <span class="material-icons text-primary">star</span>
                     <span class="ms-2">{{ shop.score }}</span>
                   </div>
@@ -110,13 +130,14 @@
               </div>
               <div class="card-footer bg-transparent border-0">
                 <div class="d-flex">
-                  <a
-                    href="#"
+                  <button
+                    type="button"
                     class="btn btn-outline-info bg-transparnt d-flex align-items-center lh-base me-3"
                     @click.prevent="addRoulette(shop.ShopID, shop.Name)"
+                    :disabled="isDisabled"
                   >
                     <span class="material-icons fs-6 me-1">add</span>加入輪盤
-                  </a>
+                  </button>
                   <a
                     href="#"
                     class="btn btn-outline-primary bg-transparnt d-flex align-items-center lh-base"
@@ -159,6 +180,7 @@ export default {
   data() {
     return {
       shops: [],
+      isDisabled: false,
       isLoading: false,
       loader: {
         width: 150,
@@ -172,53 +194,12 @@ export default {
       memberRouteTitles: [],
       memberFavorites: [],
       shopId: 0,
+      isShowScore: false,
+      routeArr: [],
     };
   },
+  inject: ["emitter"],
   methods: {
-    getShops() {
-      const api = `https://localhost:44333/api/ShopInfoes`;
-
-      this.$http
-        .get(api)
-        .then((res) => {
-          // this.isLoading = true;
-          this.shops = res.data;
-          this.shops.forEach((item, index) => {
-            this.shops[index].tags = item.TagIds.split(",");
-            this.getShopScore(item.ShopID, index);
-          });
-        })
-        .catch(() => {
-          // console.dir(err);
-        });
-    },
-    getShopScore() {
-      let api = `https://localhost:44333/api/shopreviews/score`;
-
-      this.shops.forEach((item, index) => {
-        api = `https://localhost:44333/api/shopreviews/score/${item.ShopID}`;
-        this.$http
-          .get(api)
-          .then((res) => {
-            this.shops[index].score = res.data;
-          })
-          .catch(() => {
-            this.shops[index].score = "尚未有評分";
-          });
-      });
-    },
-    addRoute(id) {
-      const api = `https://localhost:44333/api/Routes/${id}`;
-
-      this.$http
-        .post(api)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     getMember() {
       let member = document.cookie.replace(
         /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
@@ -252,19 +233,20 @@ export default {
       };
       this.$http
         .post(api, obj)
-        .then((res) => {
+        .then(() => {
           if (!this.memberFavorites.includes(shopId)) {
             this.memberFavorites.push(shopId);
           } else {
             return;
           }
-          // this.memberFavorites = [];
           this.getMemberFavorites();
-          alert(res.data);
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "已加入我的最愛",
+          });
         })
-        .catch(() => {
-          // console.dir(err);
-          alert("此商家已經被加過囉");
+        .catch((err) => {
+          console.dir(err);
         });
     },
     removeFavorite(shopId) {
@@ -272,27 +254,42 @@ export default {
 
       this.$http
         .delete(api)
-        .then((res) => {
+        .then(() => {
           this.memberFavorites.filter((item, index) => {
             if (item == shopId || this.memberFavorites.includes(item.ShopID)) {
               this.memberFavorites.splice(index, 1);
             }
           });
           this.getMemberFavorites();
-          alert(res.data);
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "已從我的最愛中移除",
+          });
         })
-        .catch(() => {
-          // console.dir(err);
-          alert("此商家已經被加過囉");
+        .catch((err) => {
+          console.dir(err);
         });
     },
     addRoulette(id, name) {
-      if (localStorage.length >= 13) {
+      this.isDisabled = true;
+      if (localStorage.length >= 12) {
         alert("最多只能加入 12 個輪盤項目");
       } else {
-        localStorage.setItem(id, name);
-        alert("已加入隨機輪盤");
+        if (this.routeArr.includes(`${id}`)) {
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "此店家已經有囉",
+          });
+        } else {
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "已加入隨機輪盤",
+          });
+          localStorage.setItem(id, name);
+          this.routeArr = Object.keys(localStorage);
+        }
       }
+      this.isDisabled = false;
     },
     openRouteModal(shopId) {
       this.shopId = shopId;
@@ -309,7 +306,6 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.memberRoutes = res.data;
           this.memberRoutes.forEach((item) => {
             this.memberRouteTitles.push({
@@ -322,6 +318,9 @@ export default {
           console.log(err);
         });
     },
+    showScore() {
+      this.isShowScore = !this.isShowScore;
+    },
   },
   watch: {
     allShops() {
@@ -329,7 +328,10 @@ export default {
     },
   },
   mounted() {
-    // this.getShops();
+    this.routeArr = Object.keys(localStorage);
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1500);
     this.getMember();
     this.getMemberFavorites();
     this.getRoutes();

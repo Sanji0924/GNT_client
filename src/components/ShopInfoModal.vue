@@ -8,7 +8,7 @@
   >
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header bg-primary">
           <h5 class="modal-title" id="exampleModalLabel">店家詳細資訊</h5>
           <button
             type="button"
@@ -85,7 +85,6 @@
           >
             關閉
           </button>
-          <!-- <button type="button" class="btn btn-primary"></button> -->
         </div>
       </div>
     </div>

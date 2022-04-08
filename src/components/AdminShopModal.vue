@@ -58,7 +58,7 @@
                     type="text"
                     class="form-control"
                     id="shopLongitude"
-                    v-model="tempShop.Longitude"
+                    v-model.number="tempShop.Longitude"
                   />
                 </div>
                 <div class="mb-3 col-6">
@@ -67,7 +67,7 @@
                     type="text"
                     class="form-control"
                     id="shopLatitude"
-                    v-model="tempShop.Latitude"
+                    v-model.number="tempShop.Latitude"
                   />
                 </div>
                 <div class="mb-3 col-6">
@@ -93,74 +93,58 @@
                   </select>
                 </div>
                 <div class="mb-3 col-6">
-                  <label for="shopTag" class="form-label"
-                    >店家子分類（複選）</label
+                  <input
+                    id="is_enabled"
+                    class="form-check-input"
+                    type="checkbox"
+                    checked
+                  />
+                  <label class="form-check-label ms-2" for="is_enabled"
+                    >是否啟用</label
                   >
-                  <select
-                    id="shopTag"
-                    class="form-select"
-                    multiple
-                    size="3"
-                    v-model="selectTags"
-                  >
-                    <option :value="tag.Tag1" v-for="tag in tags" :key="tag.ID">
-                      {{ tag.TagName }}
-                    </option>
-                  </select>
-                </div>
-                <div class="mb-3 col-6">
-                  <label for="shopTag" class="form-label"
-                    >店家子分類（複選）</label
-                  >
-                  <p v-if="selectTags">{{ selectTags.join(", ") }}</p>
                 </div>
               </div>
             </div>
             <div class="col-12 col-lg-6">
-              <div class="mb-3">
-                <p class="mb-2">店家營業時間</p>
-                <!-- <label for="shopOpenTime" class="form-label me-3">星期一</label> -->
-                <div
-                  class="d-flex justify-content-between align-items-center mb-2"
-                  v-for="day in week"
-                  :key="day"
-                >
-                  <span>{{ toWeek(day) }}</span>
-                  <input
-                    hidden
-                    type="text"
-                    class="form-control d-inline w-25 me-2"
-                    id="shopOpenTime"
-                    :value="tempShop[day]"
-                    disabled
-                  />
-                  <input
-                    type="text"
-                    class="form-control d-inline w-25"
-                    id="shopOpenTime"
-                    v-if="tempShop[day]"
-                    v-model="tempShop[day]"
-                  />
-                  到
-                  <input
-                    type="time"
-                    class="form-control d-inline w-25"
-                    id="shopOpenTime"
-                    v-if="tempShop[day]"
-                    v-model="tempShop[day].split('-')[1]"
-                  />
+              <div class="row">
+                <div class="mb-3 col-6">
+                  <p class="mb-2">店家子分類（複選）</p>
+                  <span
+                    class="d-inline-block me-2"
+                    v-for="tag in tags"
+                    :key="tag.Tag1"
+                  >
+                    <input
+                      :key="tag"
+                      class="form-check-input"
+                      type="checkbox"
+                      :value="tag.TagName"
+                      :id="tag.Tag1"
+                      :checked="tempShop.tags.includes(tag.TagName)"
+                    />
+                    <label class="form-check-label ms-1" :for="tag.Tag1">
+                      {{ tag.TagName }}
+                    </label>
+                  </span>
                 </div>
-              </div>
-              <div class="form-check mb-3 col-6">
-                <input
-                  id="is_enabled"
-                  class="form-check-input"
-                  type="checkbox"
-                  checked
-                />
-                <label class="form-check-label" for="is_enabled"
-                  >是否啟用</label
-                >
+                <div class="col-6 mb-3">
+                  <p class="mb-2">店家營業時間</p>
+                  <div
+                    class="d-flex align-items-center mb-2"
+                    v-for="day in week"
+                    :key="day"
+                  >
+                    <label class="form-check-label ms-1" for="shopOpenTime">
+                      {{ toWeek(day) }}
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control d-inline w-75 ms-2"
+                      id="shopOpenTime"
+                      v-model="tempShop[day]"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </form>
@@ -240,25 +224,8 @@
                     </div>
                     <img :src="tempShop.Image5" alt="" class="img-fluid mb-3" />
                   </div>
-                  <!-- <div>
-                      <button
-                        type="button"
-                        class="btn btn-outline-primary"
-                        v-if="images.length"
-                      >
-                        新增圖片
-                      </button>
-                    </div>
-                    <div>
-                      <button type="button" class="btn btn-outline-danger">
-                        刪除圖片
-                      </button>
-                    </div> -->
                 </div>
               </div>
-              <!-- <div>
-              <button type="button" class="btn btn-outline-primary w-100">新增圖片</button>
-            </div> -->
             </div>
           </div>
         </div>
@@ -270,11 +237,7 @@
           >
             關閉
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="updateShop(tempShop.ShopID)"
-          >
+          <button type="button" class="btn btn-primary" @click="update">
             儲存
           </button>
         </div>
@@ -313,31 +276,29 @@ export default {
     toWeek(day) {
       switch (day) {
         case "Monday":
-          return "星期一";
+          return "週一";
         case "Tuesday":
-          return "星期二";
+          return "週二";
         case "Wednesday":
-          return "星期三";
+          return "週三";
         case "Thursday":
-          return "星期四";
+          return "週四";
         case "Friday":
-          return "星期五";
+          return "週五";
         case "Saturday":
-          return "星期六";
+          return "週六";
         case "Sunday":
-          return "星期日";
+          return "週日";
         default:
           return "";
       }
     },
     getAllTags() {
-      this.selectTags = this.tempShop.tags;
       const api = `https://localhost:44333/api/tag`;
 
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.tags = res.data;
         })
         .catch((err) => {
@@ -345,6 +306,9 @@ export default {
         });
     },
     update() {
+      if (this.selectTags) {
+        this.tempShop.tags = this.selectTags.join(",");
+      }
       this.$emit("update", this.tempShop);
     },
   },

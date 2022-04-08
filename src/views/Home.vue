@@ -68,7 +68,13 @@
         <div class="row justify-content-center">
           <div class="col-10 col-md-6 col-lg-5">
             <h3 class="h2 text-center">意見回饋</h3>
-            <form action="#" ref="form">
+            <div class="d-flex flex-column align-items-center" v-if="!isMember">
+              <h5>登入即可留言</h5>
+              <router-link to="/memberlogin" class="btn btn-primary text-center"
+                >按此登入</router-link
+              >
+            </div>
+            <form action="#" ref="form" v-else>
               <input
                 type="hidden"
                 name="memberID"
@@ -102,16 +108,6 @@
                   <option value="其他">其他</option>
                 </select>
               </div>
-              <!-- <div class="mb-3">
-                <label for="reviewDate" class="form-label">填寫日期</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="reviewDate"
-                  name="reviewDate"
-                  v-model="review.ReviewDate"
-                />
-              </div> -->
               <div class="mb-3">
                 <label for="reviewContent" class="form-label">留言</label
                 ><span class="text-danger ms-2">必填</span>
@@ -129,8 +125,13 @@
                   type="submit"
                   class="btn btn-primary btn-lg w-25"
                   @click.prevent="addWebsiteReview"
+                  :disabled="isDisabled"
                 >
                   送出
+                  <span
+                    class="spinner-grow spinner-grow-sm"
+                    v-if="isDisabled"
+                  ></span>
                 </button>
               </div>
             </form>
@@ -163,6 +164,7 @@ import RouteModal from "../components/RouteModal.vue";
 export default {
   data() {
     return {
+      isDisabled: false,
       isMember: false,
       memberName: "",
       review: {
@@ -184,6 +186,7 @@ export default {
       shopId: 0,
     };
   },
+  inject: ["emitter"],
   components: {
     FrontNavbar,
     FrontFooter,
@@ -206,24 +209,26 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.memberName = res.data[0].Name;
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     addWebsiteReview() {
+      this.isDisabled = true;
       const api = `https://localhost:44333/api/websitereview`;
 
       this.$http
         .post(api, this.review)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.review.Type = "";
           this.review.RContent = "";
-          alert(res.data);
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "已送出，感謝您的留言",
+          });
+          this.isDisabled = false;
         })
         .catch((err) => {
           console.dir(err);
@@ -236,12 +241,14 @@ export default {
       );
       if (myCookie === "true") {
         this.isMember = true;
+        this.review.MemberID = document.cookie.replace(
+          /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        );
+        this.getMemberInfo();
+      } else {
+        this.isMember = false;
       }
-      this.review.MemberID = document.cookie.replace(
-        /(?:(?:^|.*;\s*)memberID\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      this.getMemberInfo();
     },
     openRouteModal(shopId) {
       this.shopId = shopId;
@@ -258,7 +265,6 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.memberRoutes = res.data;
           this.memberRoutes.forEach((item) => {
             this.memberRouteTitles.push({
@@ -278,10 +284,6 @@ export default {
     setTimeout(() => {
       this.isLoading = false;
     }, 1000);
-    // EventBus.$on("send", (member) => {
-    //   console.log(member);
-    //   this.memberName = member;
-    // });
   },
 };
 </script>

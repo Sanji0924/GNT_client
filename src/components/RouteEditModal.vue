@@ -32,7 +32,7 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo"
             >
-              {{ route.Dest1 }} / {{ route.ShopInfo.Name }}
+              {{ route.ShopInfo.Name }}
               <button
                 type="button"
                 class="btn btn-outline-danger btn-sm"
@@ -45,8 +45,12 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo1"
             >
-              {{ route.Dest2 }} / {{ route.ShopInfo1.Name }}
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              {{ route.ShopInfo1.Name }}
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeDest('Dest2', 'ShopInfo1')"
+              >
                 移除
               </button>
             </li>
@@ -54,8 +58,12 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo2"
             >
-              {{ route.Dest3 }} / {{ route.ShopInfo2.Name }}
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              {{ route.ShopInfo2.Name }}
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeDest('Dest3', 'ShopInfo2')"
+              >
                 移除
               </button>
             </li>
@@ -63,8 +71,12 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo3"
             >
-              {{ route.Dest4 }} / {{ route.ShopInfo3.Name }}
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              {{ route.ShopInfo3.Name }}
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeDest('Dest4', 'ShopInfo3')"
+              >
                 移除
               </button>
             </li>
@@ -72,8 +84,12 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo4"
             >
-              {{ route.Dest5 }} / {{ route.ShopInfo4.Name }}
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              {{ route.ShopInfo4.Name }}
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeDest('Dest5', 'ShopInfo4')"
+              >
                 移除
               </button>
             </li>
@@ -81,8 +97,12 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo5"
             >
-              {{ route.Dest6 }} / {{ route.ShopInfo5.Name }}
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              {{ route.ShopInfo5.Name }}
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeDest('Dest6', 'ShopInfo5')"
+              >
                 移除
               </button>
             </li>
@@ -90,8 +110,12 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo6"
             >
-              {{ route.Dest7 }} / {{ route.ShopInfo6.Name }}
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              {{ route.ShopInfo6.Name }}
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeDest('Dest7', 'ShopInfo6')"
+              >
                 移除
               </button>
             </li>
@@ -99,8 +123,12 @@
               class="list-group-item d-flex align-items-center justify-content-between"
               v-if="route.ShopInfo7"
             >
-              {{ route.Dest8 }} / {{ route.ShopInfo7.Name }}
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              {{ route.ShopInfo7.Name }}
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeDest('Dest8', 'ShopInfo7')"
+              >
                 移除
               </button>
             </li>

@@ -22,18 +22,16 @@
               <tr>
                 <th>店家名稱</th>
                 <th>店家地區</th>
-                <!-- <th>營業時間</th> -->
                 <th class="text-center">低消</th>
                 <th width="150"></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, key) in favorites" :key="key">
-                <th>{{ item.ShopInfo.Name }}</th>
+                <th v-if="item.ShopInfo.Name">{{ item.ShopInfo.Name }}</th>
                 <td>
                   {{ item.ShopInfo.Address }}
                 </td>
-                <!-- <td>{{}}</td> -->
                 <td class="text-center">{{ item.ShopInfo.Min }}</td>
                 <td>
                   <button
@@ -92,6 +90,7 @@ export default {
       },
     };
   },
+  inject: ["emitter"],
   methods: {
     getMemberID() {
       let memberId = document.cookie.replace(
@@ -103,18 +102,17 @@ export default {
     getFavorites() {
       const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}`;
 
+      this.isLoading = true;
       this.$http
         .get(api)
         .then((res) => {
-          this.isLoading = true;
-          console.log(res);
           this.favorites = res.data;
           this.favorites.forEach((item, index) => {
             this.getShopInfo(item.ShopID, index);
           });
           setTimeout(() => {
             this.isLoading = false;
-          }, 1000);
+          }, 500);
         })
         .catch((err) => {
           console.log(err);
@@ -126,23 +124,23 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res, index);
           this.favorites[index].ShopInfo = res.data[0];
         })
         .catch((err) => {
           console.log(err);
         });
-      console.log(this.favorites);
     },
     deleteFavorite(item) {
       const api = `https://localhost:44333/api/MemberFavorites/${item.MemberID}/${item.ShopID}`;
 
       this.$http
         .delete(api)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "已移除",
+          });
           this.getFavorites();
-          alert(res.data);
           this.$refs.delModal.closeModal();
         })
         .catch((err) => {

@@ -37,7 +37,7 @@
             <router-link
               class="nav-item nav-link text-white mx-2"
               to="/admin/forms"
-              >表單管理</router-link
+              >意見回饋</router-link
             >
             <router-link
               class="nav-item nav-link text-white mx-2"
@@ -53,9 +53,6 @@
         </div>
       </div>
     </nav>
-    <!-- <section class="main pt-7">
-      <h1>請選擇要前往的頁面</h1>
-    </section> -->
     <router-view v-if="isAdmin"></router-view>
     <!-- <footer class="footer w-100">
       <div class="container-fuild bg-gray py-5">
@@ -95,7 +92,6 @@ export default {
   },
   methods: {
     checkToken() {
-      // this.isAdmin = false;
       let token = document.cookie.replace(
         /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
@@ -106,6 +102,7 @@ export default {
         this.$router.push("/adminlogin");
       } else {
         this.isAdmin = true;
+        // this.$router.push("/admin/shops");
       }
     },
   },

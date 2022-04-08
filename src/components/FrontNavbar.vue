@@ -180,15 +180,17 @@ export default {
       document.cookie = `memberToken=; expires=; path=/`;
       document.cookie = `memberID=; expires=; path=/`;
       alert("已登出，畫面將跳轉回首頁");
-      this.$router.push("/");
-      // this.$router.go(0);
+      console.log(this.$router.history.current.fullPath);
+      if (this.$router.history.current.fullPath == "/") {
+        this.$router.go(0);
+      } else {
+        this.$router.push("/");
+      }
     },
     getAllShops() {
-      console.log(this.$router.history.current.fullPath);
       if (this.$router.history.current.fullPath !== "/shops/all") {
         this.$router.push("/shops/all");
         this.$emit("get-all-shops");
-        console.log("路徑");
       } else {
         this.$emit("get-all-shops");
       }
@@ -202,10 +204,15 @@ export default {
       this.$emit("get-type-shops", type);
     },
     openRouletteModal() {
-      this.$refs.modal.getPoints();
-      this.$refs.modal.init();
-      this.$refs.modal.drawRouletteWheel();
-      this.$refs.modal.openModal();
+      let keyArr = Object.keys(localStorage);
+      if (keyArr.length < 1) {
+        alert("請至少加入 2 個景點");
+      } else {
+        this.$refs.modal.getPoints();
+        this.$refs.modal.init();
+        this.$refs.modal.drawRouletteWheel();
+        this.$refs.modal.openModal();
+      }
     },
   },
 };

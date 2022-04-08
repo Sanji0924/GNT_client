@@ -230,10 +230,10 @@ export default {
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     updateShop(item) {
+      console.log(item);
       let api = `https://localhost:44333/api/ShopInfoes/Admin`;
       let method = "post";
 
@@ -253,12 +253,14 @@ export default {
         });
     },
     openShopModal(status, item) {
+      this.tempShop = {};
       if (status === "new") {
         this.isNew = true;
         this.tempShop = {};
       } else if (status === "update") {
         this.isNew = false;
         this.tempShop = { ...item };
+        console.log(this.tempShop);
       }
       this.$refs.modal.openModal();
     },

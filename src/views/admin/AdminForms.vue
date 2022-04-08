@@ -1,5 +1,15 @@
 <template>
   <div class="container-fuild d-flex justify-content-between bg-white">
+    <loading
+      :active="isLoading"
+      loader="spinner"
+      :color="loader.color"
+      :width="loader.width"
+      :height="loader.height"
+      :lock-scroll="loader.lockScroll"
+      :is-full-page="loader.isFullPage"
+    >
+    </loading>
     <input type="checkbox" id="checkShow" hidden />
     <section
       class="container-fuild side side-admin side-member bg-white pt-6 px-3"
@@ -132,30 +142,30 @@
       </div>
     </section>
     <section class="container pt-6">
-      <h1 class="h2 mb-5 mt-5">表單資料管理</h1>
+      <h1 class="h2 mb-5 mt-5">意見回饋管理</h1>
       <div class="table-responsive-md">
         <table
           class="table align-middle table-hover table-striped table-favorite"
         >
           <thead>
             <tr>
-              <th>表單編號</th>
-              <th>會員 ID</th>
-              <th>表單類別</th>
-              <th>填寫日期</th>
-              <th>表單狀態</th>
+              <th class="text-center">表單編號</th>
+              <th class="text-center">會員 ID</th>
+              <th class="text-center">表單類別</th>
+              <th class="text-center">填寫日期</th>
+              <th class="text-center">表單狀態</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in forms" :key="item.ReviewID">
-              <th>{{ item.ReviewID }}</th>
-              <td>{{ item.MemberID }}</td>
-              <td>{{ item.Type }}</td>
-              <td v-if="item.ReviewDate">
+              <th class="text-center">{{ item.ReviewID }}</th>
+              <td class="text-center">{{ item.MemberID }}</td>
+              <td class="text-center">{{ item.Type }}</td>
+              <td v-if="item.ReviewDate" class="text-center">
                 {{ item.ReviewDate.split("T")[0] }}
               </td>
-              <td>
+              <td class="text-center">
                 <span v-if="item.Status === '已處理'">已處理</span>
                 <span class="text-primary" v-else-if="item.Status === '處理中'"
                   >處理中</span
@@ -167,7 +177,7 @@
               <td class="text-center">
                 <button
                   type="button"
-                  class="btn btn-outline-gray btn-sm"
+                  class="btn btn-outline-gray btn-sm me-2"
                   @click="openFormModal(item, 'edit')"
                 >
                   編輯
@@ -201,7 +211,6 @@
 <script>
 import AdminFormModal from "../../components/AdminFormModal.vue";
 import DeleteModal from "../../components/DeleteModal.vue";
-// import getToken from "../../assets/methods/adminToken.js";
 
 export default {
   components: {
@@ -214,11 +223,19 @@ export default {
       tempForm: {
         ReviewDate: "",
       },
-      isLoading: false,
       delType: "websiteReview",
       keywords: "",
+      isLoading: false,
+      loader: {
+        width: 150,
+        height: 150,
+        color: "#fff",
+        lockScroll: true,
+        isFullPage: false,
+      },
     };
   },
+  inject: ["emitter"],
   methods: {
     openFormModal(item, status) {
       if (status === "edit") {
@@ -230,17 +247,17 @@ export default {
       }
     },
     getForms() {
-      let api = `https://localhost:44333/api/websitereview`;
-
+      const api = `https://localhost:44333/api/websitereview`;
+      this.isLoading = true;
       this.$http
         .get(api)
         .then((res) => {
           this.forms = res.data;
           this.keywords = "";
+          this.isLoading = false;
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     getTypeForms(type) {
@@ -253,7 +270,6 @@ export default {
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     getStatusForms(status) {
@@ -266,7 +282,6 @@ export default {
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     getKeywordForms(keywords) {
@@ -288,15 +303,17 @@ export default {
 
       this.$http
         .put(api, item)
-        .then((res) => {
+        .then(() => {
           this.isLoading = true;
-          alert(res.data);
           this.getForms();
           this.$refs.modal.closeModal();
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "表單更新成功",
+          });
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     deleteForm() {
@@ -304,23 +321,25 @@ export default {
 
       this.$http
         .delete(api)
-        .then((res) => {
+        .then(() => {
           this.isLoading = true;
-          alert(res.data);
           this.getForms();
           this.$refs.delModal.closeModal();
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "刪除成功",
+          });
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
   },
   mounted() {
-    // getToken();
-    console.log(this.$http.defaults.headers.common["Authorization"]);
     this.getForms();
-    // this.getToken();
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
   },
 };
 </script>

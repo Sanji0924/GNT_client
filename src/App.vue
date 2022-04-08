@@ -1,15 +1,23 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
     <router-view />
+    <ToastMessage></ToastMessage>
   </div>
 </template>
 
 <script>
+import emitter from "./assets/methods/eventBus";
+import ToastMessage from "./components/ToastMessage.vue";
+
 export default {
+  provide() {
+    return {
+      emitter,
+    };
+  },
+  components: {
+    ToastMessage,
+  },
   // 每次換頁面就滾到最上層
   watch: {
     $route: function () {

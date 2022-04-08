@@ -101,6 +101,7 @@
                   class="form-control"
                   id="email"
                   name="email"
+                  placeholder="請輸入 Email"
                   v-model="user.Email"
                 />
               </div>

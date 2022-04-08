@@ -43,96 +43,6 @@
               </li>
             </ul>
           </div>
-          <!-- <h3 class="h4 text-dark mb-3">類別</h3> -->
-          <!-- <div class="row">
-            <ul class="list-unstyled col-12 text-center">
-              <li>
-                <router-link
-                  to="#"
-                  class="text-dark d-flex admin-side-menu-link py-2"
-                >
-                  <span class="material-icons me-2"> find_in_page </span>全部
-                </router-link>
-              </li>
-              <li>
-                <router-link
-                  to="#"
-                  class="text-dark d-flex admin-side-menu-link py-2"
-                >
-                  <span class="material-icons me-2"> find_in_page </span
-                  >推薦店家
-                </router-link>
-              </li>
-              <li>
-                <router-link
-                  tp="#"
-                  class="text-dark d-flex admin-side-menu-link py-2"
-                >
-                  <span class="material-icons me-2"> find_in_page </span
-                  >系統回饋
-                </router-link>
-              </li>
-              <li>
-                <router-link
-                  to="#"
-                  class="text-dark d-flex admin-side-menu-link py-2"
-                >
-                  <span class="material-icons me-2"> find_in_page </span
-                  >店家資訊更新
-                </router-link>
-              </li>
-              <li>
-                <router-link
-                  to="#"
-                  class="text-dark d-flex admin-side-menu-link py-2"
-                >
-                  <span class="material-icons me-2"> find_in_page </span>其他
-                </router-link>
-              </li>
-              <li class="dropdown">
-                <a
-                  class="dropdown text-dark admin-side-menu-link d-flex align-items-center py-2"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <span class="material-icons me-2"> find_in_page </span>
-                  表單狀態<span class="material-icons"> expand_more </span>
-                </a>
-                <ul
-                  class="dropdown-menu dropdown-menu-center px-2"
-                  aria-labelledby="navbarDropdown"
-                >
-                  <li>
-                    <a
-                      href="#"
-                      class="text-dark d-flex admin-side-menu-link py-2"
-                    >
-                      <span class="material-icons me-2"> edit </span>未處理
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="text-dark d-flex admin-side-menu-link py-2"
-                    >
-                      <span class="material-icons me-2"> edit </span>處理中
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="text-dark d-flex admin-side-menu-link py-2"
-                    >
-                      <span class="material-icons me-2"> edit </span>已處理
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div> -->
         </nav>
       </div>
     </section>
@@ -162,13 +72,6 @@
               </td>
               <td>{{ item.ReviewDate }}</td>
               <td class="text-center">
-                <!-- <button
-                  type="button"
-                  class="btn btn-outline-gray btn-sm"
-                  @click="openFormModal"
-                >
-                  編輯
-                </button> -->
                 <button
                   type="button"
                   class="btn btn-outline-danger btn-sm"
@@ -182,7 +85,6 @@
         </table>
       </div>
     </section>
-    <!-- <AdminFormModal ref="modal"></AdminFormModal> -->
     <DeleteModal
       ref="delModal"
       @delete-item="deleteShopReview"
@@ -203,6 +105,7 @@ export default {
       keywords: "",
     };
   },
+  inject: ["emitter"],
   components: {
     DeleteModal,
   },
@@ -213,7 +116,6 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.shopReviews = res.data;
         })
         .catch((err) => {
@@ -226,16 +128,10 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          // this.isLoading = true;
-          // alert(res.data);
-          console.log(res);
           this.shopReviews = res.data;
           this.$refs.form.reset();
-          // this.getShopReviews();
-          // this.$refs.delModal.closeModal();
         })
         .catch((err) => {
-          console.dir(err);
           alert(err.response.data.Message);
           this.$refs.form.reset();
         });
@@ -249,15 +145,16 @@ export default {
 
       this.$http
         .delete(api)
-        .then((res) => {
-          // this.isLoading = true;
-          alert(res.data);
+        .then(() => {
           this.getShopReviews();
           this.$refs.delModal.closeModal();
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "刪除成功",
+          });
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
   },

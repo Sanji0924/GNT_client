@@ -35,7 +35,6 @@
             <div
               class="form-floating mb-3 text-center d-flex justify-content-center align-items-center"
             >
-              <!-- <button class="btn btn-gray btn-lg">登入</button> -->
               <button type="button" class="btn btn-gray btn-lg" @click="login">
                 登入
               </button>
@@ -88,14 +87,12 @@ export default {
   },
   methods: {
     checkToken() {
-      // this.isAdmin = false;
       let token = document.cookie.replace(
         /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
       );
       this.$http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       if (token) {
-        // alert("請先登入");
         this.isAdmin = true;
         this.$router.push("/admin/shops");
       }
@@ -106,7 +103,6 @@ export default {
       this.$http
         .post(api, this.user)
         .then((res) => {
-          console.log(res);
           const { token, expiretime } = res.data;
 
           document.cookie = `token=${token}; expires=${new Date(
@@ -116,7 +112,6 @@ export default {
             "Authorization"
           ] = `Bearer ${token}`;
           alert(res.data.message);
-          // this.$router.push("/admin");
           this.checkToken();
         })
         .catch((err) => {
@@ -140,12 +135,6 @@ body {
 .logoImg {
   height: 45px;
   z-index: 1000;
-}
-.link-hover-opacity {
-  &:hover {
-    opacity: 0.7;
-    transition: all 0.3s;
-  }
 }
 .main {
   height: calc(100vh - 272px);

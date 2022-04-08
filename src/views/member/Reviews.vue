@@ -94,6 +94,7 @@ export default {
       },
     };
   },
+  inject: ["emitter"],
   methods: {
     getMemberID() {
       let memberId = document.cookie.replace(
@@ -103,13 +104,13 @@ export default {
       this.memberID = Number(memberId);
     },
     getReviews() {
+      this.isLoading = true;
       const api = `https://localhost:44333/api/shopreviews/${this.memberID}`;
 
       this.$http
         .get(api)
         .then((res) => {
           this.isLoading = true;
-          console.log(res);
           this.reviews = res.data;
           this.reviews.forEach((item, index) => {
             this.getShopName(item.ShopID, index);
@@ -136,17 +137,17 @@ export default {
     },
     updateReview(item) {
       const api = `https://localhost:44333/api/shopreviews/${item.MemberID}/${item.ShopID}`;
-      console.log(item);
       delete item.ShopName;
-      // delete item.ReviewDate;
-      console.log(item);
 
       this.$http
         .put(api, item)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.getReviews();
           this.$refs.modal.closeModal();
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "修改成功",
+          });
         })
         .catch((err) => {
           console.dir(err);
@@ -157,12 +158,13 @@ export default {
 
       this.$http
         .delete(api)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.getReviews();
-          alert(res.data);
           this.$refs.delModal.closeModal();
-          // this.reviews = res.data;
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "移除成功",
+          });
         })
         .catch((err) => {
           console.dir(err);

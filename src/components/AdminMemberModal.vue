@@ -154,18 +154,12 @@ export default {
     closeModal() {
       this.modal.hide();
     },
-    getDate(date) {
-      this.birth = date.split("T")[0];
-      console.log(this.birth);
-      // return editDate;
-    },
     update() {
       this.$emit("update-member", this.tempMember);
     },
   },
   mounted() {
     this.modal = new Modal(this.$refs.modal);
-    // this.getDate(this.birthDate);
   },
 };
 </script>

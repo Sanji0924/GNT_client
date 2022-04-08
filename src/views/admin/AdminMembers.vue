@@ -64,8 +64,8 @@
           <thead>
             <tr>
               <th width="80" class="text-center">會員編號</th>
-              <th width="100">會員名稱</th>
-              <th width="100">會員性別</th>
+              <th width="100" class="text-center">會員名稱</th>
+              <th width="100" class="text-center">會員性別</th>
               <th>會員 Email</th>
               <th width="100" class="text-center">黑名單</th>
               <th width="150"></th>
@@ -74,8 +74,8 @@
           <tbody>
             <tr v-for="member in members" :key="member.MemberID">
               <th class="text-center">{{ member.MemberID }}</th>
-              <td>{{ member.Name }}</td>
-              <td>{{ member.Gender }}</td>
+              <td class="text-center">{{ member.Name }}</td>
+              <td class="text-center">{{ member.Gender }}</td>
               <td>{{ member.Email }}</td>
               <td class="text-center">
                 <span
@@ -90,14 +90,14 @@
                 <button
                   type="button"
                   class="btn btn-outline-gray btn-sm me-md-2"
-                  @click="openMemberModal(member)"
+                  @click="openMemberModal(member, 'edit')"
                 >
                   編輯
                 </button>
                 <button
                   type="button"
                   class="btn btn-outline-danger btn-sm"
-                  @click="deleteMember(member.MemberID)"
+                  @click="openMemberModal(member, 'delete')"
                 >
                   刪除
                 </button>
@@ -113,16 +113,23 @@
       :birthDate="birthDate"
       @update-member="updateMember"
     ></AdminMemberModal>
+    <DeleteModal
+      ref="delModal"
+      :type="type"
+      :item="tempMember"
+      @delete-item="deleteMember"
+    ></DeleteModal>
   </div>
 </template>
 
 <script>
-import getToken from "../../assets/methods/adminToken.js";
 import AdminMemberModal from "../../components/AdminMemberModal.vue";
+import DeleteModal from "../../components/DeleteModal.vue";
 
 export default {
   components: {
     AdminMemberModal,
+    DeleteModal,
   },
   data() {
     return {
@@ -130,8 +137,10 @@ export default {
       tempMember: {},
       birthDate: "",
       keywords: "",
+      type: "adminMember",
     };
   },
+  inject: ["emitter"],
   methods: {
     getMembers() {
       const api = `https://localhost:44333/api/MemberInfoes1/Admin`;
@@ -144,7 +153,6 @@ export default {
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     getBlackList() {
@@ -153,46 +161,44 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.members = res.data;
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     updateMember(member) {
       const api = `https://localhost:44333/api/MemberInfoes1/Admin/${member.MemberID}`;
-
+      console.log(member);
       this.$http
         .put(api, member)
-        .then((res) => {
-          console.log(res);
-          alert(res.data);
+        .then(() => {
           this.getMembers();
           this.$refs.modal.closeModal();
-          // this.members = res.data;
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "更新成功",
+          });
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
-    deleteMember(id) {
-      const api = `https://localhost:44333/api/MemberInfoes1/Admin/${id}`;
+    deleteMember() {
+      const api = `https://localhost:44333/api/MemberInfoes1/Admin/${this.tempMember.MemberID}`;
 
       this.$http
         .delete(api)
-        .then((res) => {
-          console.log(res);
-          alert(res.data);
+        .then(() => {
           this.getMembers();
-          this.$refs.modal.closeModal();
-          // this.members = res.data;
+          this.$refs.delModal.closeModal();
+          this.emitter.emit("push-message", {
+            style: "primary",
+            title: "刪除成功",
+          });
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     searchMember(keywords) {
@@ -201,22 +207,22 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.members = res.data;
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    openMemberModal(item) {
+    openMemberModal(item, status) {
       this.tempMember = { ...item };
-      // this.birthDate = item.BirthDate;
-      this.$refs.modal.openModal();
+      if (status == "edit") {
+        this.$refs.modal.openModal();
+      } else if (status == "delete") {
+        this.$refs.delModal.openModal();
+      }
     },
   },
   mounted() {
-    getToken();
-    console.log(this.$http.defaults.headers.common["Authorization"]);
     this.getMembers();
   },
 };

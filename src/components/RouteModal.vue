@@ -26,8 +26,16 @@
               id="routeTitle"
               v-model="newRoute.Title"
             />
-            <button type="button" class="btn btn-primary" @click="addNewRoute">
-              建立
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="addNewRoute"
+              :disabled="isDisabled"
+            >
+              建立<span
+                class="spinner-grow spinner-grow-sm"
+                v-if="isDisabled"
+              ></span>
             </button>
           </div>
           <hr />
@@ -62,8 +70,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest1')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
                 <li
@@ -79,8 +91,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest2')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
                 <li
@@ -96,8 +112,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest3')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
                 <li
@@ -113,8 +133,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest4')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
                 <li
@@ -130,8 +154,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest5')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
                 <li
@@ -147,8 +175,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest6')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
                 <li
@@ -164,8 +196,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest7')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
                 <li
@@ -181,8 +217,12 @@
                     class="btn btn-outline-primary btn-sm"
                     v-else
                     @click="updateRoute(item, 'Dest8')"
+                    :disabled="isDisabled"
                   >
-                    加入此景點
+                    加入<span
+                      class="spinner-grow spinner-grow-sm"
+                      v-if="isDisabled"
+                    ></span>
                   </button>
                 </li>
               </ul>
@@ -190,14 +230,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="btn btn-secondary" @click="closeModal">
             關閉
           </button>
-          <!-- <button type="button" class="btn btn-primary">儲存</button> -->
         </div>
       </div>
     </div>
@@ -211,6 +246,7 @@ export default {
   props: ["routes", "titles", "shopId"],
   data() {
     return {
+      isDisabled: false,
       modal: "",
       selectRouteId: 0,
       newRoute: {
@@ -220,12 +256,14 @@ export default {
       },
     };
   },
+  inject: ["emitter"],
   methods: {
     openModal() {
       this.modal.show();
     },
     closeModal() {
       this.modal.hide();
+      this.selectRouteId = 0;
     },
     getMemberID() {
       let memberId = document.cookie.replace(
@@ -234,21 +272,23 @@ export default {
       );
       this.newRoute.MemberID = Number(memberId);
     },
-
     addNewRoute() {
+      this.isDisabled = true;
       this.newRoute.Dest1 = this.shopId;
-      console.log(this.newRoute);
       const api = `https://localhost:44333/api/Routes`;
 
       this.$http
         .post(api, this.newRoute)
-        .then((res) => {
-          console.log(res);
-          // this.memberRoutes = res.data;
-          alert(res.data);
+        .then(() => {
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "加入行程結果",
+            content: "已新增一個行程",
+          });
           this.newRoute.Title = "";
           this.$emit("get-routes");
           this.closeModal();
+          this.isDisabled = false;
         })
         .catch((err) => {
           console.log(err);
@@ -260,9 +300,12 @@ export default {
 
       this.$http
         .put(api, item)
-        .then((res) => {
-          console.log(res);
-          alert(res.data);
+        .then(() => {
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "加入行程結果",
+            content: "已將此景點加入",
+          });
           this.$emit("get-routes");
         })
         .catch((err) => {

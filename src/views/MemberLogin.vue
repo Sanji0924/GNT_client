@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import { EventBus } from "../assets/methods/eventBus";
 import FrontNavbar from "../components/FrontNavbar.vue";
 import FrontFooter from "../components/FrontFooter.vue";
 
@@ -71,6 +70,7 @@ export default {
         Password: "",
       },
       isMember: false,
+      routerFrom: "",
     };
   },
   methods: {
@@ -82,7 +82,6 @@ export default {
         .then((res) => {
           console.log(res);
           alert(res.data.message);
-          EventBus.$emit("send", res.data.name);
           const { ID } = res.data;
           this.isMember = true;
           document.cookie = `memberToken=${this.isMember}; expires=; path=/`;
@@ -97,6 +96,16 @@ export default {
   },
   beforeDestroy() {
     this.$off("send", this.isMember);
+  },
+  beforeRouteEnter(to, from, next) {
+    console.log(to);
+    console.log(from.path);
+    // this.routerFrom = from.path;
+    console.log(next);
+    next();
+  },
+  mounted() {
+    console.log(this.$router);
   },
 };
 </script>

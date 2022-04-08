@@ -12,7 +12,11 @@
           <li>生日：{{ user.BirthDate }}</li>
           <hr />
           <li>帳號：{{ user.Account }}</li>
-          <li>密碼：***</li>
+          <li>
+            密碼：<span v-for="(item, key) in user.Password.length" :key="key"
+              >*</span
+            >
+          </li>
         </ul>
 
         <div class="d-flex justify-content-end">
@@ -141,7 +145,6 @@
               visibility
             </span>
           </div>
-          <!-- </fieldset> -->
           <div class="form-floating text-end">
             <button
               id="btnConfirm"
@@ -171,6 +174,7 @@ export default {
       inputType: "password",
     };
   },
+  inject: ["emitter"],
   methods: {
     changeEdit(item) {
       this.isEdit = !this.isEdit;
@@ -183,15 +187,18 @@ export default {
       );
       this.user.MemberID = Number(memberId);
     },
-    getData() {
+    getMemberInfo() {
       const api = `https://localhost:44333/api/MemberInfoes1/${this.user.MemberID}`;
 
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.user = res.data[0];
-          console.log(this.user);
+          const birth = this.user.BirthDate.split("/");
+          birth.forEach((item, index) => {
+            birth[index] = item.padStart(2, "0");
+          });
+          this.user.BirthDate = birth.join("-");
         })
         .catch((err) => {
           console.dir(err);
@@ -201,12 +208,15 @@ export default {
       const api = `https://localhost:44333/api/MemberInfoes1/${this.user.MemberID}`;
 
       this.$http
-        .post(api, this.tempUser)
+        .put(api, this.tempUser)
         .then((res) => {
           console.log(res);
-          this.getData();
-          // this.user = res.data;
-          // console.log(this.user);
+          this.getMemberInfo();
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "修改成功",
+          });
+          this.isEdit = !this.isEdit;
         })
         .catch((err) => {
           console.dir(err);
@@ -223,7 +233,7 @@ export default {
   },
   mounted() {
     this.getMemberID();
-    this.getData();
+    this.getMemberInfo();
   },
 };
 </script>

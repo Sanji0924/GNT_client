@@ -73,44 +73,6 @@
       </div>
     </div>
   </div>
-  <!-- <div
-    class="modal fade"
-    id="editModel"
-    tabindex="-1"
-    style="z-index: 11000"
-    ref="modal"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">輪盤小遊戲</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-content">
-        <div class="">
-          <div class="wheelArea">
-            <button type="button" id="spin_button" @click="btnEvent">
-              開始
-            </button>
-            <canvas id="canvas" width="500" height="500"></canvas>
-          </div>
-          <div class="addArea">
-            <input type="text" name="" id="shopName" />
-            <button type="button" id="btnAdd">加入</button>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          關閉
-        </button>
-      </div>
-    </div>
-  </div> -->
 </template>
 
 <script>
@@ -138,6 +100,7 @@ export default {
       isRoll: false,
     };
   },
+  inject: ["emitter"],
   methods: {
     addAward() {
       this.points.push(this.award);
@@ -290,28 +253,35 @@ export default {
     openModal() {
       this.modal.show();
     },
+    closeModal() {
+      this.modal.hide();
+    },
     getPoints() {
       this.points = [];
       let keyArr = Object.keys(localStorage);
-      let index = keyArr.findIndex((el) => {
-        return el == "loglevel:webpack-dev-server";
-      });
-      keyArr.splice(index, 1);
-
       keyArr.forEach((item) => {
         this.points.push({ key: item, name: localStorage.getItem(item) });
       });
     },
     removerPoint(key) {
       localStorage.removeItem(key);
-      alert("已移除");
+      this.emitter.emit("push-message", {
+        style: "primary",
+        title: "移除輪盤項目結果",
+        content: "已從輪盤中移除",
+      });
       this.getPoints();
       this.init();
       this.drawRouletteWheel();
     },
     removerAll() {
       localStorage.clear();
-      alert("已清除所有項目");
+      this.emitter.emit("push-message", {
+        style: "danger",
+        title: "移除輪盤項目結果",
+        content: "已全部清除",
+      });
+      this.closeModal();
       this.getPoints();
       this.init();
       this.drawRouletteWheel();
@@ -319,16 +289,12 @@ export default {
   },
   mounted() {
     this.modal = new Modal(this.$refs.modal);
-    // this.getPoints();
-    // this.init();
-    // this.drawRouletteWheel();
   },
 };
 </script>
 
 <style lang="scss" scoped>
 #spin_button {
-  // font-family: "Noto Sans TC", sans-serif;
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
@@ -339,6 +305,5 @@ export default {
   text-align: center;
   background: #e98830;
   border-radius: 100%;
-  // cursor: pointer;
 }
 </style>

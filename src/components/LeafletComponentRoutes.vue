@@ -102,9 +102,7 @@ export default {
   methods: {
     getPoints() {
       this.markers = [];
-      console.log(this.markerPoint);
       this.markerPoint.forEach((item) => {
-        console.log(item);
         let shopID = item.shopID;
         let shopName = item.shopName;
         let point = latLng(item.lat, item.lng);

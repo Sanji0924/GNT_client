@@ -65,126 +65,6 @@
             </div>
           </form>
           <section>
-            <!-- <h3 class="h4 text-dark mb-3">精選主題</h3>
-            <div class="row">
-              <div class="col-12 mb-3">
-                <a
-                  href="/shops/all"
-                  class="link-hover-opacity"
-                  @click.prevent="getAllShops"
-                >
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                    style="max-height: 125px"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1627481958426-3f165fcdd3c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80"
-                      class="img-fluid overflow-hidden rounded-5"
-                      alt=""
-                    />
-                    <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
-                    >
-                      <h5 class="card-title fs-3 fw-bold mb-0">全部主題</h5>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-6 mb-3">
-                <a
-                  href="/shops/bars"
-                  class="link-hover-opacity"
-                  @click.prevent="getShops('bar')"
-                >
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1563282396-c299392870cb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                      class="img-fluid overflow-hidden rounded-5"
-                      alt=""
-                    />
-                    <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
-                    >
-                      <h5 class="card-title fs-3 fw-bold mb-0">酒吧</h5>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-6 mb-3">
-                <a
-                  href="/shops/snacks"
-                  class="link-hover-opacity"
-                  @click.prevent="getShops('snack')"
-                >
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1533970526352-9c6c0d239190?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                      class="img-fluid"
-                      alt=""
-                    />
-                    <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
-                    >
-                      <h5 class="card-title fs-3 fw-bold mb-0">
-                        宵夜<br />小吃
-                      </h5>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-6 mb-3">
-                <a
-                  href="/shops/desserts"
-                  class="link-hover-opacity"
-                  @click.prevent="getShops('dessert')"
-                >
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1541592391523-5ae8c2c88d10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                      class="img-fluid"
-                      alt=""
-                    />
-                    <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
-                    >
-                      <h5 class="card-title fs-3 fw-bold mb-0">
-                        咖啡<br />甜點
-                      </h5>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="col-6 mb-3">
-                <a
-                  href="/shops/nightviews"
-                  class="link-hover-opacity"
-                  @click.prevent="getShops('viewpoint')"
-                >
-                  <div
-                    class="card bg-dark text-white border-1 border-white rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1506747111041-18b1844bf60f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
-                      class="img-fluid"
-                      alt=""
-                    />
-                    <div
-                      class="card-img-overlay d-flex justify-content-center align-items-center"
-                    >
-                      <h5 class="card-title fs-3 fw-bold mb-0">
-                        夜間<br />景點
-                      </h5>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div> -->
             <h3 class="h4 text-dark mb-2">商家標籤</h3>
             <div class="mb-3">
               <label
@@ -202,7 +82,6 @@
               </label>
             </div>
           </section>
-          <!-- </nav> -->
         </div>
       </section>
       <section>
@@ -276,7 +155,6 @@ export default {
         isFullPage: false,
       },
       search: {
-        // tags: [],
         address: "",
         name: "",
         type: "",
@@ -284,9 +162,15 @@ export default {
       searchTags: [],
     };
   },
+  inject: ["emitter"],
   watch: {
     searchTags() {
-      this.searchShops(this.searchTags.join(","));
+      this.searchShops(
+        this.searchTags.join(","),
+        this.search.address,
+        this.search.name,
+        this.search.type
+      );
     },
   },
   methods: {
@@ -310,7 +194,7 @@ export default {
         .catch(() => {});
     },
     getAllShops() {
-      console.log(this.$router.history.current.fullPath);
+      this.isLoading = true;
 
       const api = `https://localhost:44333/api/ShopInfoes`;
       this.shopType = "all";
@@ -322,9 +206,8 @@ export default {
           this.shops.forEach((item, index) => {
             this.shops[index].tags = item.TagIds.split(",");
             this.getShopScore(item.ShopID, index);
+            this.isLoading = false;
           });
-          this.isLoading = false;
-          console.log(this.shops);
         })
         .catch(() => {});
     },
@@ -341,7 +224,9 @@ export default {
             this.getShopScore(item.ShopID, index);
           });
         })
-        .catch(() => {});
+        .catch((err) => {
+          console.dir(err);
+        });
     },
     getShopScore(shopId, index) {
       const api = `https://localhost:44333/api/shopreviews/score/${shopId}`;
@@ -356,6 +241,7 @@ export default {
         });
     },
     searchShops(tag, address, name, type) {
+      type = this.shopType;
       if (!tag) {
         tag = "null";
       }
@@ -365,19 +251,19 @@ export default {
       if (!name) {
         name = "null";
       }
-      if (!type) {
+      if (!type || type == "all") {
         type = "null";
       }
       let api = `https://localhost:44333/api/ShopInfoes/search?tag=${tag}&address=${address}&name=${name}&type=${type}`;
-      console.log(api);
       this.$http
         .get(api)
         .then((res) => {
-          console.log(res);
           this.shops = res.data;
           this.shops.forEach((item, index) => {
-            this.shops[index].tags = item.TagIds.split(",");
-            this.getShopScore(item.ShopID, index);
+            if (item.TagIds) {
+              this.shops[index].tags = item.TagIds.split(",");
+              this.getShopScore(item.ShopID, index);
+            }
           });
         })
         .catch((err) => {
@@ -386,7 +272,6 @@ export default {
     },
   },
   mounted() {
-    this.isLoading = true;
     this.getAllShops();
     this.getMember();
     this.getAllTags();
@@ -401,14 +286,4 @@ export default {
 @import "../assets/stylesheet/layout/sidebar";
 @import "../assets/stylesheet/layout/banner";
 @import "../assets/stylesheet/layout/card";
-.logoImg {
-  height: 45px;
-  z-index: 1000;
-}
-.link-hover-opacity {
-  &:hover {
-    opacity: 0.7;
-    transition: all 0.3s;
-  }
-}
 </style>

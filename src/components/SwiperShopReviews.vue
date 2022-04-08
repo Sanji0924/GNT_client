@@ -7,7 +7,9 @@
       <swiper-slide v-for="item in shopReviews" :key="item.MemberID">
         <div class="card w-100 h-100 border-1 rounded-0">
           <div class="card-body">
-            <h5 class="card-title">{{ item.MemberID }}</h5>
+            <h5 class="card-title">
+              {{ item.MemberInfo.Account }}
+            </h5>
             <ul class="list-unstyled d-flex align-items-center text-light mb-2">
               <li>
                 <span
@@ -80,11 +82,13 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res);
+          console.log(res);
           this.shopReviews = res.data.filter(
             (item) => item.ShopID == this.shopId
           );
-          // console.log(this.shopReviews);
+          this.shopReviews.forEach((item, index) => {
+            console.log(index, item.MemberInfo.Account);
+          });
         })
         .catch((err) => {
           console.dir(err);

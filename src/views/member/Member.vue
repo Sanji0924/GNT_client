@@ -9,12 +9,6 @@
           <span class="material-icons .arrow"> arrow_forward_ios </span>
         </label>
         <div class="container pt-5 side-area">
-          <!-- <label
-            for="checkShow"
-            class="nav-icon nav-icon-member text-dark d-flex"
-          >
-            <span class="material-icons"> arrow_forward_ios </span>
-          </label> -->
           <nav class="nav flex-column side-nav">
             <h3 class="h4 text-dark mb-3">選單</h3>
             <div class="row">

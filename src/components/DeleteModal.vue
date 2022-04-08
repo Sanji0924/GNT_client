@@ -16,6 +16,8 @@
             </template>
             <template v-else-if="type === 'shopInfo'"> 刪除店家 </template>
             <template v-else-if="type === 'favorite'"> 移除我的最愛 </template>
+            <template v-else-if="type === 'route'"> 移除我的行程 </template>
+            <template v-else-if="type === 'adminMember'"> 移除會員 </template>
           </h5>
 
           <button
@@ -40,6 +42,20 @@
             <strong class="text-danger" v-if="item.ShopInfo">{{
               item.ShopInfo.Name
             }}</strong>
+          </template>
+          <template v-if="type === 'route'">
+            是否將此行程
+            <strong class="text-danger" v-if="item.Title">{{
+              item.Title
+            }}</strong>
+            移除
+          </template>
+          <template v-if="type === 'adminMember'">
+            是否將此會員
+            <strong class="text-danger" v-if="item.MemberID">{{
+              item.Name
+            }}</strong>
+            移除
           </template>
         </div>
         <!-- <div class="modal-body">
