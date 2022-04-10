@@ -22,6 +22,7 @@
               </div>
               <div class="mb-4">
                 <label for="password" class="form-label">密碼</label>
+                <span class="text-danger ms-2">必填</span>
                 <input
                   type="password"
                   class="form-control"
@@ -171,7 +172,7 @@ export default {
         .then((res) => {
           console.log(res);
           alert("註冊成功");
-          this.$router.push("/memberlogin");
+          this.$router.push("/");
           // this.reviews = res.data;
         })
         .catch((err) => {

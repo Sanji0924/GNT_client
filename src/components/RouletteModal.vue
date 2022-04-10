@@ -4,12 +4,7 @@
       <div class="modal-content">
         <div class="modal-header bg-primary">
           <h5 class="modal-title" id="exampleModalLabel">輪盤小遊戲</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" @click="closeModal"></button>
         </div>
         <div class="modal-body">
           <div class="container d-lg-flex">
@@ -102,12 +97,6 @@ export default {
   },
   inject: ["emitter"],
   methods: {
-    addAward() {
-      this.points.push(this.award);
-      awardRadian = (Math.PI * 2) / this.points.length;
-      this.drawRouletteWheel();
-      this.award = "";
-    },
     init() {
       (canvas = document.getElementById("canvas")),
         // (canvas.width = 500),
@@ -217,8 +206,19 @@ export default {
       // 當 當前時間 大於 總時間，停止旋轉，並返回當前值
       spinningTime += 20;
       if (spinningTime >= spinTotalTime) {
-        console.log(this.getValue());
-        alert(`轉到 ${this.getValue()} 囉`);
+        this.closeModal();
+        this.$swal
+          .fire({
+            title: `轉到 ${this.getValue()} 囉`,
+            showCancelButton: true,
+            confirmButtonText: "開啟輪盤",
+            cancelButtonText: "關閉",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.openModal();
+            }
+          });
         this.isRoll = false;
         return;
       }
@@ -285,6 +285,7 @@ export default {
       this.getPoints();
       this.init();
       this.drawRouletteWheel();
+      // this.$router.go(0);
     },
   },
   mounted() {
@@ -293,7 +294,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #spin_button {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -305,5 +306,12 @@ export default {
   text-align: center;
   background: #e98830;
   border-radius: 100%;
+}
+.swal2-styled.swal2-confirm {
+  z-index: 11000;
+  background-color: #1c6e8c;
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color: #1c6e8c, $alpha: 0.5);
+  }
 }
 </style>

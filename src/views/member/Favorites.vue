@@ -14,46 +14,46 @@
     <div class="row">
       <div class="col-12">
         <h2 class="h4 mb-3">已儲存的地點</h2>
-        <div class="table-responsive-md">
-          <table
-            class="table align-middle table-hover table-striped table-favorite"
-          >
-            <thead>
-              <tr>
-                <th>店家名稱</th>
-                <th>店家地區</th>
-                <th class="text-center">低消</th>
-                <th width="150"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, key) in favorites" :key="key">
-                <th v-if="item.ShopInfo.Name">{{ item.ShopInfo.Name }}</th>
-                <td>
-                  {{ item.ShopInfo.Address }}
-                </td>
-                <td class="text-center">{{ item.ShopInfo.Min }}</td>
-                <td>
-                  <button
-                    type="button"
-                    class="btn btn-outline-gray btn-sm me-2"
-                    @click="openShopModal(item.ShopInfo, 'more')"
-                  >
-                    查看更多
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger btn-sm"
-                    @click="openShopModal(item, 'delete')"
-                  >
-                    移除
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
+    </div>
+    <div class="table-responsive">
+      <table
+        class="table align-middle table-hover table-striped table-favorite"
+      >
+        <thead>
+          <tr>
+            <th>店家名稱</th>
+            <th>店家地區</th>
+            <th class="text-center">低消</th>
+            <th width="150"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, key) in favorites" :key="key">
+            <th v-if="item.ShopInfo.Name">{{ item.ShopInfo.Name }}</th>
+            <td>
+              {{ item.ShopInfo.Address }}
+            </td>
+            <td class="text-center">{{ item.ShopInfo.Min }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-outline-gray btn-sm me-2"
+                @click="openShopModal(item.ShopInfo, 'more')"
+              >
+                查看更多
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="openShopModal(item, 'delete')"
+              >
+                移除
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <ShopInfoModal ref="modal" :favorite="tempFavorite"></ShopInfoModal>
     <DeleteModal
@@ -162,3 +162,7 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+@import "../../assets/stylesheet/layout/table";
+</style>

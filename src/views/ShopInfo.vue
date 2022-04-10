@@ -1,5 +1,16 @@
 <template>
   <div class="container pt-6">
+    <!-- <button>Show a group of pictures.</button> -->
+
+    <!-- all props & events -->
+    <vue-easy-lightbox
+      escDisabled
+      moveDisabled
+      :visible="visible"
+      :imgs="imgs"
+      :index="index"
+      @hide="handleHide"
+    ></vue-easy-lightbox>
     <div class="row justify-content-center">
       <div class="col-12 pt-5">
         <div class="d-flex align-items-center mb-3">
@@ -32,6 +43,7 @@
         <div
           class="shop-img mb-5"
           :style="{ backgroundImage: `url(${shop.Image1})` }"
+          @click="showMultiple"
         ></div>
         <section class="mb-5">
           <h3 class="text-white mb-2 d-flex align-items-center">
@@ -243,6 +255,7 @@ export default {
       shop: {
         notes: [],
       },
+      tempShop: {},
       review: {},
       memberRouteTitles: [],
       memberRoutes: [],
@@ -251,6 +264,9 @@ export default {
       shopId: 0,
       id: 0,
       isLoading: true,
+      visible: false,
+      index: 0, // default: 0
+      imgs: [],
     };
   },
   watch: {
@@ -278,6 +294,21 @@ export default {
           } else {
             this.shop.notes = res.data[0].Note;
           }
+          console.log(this.shop);
+          this.updateClick(this.shop);
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+    updateClick(item) {
+      this.tempShop = { ...item };
+      this.tempShop.Click += 1;
+      const api = `https://localhost:44333/api/ShopInfoes/${this.shopId}`;
+      this.$http
+        .put(api, this.tempShop)
+        .then((res) => {
+          console.log(res.data);
         })
         .catch((err) => {
           console.dir(err);
@@ -351,28 +382,44 @@ export default {
         });
     },
     addFavorite(shopId) {
-      const api = `https://localhost:44333/api/MemberFavorites`;
-      let obj = {
-        MemberID: this.review.MemberID,
-        ShopID: shopId,
-      };
-      this.$http
-        .post(api, obj)
-        .then(() => {
-          if (!this.memberFavorites.includes(shopId)) {
-            this.memberFavorites.push(shopId);
-            this.emitter.emit("push-message", {
-              style: "success",
-              title: "已加入我的最愛",
-            });
-          } else {
-            return;
-          }
-          this.getMemberFavorites();
-        })
-        .catch((err) => {
-          console.dir(err);
-        });
+      if (!this.review.MemberID) {
+        this.$swal
+          .fire({
+            icon: "info",
+            title: "請先登入",
+            showCancelButton: true,
+            confirmButtonText: "登入",
+            cancelButtonText: "關閉",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/memberlogin");
+            }
+          });
+      } else {
+        const api = `https://localhost:44333/api/MemberFavorites`;
+        let obj = {
+          MemberID: this.review.MemberID,
+          ShopID: shopId,
+        };
+        this.$http
+          .post(api, obj)
+          .then(() => {
+            if (!this.memberFavorites.includes(shopId)) {
+              this.memberFavorites.push(shopId);
+              this.emitter.emit("push-message", {
+                style: "success",
+                title: "已加入我的最愛",
+              });
+            } else {
+              return;
+            }
+            this.getMemberFavorites();
+          })
+          .catch((err) => {
+            console.dir(err);
+          });
+      }
     },
     removeFavorite(shopId) {
       const api = `https://localhost:44333/api/MemberFavorites/${this.review.MemberID}/${shopId}`;
@@ -401,7 +448,6 @@ export default {
         "$1"
       );
       this.review.MemberID = Number(memberId);
-      console.log(this.review.MemberID);
       this.getRoutes();
     },
     backToPrePage() {
@@ -414,17 +460,57 @@ export default {
       this.isLoading = status;
     },
     openRouteModal() {
-      this.$refs.modal.openModal();
       if (!this.review.MemberID) {
-        alert("請先登入");
-        this.$router.push("/memberlogin");
+        this.$swal
+          .fire({
+            icon: "info",
+            title: "請先登入",
+            showCancelButton: true,
+            confirmButtonText: "登入",
+            cancelButtonText: "關閉",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/memberlogin");
+            }
+          });
+      } else {
+        this.$refs.modal.openModal();
       }
+    },
+
+    showMultiple() {
+      this.imgs = [];
+      if (this.shop.Image1 != "") {
+        this.imgs.push(this.shop.Image1);
+      }
+      if (this.shop.Image2 != "") {
+        this.imgs.push(this.shop.Image2);
+      }
+      if (this.shop.Image3 != "") {
+        this.imgs.push(this.shop.Image3);
+      }
+      if (this.shop.Image4 != "") {
+        this.imgs.push(this.shop.Image4);
+      }
+      if (this.shop.Image5 != "") {
+        this.imgs.push(this.shop.Image5);
+      }
+      this.index = 0; // index of imgList
+      this.show();
+    },
+    show() {
+      this.visible = true;
+    },
+    handleHide() {
+      this.visible = false;
     },
   },
   mounted() {
     this.getShopInfo();
     this.getMemberID();
     this.getMemberFavorites();
+    this.updateClick();
   },
 };
 </script>
@@ -451,5 +537,11 @@ export default {
   max-width: 100%;
   height: 450px;
   border-radius: 20px;
+  &:hover {
+    cursor: pointer;
+    // transform: scale(1.2, 1.2);
+    border: 1px solid #fff;
+    transition: all 0.3s;
+  }
 }
 </style>

@@ -226,28 +226,45 @@ export default {
         });
     },
     addFavorite(shopId) {
-      const api = `https://localhost:44333/api/MemberFavorites`;
-      let obj = {
-        MemberID: this.memberID,
-        ShopID: shopId,
-      };
-      this.$http
-        .post(api, obj)
-        .then(() => {
-          if (!this.memberFavorites.includes(shopId)) {
-            this.memberFavorites.push(shopId);
-          } else {
-            return;
-          }
-          this.getMemberFavorites();
-          this.emitter.emit("push-message", {
-            style: "success",
-            title: "已加入我的最愛",
+      if (!this.memberID) {
+        // alert("請先登入");
+        this.$swal
+          .fire({
+            icon: "info",
+            title: "請先登入",
+            showCancelButton: true,
+            confirmButtonText: "登入",
+            cancelButtonText: "關閉",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/memberlogin");
+            }
           });
-        })
-        .catch((err) => {
-          console.dir(err);
-        });
+      } else {
+        const api = `https://localhost:44333/api/MemberFavorites`;
+        let obj = {
+          MemberID: this.memberID,
+          ShopID: shopId,
+        };
+        this.$http
+          .post(api, obj)
+          .then(() => {
+            if (!this.memberFavorites.includes(shopId)) {
+              this.memberFavorites.push(shopId);
+            } else {
+              return;
+            }
+            this.getMemberFavorites();
+            this.emitter.emit("push-message", {
+              style: "success",
+              title: "已加入我的最愛",
+            });
+          })
+          .catch((err) => {
+            console.dir(err);
+          });
+      }
     },
     removeFavorite(shopId) {
       const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}/${shopId}`;
@@ -271,9 +288,10 @@ export default {
         });
     },
     addRoulette(id, name) {
+      this.routeArr = Object.keys(localStorage);
       this.isDisabled = true;
       if (localStorage.length >= 12) {
-        alert("最多只能加入 12 個輪盤項目");
+        this.showAlert();
       } else {
         if (this.routeArr.includes(`${id}`)) {
           this.emitter.emit("push-message", {
@@ -293,10 +311,23 @@ export default {
     },
     openRouteModal(shopId) {
       this.shopId = shopId;
-      this.$refs.modal.openModal();
       if (!this.memberID) {
-        alert("請先登入");
-        this.$router.push("/memberlogin");
+        // alert("請先登入");
+        this.$swal
+          .fire({
+            icon: "info",
+            title: "請先登入",
+            showCancelButton: true,
+            confirmButtonText: "登入",
+            cancelButtonText: "關閉",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/memberlogin");
+            }
+          });
+      } else {
+        this.$refs.modal.openModal();
       }
     },
     getRoutes() {
@@ -321,6 +352,12 @@ export default {
     showScore() {
       this.isShowScore = !this.isShowScore;
     },
+    showAlert() {
+      this.$swal.fire({
+        icon: "info",
+        title: "最多只能加入 12 個項目",
+      });
+    },
   },
   watch: {
     allShops() {
@@ -328,7 +365,6 @@ export default {
     },
   },
   mounted() {
-    this.routeArr = Object.keys(localStorage);
     setTimeout(() => {
       this.isLoading = false;
     }, 1500);
@@ -339,6 +375,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../assets/stylesheet/layout/card";
+
+.swal2-styled.swal2-confirm {
+  background-color: #1c6e8c !important;
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color: #1c6e8c, $alpha: 0.5) !important;
+  }
+}
 </style>

@@ -29,6 +29,11 @@ L.Icon.Default.mergeOptions({
 
 import VueAwesomeSwiper from "vue-awesome-swiper";
 
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
+import VueEasyLightbox from "vue-easy-lightbox";
+
 // import "../node_modules/swiper/swiper-bundle.css";
 // import VueAwesomeSwiper from "vue-awesome-swiper";
 
@@ -53,6 +58,8 @@ Vue.component("l-marker", LMarker);
 Vue.component(VueC3);
 Vue.use(VueAxios, axios);
 Vue.use(VueAwesomeSwiper);
+Vue.use(VueSweetalert2);
+Vue.use(VueEasyLightbox);
 // Vue.use(VueAwesomeSwiper);
 
 app.$mount("#app");

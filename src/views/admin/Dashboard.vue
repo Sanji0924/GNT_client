@@ -24,6 +24,12 @@
             <router-link class="nav-item nav-link text-white mx-2" to="/"
               >前台首頁</router-link
             >
+            <a
+              href="#"
+              class="nav-item nav-link text-white mx-2"
+              @click.prevent="logout"
+              >登出</a
+            >
             <router-link
               class="nav-item nav-link text-white mx-2"
               to="/admin/shops"
@@ -98,12 +104,23 @@ export default {
       );
       this.$http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       if (!token) {
-        alert("請先登入");
+        this.showAlert();
         this.$router.push("/adminlogin");
       } else {
         this.isAdmin = true;
         // this.$router.push("/admin/shops");
       }
+    },
+    showAlert() {
+      this.$swal.fire({
+        icon: "error",
+        title: "請先登入",
+      });
+    },
+    logout() {
+      document.cookie = `token=; expires=; path=/`;
+      this.$http.defaults.headers.common["Authorization"] = "";
+      this.checkToken();
     },
   },
   mounted() {
@@ -114,6 +131,7 @@ export default {
 
 <style lang="scss">
 @import "../../assets/stylesheet/layout/sidebar";
+
 .logoImg {
   height: 45px;
   z-index: 1000;
@@ -133,5 +151,11 @@ export default {
 }
 .main {
   height: calc(100vh - 272px);
+}
+.swal2-styled.swal2-confirm {
+  background-color: #1c6e8c;
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color: #1c6e8c, $alpha: 0.5);
+  }
 }
 </style>

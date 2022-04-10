@@ -73,6 +73,7 @@ export default {
       routerFrom: "",
     };
   },
+  inject: ["emitter"],
   methods: {
     login() {
       const api = `https://localhost:44333/api/Login/Member`;
@@ -81,41 +82,40 @@ export default {
         .post(api, this.user)
         .then((res) => {
           console.log(res);
-          alert(res.data.message);
           const { ID } = res.data;
           this.isMember = true;
           document.cookie = `memberToken=${this.isMember}; expires=; path=/`;
           document.cookie = `memberID=${ID}; expires=; path=/`;
           this.$router.back();
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "登入成功",
+          });
         })
         .catch((err) => {
           console.dir(err);
-          alert(`${err.response.data.Message}，請再重新登入`);
+          this.$swal.fire({
+            icon: "error",
+            title: `${err.response.data.Message}，請再重新登入`,
+          });
         });
     },
-  },
-  beforeDestroy() {
-    this.$off("send", this.isMember);
-  },
-  beforeRouteEnter(to, from, next) {
-    console.log(to);
-    console.log(from.path);
-    // this.routerFrom = from.path;
-    console.log(next);
-    next();
-  },
-  mounted() {
-    console.log(this.$router);
   },
 };
 </script>
 
-<style lang="css">
+<style lang="scss">
 html,
 body {
   height: 100%;
 }
 .main {
   height: calc(100vh - 239px);
+}
+.swal2-styled.swal2-confirm {
+  background-color: #1c6e8c;
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color: #1c6e8c, $alpha: 0.5);
+  }
 }
 </style>

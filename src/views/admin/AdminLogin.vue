@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-gray w-100">
       <div class="container">
-        <router-link class="navbar-brand" to="/index">
+        <router-link class="navbar-brand" to="/">
           <img class="logoImg" src="../../assets/images/logo.png" alt="" />
         </router-link>
       </div>

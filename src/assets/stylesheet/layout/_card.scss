@@ -1,5 +1,10 @@
 @import "../helpers/mixin";
 .card {
+  &:hover {
+    // border: 2px solid #e98830;
+    box-shadow: 0px 0px 0px 3px #fbaa57;
+    transition: all 0.3s;
+  }
   // height: 350px;
   &-img {
     // background: url("https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80");
