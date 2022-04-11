@@ -24,12 +24,7 @@
             <router-link class="nav-item nav-link text-white mx-2" to="/"
               >前台首頁</router-link
             >
-            <a
-              href="#"
-              class="nav-item nav-link text-white mx-2"
-              @click.prevent="logout"
-              >登出</a
-            >
+
             <router-link
               class="nav-item nav-link text-white mx-2"
               to="/admin/shops"
@@ -49,6 +44,12 @@
               class="nav-item nav-link text-white mx-2"
               to="/admin/shopreviews"
               >商家評論</router-link
+            >
+            <a
+              href="#"
+              class="nav-item nav-link text-white mx-2"
+              @click.prevent="logout"
+              >登出</a
             >
             <!-- <router-link
               class="nav-item nav-link text-white mx-2"
@@ -96,6 +97,7 @@ export default {
       isAdmin: false,
     };
   },
+  inject: ["emitter"],
   methods: {
     checkToken() {
       let token = document.cookie.replace(
@@ -120,6 +122,10 @@ export default {
     logout() {
       document.cookie = `token=; expires=; path=/`;
       this.$http.defaults.headers.common["Authorization"] = "";
+      this.emitter.emit("push-message", {
+        style: "primary",
+        title: "token 已清除",
+      });
       this.checkToken();
     },
   },

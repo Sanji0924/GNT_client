@@ -41,13 +41,7 @@
               @click.prevent="openRouletteModal"
               >隨機輪盤</a
             >
-            <a
-              class="nav-item nav-link mx-2 d-flex justify-content-center"
-              v-if="isMember"
-              href="#"
-              @click.prevent="logout"
-              >會員登出</a
-            >
+
             <div class="dropdown">
               <a
                 class="nav-link dropdown d-flex justify-content-center align-items-center mx-2"
@@ -157,6 +151,13 @@
                 </li>
               </ul>
             </div>
+            <a
+              class="nav-item nav-link mx-2 d-flex justify-content-center"
+              v-if="isMember"
+              href="#"
+              @click.prevent="logout"
+              >會員登出</a
+            >
           </div>
         </div>
       </div>

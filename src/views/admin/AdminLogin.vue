@@ -85,6 +85,7 @@ export default {
       },
     };
   },
+  inject: ["emitter"],
   methods: {
     checkToken() {
       let token = document.cookie.replace(
@@ -111,7 +112,10 @@ export default {
           this.$http.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${token}`;
-          alert(res.data.message);
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "登入成功",
+          });
           this.checkToken();
         })
         .catch((err) => {
