@@ -198,6 +198,7 @@
     <AdminFormModal
       ref="modal"
       :form="tempForm"
+      :loading="isDisabled"
       @update="updateForm"
     ></AdminFormModal>
     <DeleteModal
@@ -233,6 +234,7 @@ export default {
         lockScroll: true,
         isFullPage: false,
       },
+      isDisabled: false,
     };
   },
   inject: ["emitter"],
@@ -298,6 +300,7 @@ export default {
         });
     },
     updateForm(item) {
+      this.isDisabled = true;
       console.log(item);
       const api = `https://localhost:44333/api/websitereview/admin/${item.ReviewID}`;
 
@@ -311,6 +314,7 @@ export default {
             style: "success",
             title: "表單更新成功",
           });
+          this.isDisabled = false;
         })
         .catch((err) => {
           console.dir(err);

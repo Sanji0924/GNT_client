@@ -95,14 +95,18 @@
                 >點我前往</a
               >
             </li>
-            <li class="d-flex">
-              <span class="material-icons me-1"> local_offer </span
-              >店家標籤：<span
-                v-for="tag in shop.tags"
-                :key="tag"
-                class="d-flex align-items-center fs-6 badge bg-info ms-2"
-                >{{ tag }}</span
-              >
+            <li class="d-md-flex">
+              <div class="d-flex align-items-center mb-1">
+                <span class="material-icons me-1"> local_offer </span>店家標籤：
+              </div>
+              <div class="d-flex flex-wrap">
+                <span
+                  v-for="tag in shop.tags"
+                  :key="tag"
+                  class="d-flex align-items-center fs-6 badge bg-info m-1"
+                  >{{ tag }}</span
+                >
+              </div>
             </li>
           </ul>
         </section>
@@ -303,6 +307,8 @@ export default {
     },
     updateClick(item) {
       this.tempShop = { ...item };
+      delete this.tempShop.tags;
+      delete this.tempShop.notes;
       this.tempShop.Click += 1;
       const api = `https://localhost:44333/api/ShopInfoes/${this.shopId}`;
       this.$http
@@ -510,7 +516,7 @@ export default {
     this.getShopInfo();
     this.getMemberID();
     this.getMemberFavorites();
-    this.updateClick();
+    // this.updateClick();
   },
 };
 </script>

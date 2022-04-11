@@ -14,7 +14,11 @@
     <div class="row">
       <div class="col-12 table-responsive-lg">
         <h2 class="h4 mb-3">已分享的心得</h2>
-        <table class="table align-middle table-hover table-striped">
+
+        <table
+          v-if="reviews.length != 0"
+          class="table align-middle table-hover table-striped"
+        >
           <thead>
             <tr>
               <th width="150">店家名稱</th>
@@ -53,6 +57,7 @@
             </tbody>
           </keep-alive>
         </table>
+        <p v-else>目前沒有分享任何的心得</p>
       </div>
     </div>
     <MemberReviewModal
@@ -115,13 +120,13 @@ export default {
           this.reviews.forEach((item, index) => {
             this.getShopName(item.ShopID, index);
           });
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 500);
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
         });
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 500);
     },
     getShopName(id, index) {
       const api = `https://localhost:44333/api/shopinfoes/${id}`;

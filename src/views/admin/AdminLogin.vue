@@ -120,6 +120,10 @@ export default {
         })
         .catch((err) => {
           console.dir(err);
+          this.$swal.fire({
+            icon: "error",
+            title: `${err.response.data.Message}`,
+          });
         });
     },
   },
@@ -142,5 +146,11 @@ body {
 }
 .main {
   height: calc(100vh - 272px);
+}
+.swal2-styled.swal2-confirm {
+  background-color: #1c6e8c;
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color: #1c6e8c, $alpha: 0.5);
+  }
 }
 </style>

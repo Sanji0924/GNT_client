@@ -18,6 +18,7 @@
             <template v-else-if="type === 'favorite'"> 移除我的最愛 </template>
             <template v-else-if="type === 'route'"> 移除我的行程 </template>
             <template v-else-if="type === 'adminMember'"> 移除會員 </template>
+            <template v-else-if="type === 'logout'"> 會員登出 </template>
           </h5>
 
           <button
@@ -57,6 +58,10 @@
             }}</strong>
             移除
           </template>
+          <template v-if="type === 'logout'">
+            是否要
+            <strong class="text-danger">登出</strong>
+          </template>
         </div>
         <!-- <div class="modal-body">
           是否刪除
@@ -71,6 +76,15 @@
             取消
           </button>
           <button
+            type="button"
+            class="btn btn-primary text-white"
+            @click="deleteItem"
+            v-if="type === 'logout'"
+          >
+            確定
+          </button>
+          <button
+            v-else
             type="button"
             class="btn btn-danger text-white"
             @click="deleteItem"

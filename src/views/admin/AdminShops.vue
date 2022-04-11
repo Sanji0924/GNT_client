@@ -169,8 +169,9 @@
     </section>
     <AdminShopModal
       ref="modal"
-      :tempShop="tempShop"
-      :isNew="isNew"
+      :temp-shop="tempShop"
+      :is-new="isNew"
+      :shop-tags="shopTags"
       @update="updateShop"
     ></AdminShopModal>
   </div>
@@ -187,9 +188,11 @@ export default {
     return {
       shops: [],
       tempShop: {},
-      isNew: true,
+      isNew: false,
+      shopTags: [],
     };
   },
+  inject: ["emitter"],
   methods: {
     getShops(type) {
       let api = `https://localhost:44333/api/ShopInfoes`;
@@ -203,15 +206,9 @@ export default {
         .then((res) => {
           console.log(res);
           this.shops = res.data;
-          this.shops.forEach((item, index) => {
-            if (item.TagIds) {
-              this.shops[index].tags = item.TagIds.split(",");
-            }
-          });
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     getEnableShops(status) {
@@ -222,11 +219,6 @@ export default {
         .then((res) => {
           console.log(res);
           this.shops = res.data;
-          this.shops.forEach((item, index) => {
-            if (item.TagIds) {
-              this.shops[index].tags = item.TagIds.split(",");
-            }
-          });
         })
         .catch((err) => {
           console.dir(err);
@@ -236,33 +228,37 @@ export default {
       console.log(item);
       let api = `https://localhost:44333/api/ShopInfoes/Admin`;
       let method = "post";
+      if (this.isNew == false) {
+        api = `https://localhost:44333/api/ShopInfoes/Admin/${item.ShopID}`;
+        method = "put";
+      }
 
       this.$http[method](api, item)
         .then((res) => {
           console.log(res);
-          // this.shops = res.data;
-          // this.shops.forEach((item, index) => {
-          //   if (item.TagIds) {
-          //     this.shops[index].tags = item.TagIds.split(",");
-          //   }
-          // });
+          this.getShops();
+          this.$refs.modal.closeModal();
+          this.emitter.emit("push-message", {
+            style: "success",
+            title: "成功上傳",
+          });
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
     openShopModal(status, item) {
       this.tempShop = {};
-      if (status === "new") {
+      if (status == "new") {
+        // this.tempShop = {};
         this.isNew = true;
-        this.tempShop = {};
-      } else if (status === "update") {
+        this.$refs.modal.openModal();
+      } else if (status == "update") {
         this.isNew = false;
         this.tempShop = { ...item };
         console.log(this.tempShop);
+        this.$refs.modal.openModal();
       }
-      this.$refs.modal.openModal();
     },
   },
   mounted() {

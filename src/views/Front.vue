@@ -41,6 +41,7 @@
                   v-model="search.address"
                 >
                   <option value="" selected disabled>請選擇地區</option>
+                  <option value="null" selected>全部地區</option>
                   <option :value="area" v-for="area in areas" :key="area">
                     {{ area }}
                   </option>

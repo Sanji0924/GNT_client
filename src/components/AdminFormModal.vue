@@ -106,9 +106,10 @@
             type="button"
             class="btn btn-primary"
             @click="update"
-            :disabled="isLoading"
+            :disabled="loading"
           >
             儲存
+            <span class="spinner-grow spinner-grow-sm" v-if="loading"></span>
           </button>
         </div>
       </div>
@@ -120,11 +121,10 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
-  props: ["form"],
+  props: ["form", "loading"],
   data() {
     return {
       modal: "",
-      isLoading: false,
     };
   },
   methods: {

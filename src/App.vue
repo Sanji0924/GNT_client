@@ -5,6 +5,9 @@
   </div>
 </template>
 
+<script src="https://cdn.jsdelivr.net/npm/@vee-validate/i18n@4.5.8/dist/vee-validate-i18n.min.js"></script>
+;
+
 <script>
 import emitter from "./assets/methods/eventBus";
 import ToastMessage from "./components/ToastMessage.vue";

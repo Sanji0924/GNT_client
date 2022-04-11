@@ -155,7 +155,7 @@
               class="nav-item nav-link mx-2 d-flex justify-content-center"
               v-if="isMember"
               href="#"
-              @click.prevent="logout"
+              @click.prevent="openDelModal"
               >會員登出</a
             >
           </div>
@@ -163,22 +163,34 @@
       </div>
     </nav>
     <Roulette ref="modal"></Roulette>
+    <DeleteModal
+      ref="delModal"
+      :type="type"
+      @delete-item="logout"
+    ></DeleteModal>
   </div>
 </template>
 
 <script>
 // import { EventBus } from "../assets/methods/eventBus";
 import Roulette from "../components/RouletteModal.vue";
+import DeleteModal from "../components/DeleteModal.vue";
 
 export default {
   props: ["isMember"],
   data() {
-    return {};
+    return {
+      type: "logout",
+    };
   },
   components: {
     Roulette,
+    DeleteModal,
   },
   methods: {
+    openDelModal() {
+      this.$refs.delModal.openModal();
+    },
     logout() {
       document.cookie = `memberToken=; expires=; path=/`;
       document.cookie = `memberID=; expires=; path=/`;
@@ -188,6 +200,7 @@ export default {
         showConfirmButton: false,
         timer: 1500,
       });
+      this.$refs.delModal.closeModal();
       setTimeout(() => {
         if (this.$router.history.current.fullPath == "/") {
           this.$router.go(0);
@@ -214,7 +227,7 @@ export default {
     },
     openRouletteModal() {
       let keyArr = Object.keys(localStorage);
-      if (keyArr.length < 1) {
+      if (keyArr.length < 2) {
         this.showAlert();
       } else {
         this.$refs.modal.getPoints();

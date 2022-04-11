@@ -98,6 +98,9 @@ export default {
     };
   },
   inject: ["emitter"],
+  updated() {
+    this.checkToken();
+  },
   methods: {
     checkToken() {
       let token = document.cookie.replace(

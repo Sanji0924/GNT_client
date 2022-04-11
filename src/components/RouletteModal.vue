@@ -270,6 +270,15 @@ export default {
         title: "移除輪盤項目結果",
         content: "已從輪盤中移除",
       });
+      let keyArr = Object.keys(localStorage);
+      if (keyArr.length <= 1) {
+        this.$swal.fire({
+          icon: "info",
+          title: "請至少加入 2 個景點",
+        });
+        this.closeModal();
+      }
+
       this.getPoints();
       this.init();
       this.drawRouletteWheel();

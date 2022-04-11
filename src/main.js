@@ -34,10 +34,25 @@ import "sweetalert2/dist/sweetalert2.min.css";
 
 import VueEasyLightbox from "vue-easy-lightbox";
 
-// import "../node_modules/swiper/swiper-bundle.css";
-// import VueAwesomeSwiper from "vue-awesome-swiper";
+import VeeValidate from "vee-validate";
+import zhTW from "vee-validate/dist/locale/zh_TW";
+// import VueI18n from "vue-i18n";
 
-import VueC3 from "vue-c3";
+// const i18n = new VueI18n({
+//   locale: "zhTW",
+// });
+// configure({
+//   generateMessage: localize({ zh_TW: zhTW }),
+//   validateOnInput: true,
+// });
+
+Vue.use(VeeValidate, {
+  events: "input|blur", //這是為了讓使用者離開該欄位時觸發驗證
+  dictionary: {
+    zhTW,
+  },
+  locale: "zhTW",
+});
 
 import App from "./App.vue";
 import router from "./router";
@@ -46,6 +61,7 @@ Vue.config.productionTip = false;
 
 const app = new Vue({
   router,
+  // i18n,
   render: (h) => h(App),
 });
 // Vue.prototype.$bus = new Vue();
@@ -55,11 +71,12 @@ Vue.component("pulse-loader", PulseLoader);
 Vue.component("l-map", LMap);
 Vue.component("l-tile-layer", LTileLayer);
 Vue.component("l-marker", LMarker);
-Vue.component(VueC3);
 Vue.use(VueAxios, axios);
 Vue.use(VueAwesomeSwiper);
 Vue.use(VueSweetalert2);
 Vue.use(VueEasyLightbox);
+// Vue.use(VeeValidate);
+// Vue.use(VueI18n);
 // Vue.use(VueAwesomeSwiper);
 
 app.$mount("#app");

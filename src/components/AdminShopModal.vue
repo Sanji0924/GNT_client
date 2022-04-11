@@ -97,7 +97,8 @@
                     id="is_enabled"
                     class="form-check-input"
                     type="checkbox"
-                    checked
+                    v-model="tempShop.Enable"
+                    :checked="tempShop.Enable"
                   />
                   <label class="form-check-label ms-2" for="is_enabled"
                     >是否啟用</label
@@ -111,16 +112,15 @@
                   <p class="mb-2">店家子分類（複選）</p>
                   <span
                     class="d-inline-block me-2"
-                    v-for="tag in tags"
-                    :key="tag.Tag1"
+                    v-for="(tag, key) in tags"
+                    :key="key"
                   >
                     <input
-                      :key="tag"
                       class="form-check-input"
                       type="checkbox"
-                      :value="tag.TagName"
                       :id="tag.Tag1"
-                      :checked="tempShop.tags.includes(tag.TagName)"
+                      :value="tag.TagName"
+                      v-model="selectTags"
                     />
                     <label class="form-check-label ms-1" :for="tag.Tag1">
                       {{ tag.TagName }}
@@ -131,8 +131,8 @@
                   <p class="mb-2">店家營業時間</p>
                   <div
                     class="d-flex align-items-center mb-2"
-                    v-for="day in week"
-                    :key="day"
+                    v-for="(day, key) in week"
+                    :key="key"
                   >
                     <label class="form-check-label ms-1" for="shopOpenTime">
                       {{ toWeek(day) }}
@@ -250,7 +250,7 @@
 import Modal from "bootstrap/js/dist/modal";
 
 export default {
-  props: ["tempShop", "isNew"],
+  props: ["tempShop", "is-new", "shopTags"],
   data() {
     return {
       modal: "",
@@ -265,13 +265,20 @@ export default {
         "Saturday",
         "Sunday",
       ],
-      testTime: "",
-      testTime2: "",
+      isLoading: false,
     };
   },
   methods: {
     openModal() {
+      if (this.tempShop.TagIds) {
+        this.selectTags = this.tempShop.TagIds.split(",");
+      } else {
+        this.selectTags = [];
+      }
       this.modal.show();
+    },
+    closeModal() {
+      this.modal.hide();
     },
     toWeek(day) {
       switch (day) {
@@ -306,15 +313,14 @@ export default {
         });
     },
     update() {
-      if (this.selectTags) {
-        this.tempShop.tags = this.selectTags.join(",");
-      }
+      this.tempShop.TagIds = this.selectTags.join(",");
       this.$emit("update", this.tempShop);
     },
   },
   mounted() {
     this.modal = new Modal(this.$refs.modal);
     this.getAllTags();
+    console.log(this.tempShop);
   },
 };
 </script>
