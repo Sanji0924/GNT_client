@@ -178,7 +178,7 @@ export default {
       this.memberId = Number(memberId);
     },
     getRoutes() {
-      const api = `https://localhost:44333/api/Routes/${this.memberId}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/${this.memberId}`;
 
       this.$http
         .get(api)
@@ -195,7 +195,7 @@ export default {
         });
     },
     deleteRoute(item) {
-      const api = `https://localhost:44333/api/Routes/${item.RouteID}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/${item.RouteID}`;
 
       this.$http
         .delete(api)
@@ -212,7 +212,7 @@ export default {
         });
     },
     deleteAllRoutes() {
-      const api = `https://localhost:44333/api/Routes/deleteAll/${this.memberId}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/deleteAll/${this.memberId}`;
 
       this.$http
         .delete(api)
@@ -228,7 +228,7 @@ export default {
         });
     },
     updateRoute(item) {
-      const api = `https://localhost:44333/api/Routes/${item.RouteID}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/${item.RouteID}`;
 
       this.$http
         .put(api, item)
@@ -246,7 +246,7 @@ export default {
         });
     },
     getRoutePoint(routeId, index) {
-      const api = `https://localhost:44333/api/Routes/RouteID/${routeId}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/RouteID/${routeId}`;
 
       this.$http
         .get(api)

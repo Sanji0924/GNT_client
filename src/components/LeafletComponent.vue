@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     getPoints() {
-      const api = `https://localhost:44333/api/ShopInfoes`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes`;
 
       this.$http
         .get(api)

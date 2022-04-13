@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     getShopReviews() {
-      const api = `https://localhost:44333/api/shopreviews`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews`;
 
       this.$http
         .get(api)
@@ -123,7 +123,7 @@ export default {
         });
     },
     getKeywords(keywords) {
-      const api = `https://localhost:44333/api/shopreviews/keywords/${keywords}`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews/keywords/${keywords}`;
 
       this.$http
         .get(api)
@@ -141,7 +141,7 @@ export default {
       this.$refs.delModal.openModal();
     },
     deleteShopReview() {
-      const api = `https://localhost:44333/api/shopreviews/Admin/${this.tempShopReview.MemberID}/${this.tempShopReview.ShopID}`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews/Admin/${this.tempShopReview.MemberID}/${this.tempShopReview.ShopID}`;
 
       this.$http
         .delete(api)

@@ -284,7 +284,7 @@ export default {
     getShopInfo() {
       const { id } = this.$route.params;
       this.shopId = Number(id);
-      const api = `https://localhost:44333/api/ShopInfoes/${this.shopId}`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes/${this.shopId}`;
       this.$http
         .get(api)
         .then((res) => {
@@ -310,7 +310,7 @@ export default {
       delete this.tempShop.tags;
       delete this.tempShop.notes;
       this.tempShop.Click += 1;
-      const api = `https://localhost:44333/api/ShopInfoes/${this.shopId}`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes/${this.shopId}`;
       this.$http
         .put(api, this.tempShop)
         .then((res) => {
@@ -322,7 +322,7 @@ export default {
     },
     getRoutes() {
       this.memberRouteTitles = [];
-      const api = `https://localhost:44333/api/Routes/${this.review.MemberID}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/${this.review.MemberID}`;
 
       this.$http
         .get(api)
@@ -342,7 +342,7 @@ export default {
     addShopReview() {
       this.isDisabled = true;
       this.review.ShopID = this.shopId;
-      const api = `https://localhost:44333/api/shopreviews`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews`;
       if (!this.review.MemberID) {
         alert("請先登入");
         this.$router.push("/memberLogin");
@@ -370,7 +370,7 @@ export default {
       }
     },
     getMemberFavorites() {
-      const api = `https://localhost:44333/api/MemberFavorites/${this.review.MemberID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${this.review.MemberID}`;
 
       this.$http
         .get(api)
@@ -403,7 +403,7 @@ export default {
             }
           });
       } else {
-        const api = `https://localhost:44333/api/MemberFavorites`;
+        const api = `${process.env.VUE_APP_API}/api/MemberFavorites`;
         let obj = {
           MemberID: this.review.MemberID,
           ShopID: shopId,
@@ -428,7 +428,7 @@ export default {
       }
     },
     removeFavorite(shopId) {
-      const api = `https://localhost:44333/api/MemberFavorites/${this.review.MemberID}/${shopId}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${this.review.MemberID}/${shopId}`;
 
       this.$http
         .delete(api)

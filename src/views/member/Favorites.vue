@@ -100,7 +100,7 @@ export default {
       this.memberID = Number(memberId);
     },
     getFavorites() {
-      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${this.memberID}`;
 
       this.isLoading = true;
       this.$http
@@ -119,7 +119,7 @@ export default {
         });
     },
     getShopInfo(id, index) {
-      const api = `https://localhost:44333/api/shopinfoes/${id}`;
+      const api = `${process.env.VUE_APP_API}/api/shopinfoes/${id}`;
 
       this.$http
         .get(api)
@@ -131,7 +131,7 @@ export default {
         });
     },
     deleteFavorite(item) {
-      const api = `https://localhost:44333/api/MemberFavorites/${item.MemberID}/${item.ShopID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${item.MemberID}/${item.ShopID}`;
 
       this.$http
         .delete(api)

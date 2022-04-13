@@ -99,7 +99,7 @@ export default {
       }
     },
     login() {
-      const api = `https://localhost:44333/api/Login/AD`;
+      const api = `${process.env.VUE_APP_API}/api/Login/AD`;
 
       this.$http
         .post(api, this.user)

@@ -305,7 +305,7 @@ export default {
       }
     },
     getAllTags() {
-      const api = `https://localhost:44333/api/tag`;
+      const api = `${process.env.VUE_APP_API}/api/tag`;
 
       this.$http
         .get(api)

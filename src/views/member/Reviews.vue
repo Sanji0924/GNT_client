@@ -110,7 +110,7 @@ export default {
     },
     getReviews() {
       this.isLoading = true;
-      const api = `https://localhost:44333/api/shopreviews/${this.memberID}`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews/${this.memberID}`;
 
       this.$http
         .get(api)
@@ -130,7 +130,7 @@ export default {
         });
     },
     getShopName(id, index) {
-      const api = `https://localhost:44333/api/shopinfoes/${id}`;
+      const api = `${process.env.VUE_APP_API}/api/shopinfoes/${id}`;
 
       this.$http
         .get(api)
@@ -142,7 +142,7 @@ export default {
         });
     },
     updateReview(item) {
-      const api = `https://localhost:44333/api/shopreviews/${item.MemberID}/${item.ShopID}`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews/${item.MemberID}/${item.ShopID}`;
       delete item.ShopName;
 
       this.$http
@@ -160,7 +160,7 @@ export default {
         });
     },
     deleteReview() {
-      const api = `https://localhost:44333/api/shopreviews/${this.memberID}/${this.shopID}`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews/${this.memberID}/${this.shopID}`;
 
       this.$http
         .delete(api)

@@ -172,7 +172,6 @@
 </template>
 
 <script>
-// import { EventBus } from "../assets/methods/eventBus";
 import Roulette from "../components/RouletteModal.vue";
 import DeleteModal from "../components/DeleteModal.vue";
 

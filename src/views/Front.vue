@@ -185,7 +185,7 @@ export default {
       }
     },
     getAllTags() {
-      const api = `https://localhost:44333/api/Tag`;
+      const api = `${process.env.VUE_APP_API}/api/Tag`;
 
       this.$http
         .get(api)
@@ -197,7 +197,7 @@ export default {
     getAllShops() {
       this.isLoading = true;
 
-      const api = `https://localhost:44333/api/ShopInfoes`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes`;
       this.shopType = "all";
 
       this.$http
@@ -213,7 +213,7 @@ export default {
         .catch(() => {});
     },
     getShops(type) {
-      const api = `https://localhost:44333/api/ShopInfoes/type/${type}`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes/type/${type}`;
       this.shopType = type;
 
       this.$http
@@ -230,7 +230,7 @@ export default {
         });
     },
     getShopScore(shopId, index) {
-      const api = `https://localhost:44333/api/shopreviews/score/${shopId}`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews/score/${shopId}`;
 
       this.$http
         .get(api)
@@ -255,7 +255,7 @@ export default {
       if (!type || type == "all") {
         type = "null";
       }
-      let api = `https://localhost:44333/api/ShopInfoes/search?tag=${tag}&address=${address}&name=${name}&type=${type}`;
+      let api = `${process.env.VUE_APP_API}/api/ShopInfoes/search?tag=${tag}&address=${address}&name=${name}&type=${type}`;
       this.$http
         .get(api)
         .then((res) => {

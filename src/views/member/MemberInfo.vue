@@ -188,24 +188,28 @@ export default {
       this.user.MemberID = Number(memberId);
     },
     getMemberInfo() {
-      const api = `https://localhost:44333/api/MemberInfoes1/${this.user.MemberID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1/${this.user.MemberID}`;
 
       this.$http
         .get(api)
         .then((res) => {
           this.user = res.data[0];
           const birth = this.user.BirthDate.split("/");
+          console.log(birth);
+          birth.unshift(birth[2]);
+          birth.splice(3, 1);
           birth.forEach((item, index) => {
             birth[index] = item.padStart(2, "0");
           });
           this.user.BirthDate = birth.join("-");
+          console.log(this.user.BirthDate);
         })
         .catch((err) => {
           console.dir(err);
         });
     },
     updateData() {
-      const api = `https://localhost:44333/api/MemberInfoes1/${this.user.MemberID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1/${this.user.MemberID}`;
 
       this.$http
         .put(api, this.tempUser)

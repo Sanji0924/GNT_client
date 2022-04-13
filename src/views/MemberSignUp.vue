@@ -155,9 +155,6 @@
               </div>
             </fieldset>
             <div class="form-floating mb-3 text-center">
-              <!-- <button type="submit" class="btn btn-primary btn-lg w-100">
-                送出
-              </button> -->
               <button
                 type="button"
                 class="btn btn-primary btn-lg w-100"
@@ -199,18 +196,15 @@ export default {
         Gender: "",
         BirthDate: "",
         Email: "",
-        // RegisterDate: "",
         BlackList: false,
-        // Image: "",
         Account: "",
         Password: "",
-        // Point: "",
       },
     };
   },
   methods: {
     signUp() {
-      const api = `https://localhost:44333/api/MemberInfoes1`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1`;
 
       this.$http
         .post(api, this.user)
@@ -222,11 +216,9 @@ export default {
             timer: 1500,
           });
           this.$router.push("/");
-          // this.reviews = res.data;
         })
         .catch((err) => {
           console.dir(err);
-          // alert(err.response.data.Message);
         });
     },
   },

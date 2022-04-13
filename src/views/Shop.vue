@@ -208,7 +208,7 @@ export default {
       this.memberID = Number(member);
     },
     getMemberFavorites() {
-      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${this.memberID}`;
 
       this.$http
         .get(api)
@@ -242,7 +242,7 @@ export default {
             }
           });
       } else {
-        const api = `https://localhost:44333/api/MemberFavorites`;
+        const api = `${process.env.VUE_APP_API}/api/MemberFavorites`;
         let obj = {
           MemberID: this.memberID,
           ShopID: shopId,
@@ -267,7 +267,7 @@ export default {
       }
     },
     removeFavorite(shopId) {
-      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}/${shopId}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${this.memberID}/${shopId}`;
 
       this.$http
         .delete(api)
@@ -332,7 +332,7 @@ export default {
     },
     getRoutes() {
       this.memberRouteTitles = [];
-      const api = `https://localhost:44333/api/Routes/${this.memberID}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/${this.memberID}`;
 
       this.$http
         .get(api)

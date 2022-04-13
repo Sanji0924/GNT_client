@@ -43,8 +43,6 @@
               >
                 登入
               </button>
-
-              <!-- <button type="submit" class="btn btn-primary btn-lg w-100">登入</button> -->
             </div>
           </form>
         </div>
@@ -76,7 +74,7 @@ export default {
   inject: ["emitter"],
   methods: {
     login() {
-      const api = `https://localhost:44333/api/Login/Member`;
+      const api = `${process.env.VUE_APP_API}/api/Login/Member`;
 
       this.$http
         .post(api, this.user)

@@ -143,7 +143,7 @@ export default {
   inject: ["emitter"],
   methods: {
     getMembers() {
-      const api = `https://localhost:44333/api/MemberInfoes1/Admin`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1/Admin`;
 
       this.$http
         .get(api)
@@ -156,7 +156,7 @@ export default {
         });
     },
     getBlackList() {
-      const api = `https://localhost:44333/api/MemberInfoes1/Admin/BlackList`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1/Admin/BlackList`;
 
       this.$http
         .get(api)
@@ -168,7 +168,7 @@ export default {
         });
     },
     updateMember(member) {
-      const api = `https://localhost:44333/api/MemberInfoes1/Admin/${member.MemberID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1/Admin/${member.MemberID}`;
       console.log(member);
       this.$http
         .put(api, member)
@@ -185,7 +185,7 @@ export default {
         });
     },
     deleteMember() {
-      const api = `https://localhost:44333/api/MemberInfoes1/Admin/${this.tempMember.MemberID}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1/Admin/${this.tempMember.MemberID}`;
 
       this.$http
         .delete(api)
@@ -202,7 +202,7 @@ export default {
         });
     },
     searchMember(keywords) {
-      const api = `https://localhost:44333/api/MemberInfoes1/Admin/Keywords/${keywords}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberInfoes1/Admin/Keywords/${keywords}`;
 
       this.$http
         .get(api)

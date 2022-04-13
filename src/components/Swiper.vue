@@ -132,7 +132,7 @@ export default {
   inject: ["emitter"],
   methods: {
     getShops() {
-      const api = `https://localhost:44333/api/ShopInfoes`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes`;
 
       this.$http
         .get(api)
@@ -150,7 +150,7 @@ export default {
         });
     },
     getShopScore(shopId, index) {
-      const api = `https://localhost:44333/api/shopreviews/score/${shopId}`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews/score/${shopId}`;
 
       this.$http
         .get(api)
@@ -163,7 +163,7 @@ export default {
         });
     },
     getMemberFavorites() {
-      const api = `https://localhost:44333/api/MemberFavorites/${this.memberId}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${this.memberId}`;
 
       this.$http
         .get(api)
@@ -203,7 +203,7 @@ export default {
             }
           });
       } else {
-        const api = `https://localhost:44333/api/MemberFavorites`;
+        const api = `${process.env.VUE_APP_API}/api/MemberFavorites`;
         let obj = {
           MemberID: this.memberId,
           ShopID: shopId,
@@ -228,7 +228,7 @@ export default {
       }
     },
     removeFavorite(shopId) {
-      const api = `https://localhost:44333/api/MemberFavorites/${this.memberID}/${shopId}`;
+      const api = `${process.env.VUE_APP_API}/api/MemberFavorites/${this.memberID}/${shopId}`;
 
       this.$http
         .delete(api)
@@ -270,7 +270,6 @@ export default {
     },
     openRouteModal(shopId) {
       if (!this.memberId) {
-        // alert("請先登入");
         this.$swal
           .fire({
             icon: "info",
@@ -288,15 +287,10 @@ export default {
         this.shopId = shopId;
         this.$emit("open-modal", this.shopId);
       }
-
-      // if (!this.memberID) {
-      //   alert("請先登入");
-      //   this.$router.push("/memberlogin");
-      // }
     },
     getRoutes() {
       this.memberRouteTitles = [];
-      const api = `https://localhost:44333/api/Routes/${this.memberID}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/${this.memberID}`;
 
       this.$http
         .get(api)

@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     getShopReviews() {
-      const api = `https://localhost:44333/api/shopreviews`;
+      const api = `${process.env.VUE_APP_API}/api/shopreviews`;
       this.$http
         .get(api)
         .then((res) => {
@@ -113,10 +113,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    // text-align: center;
     font-weight: bold;
     font-size: 14px;
-    // background-color: rgb(98, 168, 200);
   }
 }
 </style>

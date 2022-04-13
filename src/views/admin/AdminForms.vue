@@ -249,7 +249,7 @@ export default {
       }
     },
     getForms() {
-      const api = `https://localhost:44333/api/websitereview`;
+      const api = `${process.env.VUE_APP_API}/api/websitereview`;
       this.isLoading = true;
       this.$http
         .get(api)
@@ -263,7 +263,7 @@ export default {
         });
     },
     getTypeForms(type) {
-      const api = `https://localhost:44333/api/websitereview/type/${type}`;
+      const api = `${process.env.VUE_APP_API}/api/websitereview/type/${type}`;
 
       this.$http
         .get(api)
@@ -275,7 +275,7 @@ export default {
         });
     },
     getStatusForms(status) {
-      const api = `https://localhost:44333/api/websitereview/status/${status}`;
+      const api = `${process.env.VUE_APP_API}/api/websitereview/status/${status}`;
 
       this.$http
         .get(api)
@@ -287,7 +287,7 @@ export default {
         });
     },
     getKeywordForms(keywords) {
-      const api = `https://localhost:44333/api/websitereview/keywords/${keywords}`;
+      const api = `${process.env.VUE_APP_API}/api/websitereview/keywords/${keywords}`;
 
       this.$http
         .get(api)
@@ -302,7 +302,7 @@ export default {
     updateForm(item) {
       this.isDisabled = true;
       console.log(item);
-      const api = `https://localhost:44333/api/websitereview/admin/${item.ReviewID}`;
+      const api = `${process.env.VUE_APP_API}/api/websitereview/admin/${item.ReviewID}`;
 
       this.$http
         .put(api, item)
@@ -321,7 +321,7 @@ export default {
         });
     },
     deleteForm() {
-      const api = `https://localhost:44333/api/websitereview/admin/${this.tempForm.ReviewID}`;
+      const api = `${process.env.VUE_APP_API}/api/websitereview/admin/${this.tempForm.ReviewID}`;
 
       this.$http
         .delete(api)

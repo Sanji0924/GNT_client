@@ -1,13 +1,5 @@
 <template>
   <div v-if="!isLoading">
-    <!-- <div
-      class="spinner-border text-primary"
-      role="status"
-      v-if="isLoading"
-      style="z-index: 10000"
-    >
-      <span class="visually-hidden">Loading...</span>
-    </div> -->
     <l-map :zoom="zoom" :center="center" style="height: 300px; width: 100%">
       <l-control-layers position="topright"></l-control-layers>
 
@@ -114,14 +106,12 @@ export default {
     getPoints() {
       this.markers = [];
       this.isLoading = true;
-      const api = `https://localhost:44333/api/ShopInfoes`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes`;
 
       this.$http
         .get(api)
         .then((res) => {
-          // console.log(res);
           this.shops = res.data;
-          // console.log(this.shops);
           let center = [];
           this.shops.forEach((item) => {
             let shopID = item.ShopID;
@@ -147,10 +137,6 @@ export default {
       this.$emit("change-page", id);
       this.$router.push(`/shops/shop/${id}`);
     },
-  },
-  mounted() {
-    // this.getPoints();
-    // this.shopId = this.id;
   },
 };
 </script>

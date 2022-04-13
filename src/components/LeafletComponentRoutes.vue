@@ -145,7 +145,7 @@ export default {
     },
     getRoutePoints() {
       console.log(this.routeId);
-      const api = `https://localhost:44333/api/Routes/RouteID/${this.routeId}`;
+      const api = `${process.env.VUE_APP_API}/Routes/RouteID/${this.routeId}`;
 
       this.$http
         .get(api)
@@ -201,8 +201,6 @@ export default {
   },
   mounted() {
     this.getPoints();
-    // this.getRoutePoints();
-    // this.shopId = this.id;
   },
 };
 </script>

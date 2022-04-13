@@ -275,7 +275,7 @@ export default {
     addNewRoute() {
       this.isDisabled = true;
       this.newRoute.Dest1 = this.shopId;
-      const api = `https://localhost:44333/api/Routes`;
+      const api = `${process.env.VUE_APP_API}/api/Routes`;
 
       this.$http
         .post(api, this.newRoute)
@@ -297,7 +297,7 @@ export default {
     updateRoute(item, point) {
       this.isDisabled = true;
       item[point] = this.shopId;
-      const api = `https://localhost:44333/api/Routes/${item.RouteID}`;
+      const api = `${process.env.VUE_APP_API}/api/Routes/${item.RouteID}`;
 
       this.$http
         .put(api, item)

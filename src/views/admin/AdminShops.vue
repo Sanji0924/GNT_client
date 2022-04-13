@@ -197,10 +197,10 @@ export default {
   inject: ["emitter"],
   methods: {
     getShops(type) {
-      let api = `https://localhost:44333/api/ShopInfoes`;
+      let api = `${process.env.VUE_APP_API}/api/ShopInfoes`;
 
       if (type) {
-        api = `https://localhost:44333/api/ShopInfoes/type/${type}`;
+        api = `${process.env.VUE_APP_API}/api/ShopInfoes/type/${type}`;
       }
 
       this.$http
@@ -217,7 +217,7 @@ export default {
         });
     },
     getEnableShops(status) {
-      const api = `https://localhost:44333/api/ShopInfoes/Enable?isEnable=${status}`;
+      const api = `${process.env.VUE_APP_API}/api/ShopInfoes/Enable?isEnable=${status}`;
 
       this.$http
         .get(api)
@@ -232,10 +232,10 @@ export default {
     updateShop(item) {
       console.log(item);
       delete item.tags;
-      let api = `https://localhost:44333/api/ShopInfoes/Admin`;
+      let api = `${process.env.VUE_APP_API}/api/ShopInfoes/Admin`;
       let method = "post";
       if (this.isNew == false) {
-        api = `https://localhost:44333/api/ShopInfoes/Admin/${item.ShopID}`;
+        api = `${process.env.VUE_APP_API}/api/ShopInfoes/Admin/${item.ShopID}`;
         method = "put";
       }
 
