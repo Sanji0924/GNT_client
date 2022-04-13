@@ -187,7 +187,9 @@ export default {
   data() {
     return {
       shops: [],
-      tempShop: {},
+      tempShop: {
+        tags: [],
+      },
       isNew: false,
       shopTags: [],
     };
@@ -206,6 +208,9 @@ export default {
         .then((res) => {
           console.log(res);
           this.shops = res.data;
+          this.shops.forEach((item, index) => {
+            this.shops[index].tags = item.TagIds.split(",");
+          });
         })
         .catch((err) => {
           console.dir(err);
@@ -226,6 +231,7 @@ export default {
     },
     updateShop(item) {
       console.log(item);
+      delete item.tags;
       let api = `https://localhost:44333/api/ShopInfoes/Admin`;
       let method = "post";
       if (this.isNew == false) {
@@ -255,6 +261,7 @@ export default {
         this.$refs.modal.openModal();
       } else if (status == "update") {
         this.isNew = false;
+        this.a;
         this.tempShop = { ...item };
         console.log(this.tempShop);
         this.$refs.modal.openModal();

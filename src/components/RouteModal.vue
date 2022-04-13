@@ -295,6 +295,7 @@ export default {
         });
     },
     updateRoute(item, point) {
+      this.isDisabled = true;
       item[point] = this.shopId;
       const api = `https://localhost:44333/api/Routes/${item.RouteID}`;
 
@@ -307,6 +308,7 @@ export default {
             content: "已將此景點加入",
           });
           this.$emit("get-routes");
+          this.isDisabled = false;
         })
         .catch((err) => {
           console.log(err);

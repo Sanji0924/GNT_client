@@ -120,7 +120,7 @@
                       type="checkbox"
                       :id="tag.Tag1"
                       :value="tag.TagName"
-                      v-model="selectTags"
+                      v-model="tempShop.tags"
                     />
                     <label class="form-check-label ms-1" :for="tag.Tag1">
                       {{ tag.TagName }}
@@ -270,12 +270,16 @@ export default {
   },
   methods: {
     openModal() {
-      if (this.tempShop.TagIds) {
-        this.selectTags = this.tempShop.TagIds.split(",");
+      if (this.tempShop.tags.length < 0) {
+        this.selectTags = this.tempShop.tags;
       } else {
         this.selectTags = [];
       }
       this.modal.show();
+
+      setTimeout(() => {
+        console.log("打開");
+      }, 1000);
     },
     closeModal() {
       this.modal.hide();

@@ -30,7 +30,7 @@
         </thead>
         <tbody>
           <tr v-for="(item, key) in favorites" :key="key">
-            <th v-if="item.ShopInfo.Name">{{ item.ShopInfo.Name }}</th>
+            <th v-if="item.ShopInfo">{{ item.ShopInfo.Name }}</th>
             <td>
               {{ item.ShopInfo.Address }}
             </td>
@@ -106,13 +106,13 @@ export default {
       this.$http
         .get(api)
         .then((res) => {
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 1000);
           this.favorites = res.data;
           this.favorites.forEach((item, index) => {
             this.getShopInfo(item.ShopID, index);
           });
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 500);
         })
         .catch((err) => {
           console.log(err);

@@ -120,13 +120,14 @@ export default {
           this.reviews.forEach((item, index) => {
             this.getShopName(item.ShopID, index);
           });
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 1000);
         })
         .catch((err) => {
           console.dir(err);
+          this.isLoading = false;
         });
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 500);
     },
     getShopName(id, index) {
       const api = `https://localhost:44333/api/shopinfoes/${id}`;
